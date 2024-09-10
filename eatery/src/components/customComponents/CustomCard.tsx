@@ -17,7 +17,7 @@ type Props = {};
 
 const CustomCard = (props: Props) => {
   return (
-    <Card maxW="sm" h="200px" w="250px" bg="#fffafa" borderRadius="lg" boxShadow='2xl'>
+    <Card maxW="sm" h="22vh" w="15vw" bg="#F2F0EA" borderRadius="lg" boxShadow='2xl'>
       <CardBody p="15px">
         <Image
           src="https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg"
