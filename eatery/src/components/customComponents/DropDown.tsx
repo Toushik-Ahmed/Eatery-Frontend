@@ -5,16 +5,15 @@ type Props = {};
 
 function DropDown({}: Props) {
   return (
-    <div>
-      <Menu>
+    <div className='w-fit'>
+      <Menu  >
         <MenuButton
-          px={0}
-          py={0}
+
           as={Button}
           rightIcon={<IoChevronDownCircleOutline />}
         ></MenuButton>
-        <MenuList p={0} m={0} w={'fit-content'}>
-          <MenuItem w={'fit-content'} p={0} m={0}>
+        <MenuList p={0} m={0} w={'fit-content'} _hover={{color:"#1D1842"}}>
+          <MenuItem w={'fit-content'} _hover={{color:"#1D1842"}}>
             Logout
           </MenuItem>
         </MenuList>
