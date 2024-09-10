@@ -1,20 +1,26 @@
 import Link from 'next/link';
 import { BsCart } from 'react-icons/bs';
-import { FaArrowCircleDown } from 'react-icons/fa';
 import { IoIosAddCircleOutline, IoMdBook } from 'react-icons/io';
 import { LuTrash } from 'react-icons/lu';
+import DropDown from '../customComponents/DropDown';
+import { FaArrowCircleDown } from 'react-icons/fa';
 type Props = {};
 
 const SideNavbar = (props: Props) => {
+
+
+  const actions=<FaArrowCircleDown className=" text-white " />
   return (
-    <nav className="bg-[#FF5841] h-[100vh] w-[20vw]">
+    <nav className="bg-[#FF5841] h-[100vh] w-fit">
       <div className="p-2 flex gap-8">
         <div className="bg-[white] w-fit p-2 rounded-[65%] font-bold text-xl">
           A
         </div>
         <div className="flex gap-4  items-center">
           <div className="text-white">User Name</div>
-          <FaArrowCircleDown className=" text-white " />
+
+
+          <DropDown  />
         </div>
       </div>
       <div>
