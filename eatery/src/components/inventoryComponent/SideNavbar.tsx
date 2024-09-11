@@ -3,21 +3,19 @@ import { BsCart } from 'react-icons/bs';
 import { IoIosAddCircleOutline, IoMdBook } from 'react-icons/io';
 import { LuTrash } from 'react-icons/lu';
 import DropDown from '../customComponents/DropDown';
-type Props = {};
+// type Props = {};
 
-const SideNavbar = (props: Props) => {
+const SideNavbar = () => {
   const items = ['Logout'];
   return (
     <nav className="bg-[#FF5841] h-[100vh] w-fit">
       <div className="p-2 flex gap-8">
-        <div className="bg-[white] w-fit px-1 py-1 rounded-2xl font-bold text-xl">
+        <div className="bg-[white] px-1 py-1 h-10 w-10 font-bold text-xl rounded-full flex items-center justify-center">
           A
         </div>
 
         <div className="flex gap-4  items-center">
-          <div className="text-white">User Name</div>
-
-          <DropDown items={items} />
+          <DropDown actions="User Name" items={items} />
         </div>
       </div>
       <div>
