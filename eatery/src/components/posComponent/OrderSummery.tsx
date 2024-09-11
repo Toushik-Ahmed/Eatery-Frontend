@@ -15,7 +15,7 @@ const OrderSummery = (props: Props) => {
     <Box
       borderWidth="1px"
       borderRadius="md"
-      bg={"#f7f1ed"}
+      bg={"#FFFFF6"}
       w={"20vw"}
       h={"90vh"}
     >
