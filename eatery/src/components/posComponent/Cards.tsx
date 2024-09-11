@@ -1,15 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
 import { Box, Button, Grid } from "@chakra-ui/react";
 
 type Props = {};
-
+interface Items {
+  id: number;
+  name: string;
+  size: string;
+  addons: string[];
+  price: number;
+  category: string;
+  availability: string[];
+  image: string;
+}
 const Cards = (props: Props) => {
   const items = [
     {
+      id: 1,
       name: "Burger",
       size: "large",
       addons: ["salami", "cheese", "bacon"],
@@ -20,19 +30,21 @@ const Cards = (props: Props) => {
         "https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg",
     },
     {
+      id: 2,
       name: "Pizza",
       size: "large",
       addons: ["sausage", "mushroom", "black olive"],
       price: 900,
       category: "Fastfood",
-      availability: ["All Items", "Lunch", "Dinner"],
+      availability: ["All Items", "Lunch"],
       image:
         "https://static.vecteezy.com/system/resources/previews/022/994/042/non_2x/the-pepperoni-pizza-and-a-piece-of-streched-cheese-pizza-with-ai-generated-free-photo.jpg",
     },
     {
-      name: "Sub Sandwitch",
+      id: 3,
+      name: "Sub Sandwich",
       size: "medium",
-      addons: "capsicum",
+      addons: ["capsicum"],
       price: 300,
       category: "Fastfood",
       availability: ["All Items", "All Day", "Dinner"],
@@ -40,9 +52,10 @@ const Cards = (props: Props) => {
         "https://tastytreatbd.com/images/detailed/127/Mexican_Sub_Sandwich.jpg",
     },
     {
+      id: 4,
       name: "Chicken Fry",
       size: "2 pcs",
-      addons: "sauce",
+      addons: ["sauce"],
       price: 200,
       category: "Fastfood",
       availability: ["All Items", "All Day", "Dinner"],
@@ -50,9 +63,10 @@ const Cards = (props: Props) => {
         "https://www.banglakutir.com/app-contents/upload/1/products/1640865304_2_1_133038878.jpg",
     },
     {
+      id: 5,
       name: "Sprite",
       size: "1 litre",
-      addons: "",
+      addons: [""],
       price: 50,
       category: "Beverage",
       availability: ["All Items", "All Day", "Breakfast", "Lunch", "Dinner"],
@@ -61,9 +75,10 @@ const Cards = (props: Props) => {
     },
 
     {
+      id: 6,
       name: "Fanta",
       size: "1 litre",
-      addons: "",
+      addons: [""],
       price: 50,
       category: "Beverage",
       availability: ["All Items", "All Day", "Breakfast", "Lunch", "Dinner"],
@@ -71,16 +86,18 @@ const Cards = (props: Props) => {
         "https://static.thcdn.com/images/medium/original/widgets/190-en/58/original-New_Fanta_Mobile-011458.png",
     },
     {
+      id: 7,
       name: "Mexican Taco",
       size: "medium",
-      addons: "letuce",
+      addons: ["lettuce"],
       price: 200,
       category: "Fastfood",
-      availability: ["All Items", "Dinner"],
+      availability: ["All Items", "Breakfast", "Dinner"],
       image:
         "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/sneha-archanaskitchen.com/Classic_Mexican_Taco_Recipe_With_Refried_Beans__Fresh_Summer_Salad.jpg",
     },
     {
+      id: 8,
       name: "Burger",
       size: "medium",
       addons: ["salami", "cheese", "bacon"],
@@ -91,6 +108,7 @@ const Cards = (props: Props) => {
         "https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg",
     },
     {
+      id: 9,
       name: "Pasta",
       size: "medium",
       addons: ["black olive", "mozzarella"],
@@ -103,11 +121,16 @@ const Cards = (props: Props) => {
   ];
 
   const categories = Array.from(new Set(items.map((item) => item.category)));
-  const [availability, setAvailability] = useState("All Items");
+  const [availability, setAvailability] = useState<string>("All Items");
 
-  const availableItems = items.filter((item) =>
-    item.availability.includes(availability)
-  );
+  const [availableItems, setAvailableItems] = useState<Items[]>(items);
+
+  useEffect(() => {
+    const filteredItems = items.filter((item) =>
+      item.availability.includes(availability)
+    );
+    setAvailableItems(filteredItems);
+  }, [availability]);
 
   return (
     <div className="mx-[2vw]">
@@ -185,7 +208,7 @@ const Cards = (props: Props) => {
                       .filter((item) => item.category === category)
                       .map((item) => (
                         <CustomCard
-                          key={item.name}
+                          key={item.id}
                           name={item.name}
                           size={item.size}
                           price={item.price}
