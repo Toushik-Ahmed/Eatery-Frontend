@@ -11,26 +11,45 @@ import {
   Divider,
   ButtonGroup,
   Image,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 
-type Props = {};
+type Props = {
+  name: string;
+  size: string;
+  image: string;
+  price: number;
+};
 
-const CustomCard = (props: Props) => {
+const CustomCard = ({ name, size, image, price}: Props) => {
   return (
-    <Card maxW="sm" h="200px" w="250px" bg="#fffafa" borderRadius="lg" boxShadow='2xl'>
-      <CardBody p="15px">
-        <Image
-          src="https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg"
-          alt="Beef Cheese Burger"
-          borderRadius="lg"
-          h="120px"
-          w="250px"
-        />
+    <Card
+      maxW="sm"
+      h="26vh"
+      w="10vw"
+      bg="white"
+      borderRadius="lg"
+      boxShadow="md"
+    >
+      <CardBody p={"2"}>
+        <Image src={image} alt={name} borderRadius="lg" h="120px" w="250px" />
         <Stack mt="2" spacing="1">
-          <Heading size="md">Beef Cheese Burger</Heading>
-          <Text color="orange.600" fontSize="1rem" >
-            $10
+          <Heading size="md" fontWeight={"semibold"} >
+            {name}
+          </Heading>
+          <Text color="black" fontSize="md">
+            The Best cheese burger you will ever have
           </Text>
+          <Flex>
+          <Text color="#ff5841" fontSize="md" >
+            {price}
+          </Text>
+          <Spacer />
+          <Text color="#ff5841" fontSize="md" >
+            {size}
+          </Text>
+          </Flex>
         </Stack>
       </CardBody>
     </Card>
