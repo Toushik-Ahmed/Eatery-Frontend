@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
 import { Box, Button, Grid } from "@chakra-ui/react";
@@ -15,6 +15,7 @@ const Cards = (props: Props) => {
       addons: ["salami", "cheese", "bacon"],
       price: 300,
       category: "Fastfood",
+      availability: ["All Items", "Lunch", "Dinner"],
       image:
         "https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg",
     },
@@ -24,6 +25,7 @@ const Cards = (props: Props) => {
       addons: ["sausage", "mushroom", "black olive"],
       price: 900,
       category: "Fastfood",
+      availability: ["All Items", "Lunch", "Dinner"],
       image:
         "https://static.vecteezy.com/system/resources/previews/022/994/042/non_2x/the-pepperoni-pizza-and-a-piece-of-streched-cheese-pizza-with-ai-generated-free-photo.jpg",
     },
@@ -33,6 +35,7 @@ const Cards = (props: Props) => {
       addons: "capsicum",
       price: 300,
       category: "Fastfood",
+      availability: ["All Items", "All Day", "Dinner"],
       image:
         "https://tastytreatbd.com/images/detailed/127/Mexican_Sub_Sandwich.jpg",
     },
@@ -42,6 +45,7 @@ const Cards = (props: Props) => {
       addons: "sauce",
       price: 200,
       category: "Fastfood",
+      availability: ["All Items", "All Day", "Dinner"],
       image:
         "https://www.banglakutir.com/app-contents/upload/1/products/1640865304_2_1_133038878.jpg",
     },
@@ -51,6 +55,7 @@ const Cards = (props: Props) => {
       addons: "",
       price: 50,
       category: "Beverage",
+      availability: ["All Items", "All Day", "Breakfast", "Lunch", "Dinner"],
       image:
         "https://www.contis.ph/cdn/shop/products/SpriteinCan.jpg?v=1689558530",
     },
@@ -61,6 +66,7 @@ const Cards = (props: Props) => {
       addons: "",
       price: 50,
       category: "Beverage",
+      availability: ["All Items", "All Day", "Breakfast", "Lunch", "Dinner"],
       image:
         "https://static.thcdn.com/images/medium/original/widgets/190-en/58/original-New_Fanta_Mobile-011458.png",
     },
@@ -70,6 +76,7 @@ const Cards = (props: Props) => {
       addons: "letuce",
       price: 200,
       category: "Fastfood",
+      availability: ["All Items", "Dinner"],
       image:
         "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/sneha-archanaskitchen.com/Classic_Mexican_Taco_Recipe_With_Refried_Beans__Fresh_Summer_Salad.jpg",
     },
@@ -79,6 +86,7 @@ const Cards = (props: Props) => {
       addons: ["salami", "cheese", "bacon"],
       price: 200,
       category: "Fastfood",
+      availability: ["All Items", "Lunch", "Dinner"],
       image:
         "https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg",
     },
@@ -88,12 +96,18 @@ const Cards = (props: Props) => {
       addons: ["black olive", "mozzarella"],
       price: 400,
       category: "Fastfood",
+      availability: ["All Items", "Lunch"],
       image:
         "https://static.thcdn.com/images/v2/app/uploads/sites/419/2021/05/FEATURE0326-THG0021212-MYP-NF-PASTA-1800-x-672-min_1619626601.jpg?width=700",
     },
   ];
 
   const categories = Array.from(new Set(items.map((item) => item.category)));
+  const [availability, setAvailability] = useState("All Items");
+
+  const availableItems = items.filter((item) =>
+    item.availability.includes(availability)
+  );
 
   return (
     <div className="mx-[2vw]">
@@ -113,35 +127,45 @@ const Cards = (props: Props) => {
             <div className="flex justify-center">
               <div className="w-fit mt-[2vh] p-2 flex justify-center space-x-8 text-xl text-black font-semibold items-center">
                 <Button
-                  bg={"white"}
+                  bg={availability === "All Items" ? "#ff5841" : "white"}
+                  textColor={availability === "All Items" ? "white" : "black"}
+                  onClick={() => setAvailability("All Items")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
                   All Items
                 </Button>
 
                 <Button
-                  bg={"white"}
+                  bg={availability === "All Day" ? "#ff5841" : "white"}
+                  textColor={availability === "All Day" ? "white" : "black"}
+                  onClick={() => setAvailability("All Day")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
                   All Day
                 </Button>
 
                 <Button
-                  bg={"white"}
+                  bg={availability === "Breakfast" ? "#ff5841" : "white"}
+                  textColor={availability === "Breakfast" ? "white" : "black"}
+                  onClick={() => setAvailability("Breakfast")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
                   Breakfast
                 </Button>
 
                 <Button
-                  bg={"white"}
+                  bg={availability === "Lunch" ? "#ff5841" : "white"}
+                  textColor={availability === "Lunch" ? "white" : "black"}
+                  onClick={() => setAvailability("Lunch")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
                   Lunch
                 </Button>
 
                 <Button
-                  bg={"white"}
+                  bg={availability === "Dinner" ? "#ff5841" : "white"}
+                  textColor={availability === "Dinner" ? "white" : "black"}
+                  onClick={() => setAvailability("Dinner")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
                   Dinner
@@ -157,7 +181,7 @@ const Cards = (props: Props) => {
                   </div>
 
                   <Grid templateColumns="repeat(6, 0fr)" gap={6}>
-                    {items
+                    {availableItems
                       .filter((item) => item.category === category)
                       .map((item) => (
                         <CustomCard
