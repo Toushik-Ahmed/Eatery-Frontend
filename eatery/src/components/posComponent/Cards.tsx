@@ -141,7 +141,7 @@ const Cards = (props: Props) => {
         <Box
           borderWidth="1px"
           borderRadius="md"
-          bg={"#e9e5ef"}
+          bg={"#f4f4f6"}
           w={"75vw"}
           h={"90vh"}
           overflow={"auto"}
