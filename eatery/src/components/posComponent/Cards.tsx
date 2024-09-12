@@ -3,140 +3,179 @@
 import React, { useEffect, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
-import { Box, Button, Grid } from "@chakra-ui/react";
+import { Box, Button, Grid, HStack, Text } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { addOrderInfo } from "@/redux/Pos/OrderSlice";
+import { AppDispatch } from "@/redux/store";
 
 type Props = {};
 interface Items {
   id: number;
   name: string;
-  size: string;
-  addons: string[];
-  price: number;
   category: string;
-  availability: string[];
+  tastyTag: string;
+  mealTime: string[];
+  description: string;
   image: string;
+  size: {
+    sizeName: string;
+    ingredients: {
+      name: string;
+      properties: {
+        quantity: number;
+        unit: string;
+      };
+    }[];
+    preparationTime: number;
+    sellingPrice: number;
+    addOns: {
+      name: string;
+      quantity: number;
+      unit: string;
+    }[];
+  }[];
 }
 const Cards = (props: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
   const items = [
     {
       id: 1,
-      name: "Burger",
-      size: "large",
-      addons: ["salami", "cheese", "bacon"],
-      price: 300,
-      category: "Fastfood",
-      availability: ["All Items", "Lunch", "Dinner"],
+      name: "Classic Burger",
+      category: "Fast Food",
+      tastyTag: "Delicious",
+      mealTime: ["All Items", "Lunch", "Dinner"],
+      description: "A classic burger with fresh ingredients",
       image:
         "https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg",
+      size: [
+        {
+          sizeName: "Large",
+          ingredients: [
+            { name: "Beef Patty", properties: { quantity: 2, unit: "pcs" } },
+            { name: "Lettuce", properties: { quantity: 3, unit: "pcs" } },
+            { name: "Tomato", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Onion", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Cheese", properties: { quantity: 2, unit: "pcs" } },
+            { name: "Pickles", properties: { quantity: 3, unit: "pcs" } },
+            { name: "Ketchup", properties: { quantity: 20, unit: "ml" } },
+            { name: "Mustard", properties: { quantity: 15, unit: "ml" } },
+            { name: "Bun", properties: { quantity: 1, unit: "pcs" } },
+          ],
+          preparationTime: 15,
+          sellingPrice: 9.99,
+          addOns: [
+            { name: "Extra Cheese", quantity: 1, unit: "slice" },
+            { name: "Bacon", quantity: 2, unit: "strips" },
+          ],
+        },
+        {
+          sizeName: "Medium",
+          ingredients: [
+            { name: "Beef Patty", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Lettuce", properties: { quantity: 2, unit: "leaves" } },
+            { name: "Tomato", properties: { quantity: 1, unit: "slice" } },
+            { name: "Onion", properties: { quantity: 1, unit: "slice" } },
+            { name: "Cheese", properties: { quantity: 1, unit: "slice" } },
+            { name: "Pickles", properties: { quantity: 2, unit: "slices" } },
+          ],
+          preparationTime: 12,
+          sellingPrice: 7.99,
+          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice" }],
+        },
+        {
+          sizeName: "Small",
+          ingredients: [
+            { name: "Beef Patty", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Lettuce", properties: { quantity: 1, unit: "leaf" } },
+            { name: "Tomato", properties: { quantity: 1, unit: "slice" } },
+          ],
+          preparationTime: 10,
+          sellingPrice: 5.99,
+          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf" }],
+        },
+      ],
     },
     {
       id: 2,
       name: "Pizza",
-      size: "large",
-      addons: ["sausage", "mushroom", "black olive"],
-      price: 900,
-      category: "Fastfood",
-      availability: ["All Items", "Lunch"],
+      category: "Fast Food",
+      tastyTag: "Delicious",
+      mealTime: ["All Items", "All Day", "Lunch"],
+      description: "A classic burger with fresh ingredients",
       image:
         "https://static.vecteezy.com/system/resources/previews/022/994/042/non_2x/the-pepperoni-pizza-and-a-piece-of-streched-cheese-pizza-with-ai-generated-free-photo.jpg",
-    },
-    {
-      id: 3,
-      name: "Sub Sandwich",
-      size: "medium",
-      addons: ["capsicum"],
-      price: 300,
-      category: "Fastfood",
-      availability: ["All Items", "All Day", "Dinner"],
-      image:
-        "https://tastytreatbd.com/images/detailed/127/Mexican_Sub_Sandwich.jpg",
-    },
-    {
-      id: 4,
-      name: "Chicken Fry",
-      size: "2 pcs",
-      addons: ["sauce"],
-      price: 200,
-      category: "Fastfood",
-      availability: ["All Items", "All Day", "Dinner"],
-      image:
-        "https://www.banglakutir.com/app-contents/upload/1/products/1640865304_2_1_133038878.jpg",
-    },
-    {
-      id: 5,
-      name: "Sprite",
-      size: "1 litre",
-      addons: [""],
-      price: 50,
-      category: "Beverage",
-      availability: ["All Items", "All Day", "Breakfast", "Lunch", "Dinner"],
-      image:
-        "https://www.contis.ph/cdn/shop/products/SpriteinCan.jpg?v=1689558530",
-    },
-
-    {
-      id: 6,
-      name: "Fanta",
-      size: "1 litre",
-      addons: [""],
-      price: 50,
-      category: "Beverage",
-      availability: ["All Items", "All Day", "Breakfast", "Lunch", "Dinner"],
-      image:
-        "https://static.thcdn.com/images/medium/original/widgets/190-en/58/original-New_Fanta_Mobile-011458.png",
-    },
-    {
-      id: 7,
-      name: "Mexican Taco",
-      size: "medium",
-      addons: ["lettuce"],
-      price: 200,
-      category: "Fastfood",
-      availability: ["All Items", "Breakfast", "Dinner"],
-      image:
-        "https://www.archanaskitchen.com/images/archanaskitchen/1-Author/sneha-archanaskitchen.com/Classic_Mexican_Taco_Recipe_With_Refried_Beans__Fresh_Summer_Salad.jpg",
-    },
-    {
-      id: 8,
-      name: "Burger",
-      size: "medium",
-      addons: ["salami", "cheese", "bacon"],
-      price: 200,
-      category: "Fastfood",
-      availability: ["All Items", "Lunch", "Dinner"],
-      image:
-        "https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg",
-    },
-    {
-      id: 9,
-      name: "Pasta",
-      size: "medium",
-      addons: ["black olive", "mozzarella"],
-      price: 400,
-      category: "Fastfood",
-      availability: ["All Items", "Lunch"],
-      image:
-        "https://static.thcdn.com/images/v2/app/uploads/sites/419/2021/05/FEATURE0326-THG0021212-MYP-NF-PASTA-1800-x-672-min_1619626601.jpg?width=700",
+      size: [
+        {
+          sizeName: "Large",
+          ingredients: [
+            { name: "Beef Patty", properties: { quantity: 2, unit: "pcs" } },
+            { name: "Lettuce", properties: { quantity: 3, unit: "pcs" } },
+            { name: "Tomato", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Onion", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Cheese", properties: { quantity: 2, unit: "pcs" } },
+            { name: "Pickles", properties: { quantity: 3, unit: "pcs" } },
+            { name: "Ketchup", properties: { quantity: 20, unit: "ml" } },
+            { name: "Mustard", properties: { quantity: 15, unit: "ml" } },
+            { name: "Bun", properties: { quantity: 1, unit: "pcs" } },
+          ],
+          preparationTime: 15,
+          sellingPrice: 9.99,
+          addOns: [
+            { name: "Extra Cheese", quantity: 1, unit: "slice" },
+            { name: "Bacon", quantity: 2, unit: "strips" },
+          ],
+        },
+        {
+          sizeName: "Medium",
+          ingredients: [
+            { name: "Beef Patty", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Lettuce", properties: { quantity: 2, unit: "leaves" } },
+            { name: "Tomato", properties: { quantity: 1, unit: "slice" } },
+            { name: "Onion", properties: { quantity: 1, unit: "slice" } },
+            { name: "Cheese", properties: { quantity: 1, unit: "slice" } },
+            { name: "Pickles", properties: { quantity: 2, unit: "slices" } },
+          ],
+          preparationTime: 12,
+          sellingPrice: 7.99,
+          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice" }],
+        },
+        {
+          sizeName: "Small",
+          ingredients: [
+            { name: "Beef Patty", properties: { quantity: 1, unit: "pcs" } },
+            { name: "Lettuce", properties: { quantity: 1, unit: "leaf" } },
+            { name: "Tomato", properties: { quantity: 1, unit: "slice" } },
+          ],
+          preparationTime: 10,
+          sellingPrice: 5.99,
+          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf" }],
+        },
+      ],
     },
   ];
 
   const categories = Array.from(new Set(items.map((item) => item.category)));
-  const [availability, setAvailability] = useState<string>("All Items");
+  const [mealTime, setMealTime] = useState<string>("All Items");
 
   const [availableItems, setAvailableItems] = useState<Items[]>(items);
 
   useEffect(() => {
     const filteredItems = items.filter((item) =>
-      item.availability.includes(availability)
+      item.mealTime.includes(mealTime)
     );
     setAvailableItems(filteredItems);
-  }, [availability]);
+  }, [mealTime]);
+
+  const handleSubmit = (item: Items) => {
+    dispatch(addOrderInfo([item]));
+  };
 
   return (
-    <div className="mx-[2vw]">
-      <div className="py-6">
-        <h2 className="text-2xl font-semibold">Order Management</h2>
-      </div>
+    <Box mx={"10"}>
+      <Text py={"6"} fontSize={"2xl"} fontWeight={"semibold"}>
+        Order Management
+      </Text>
+
       <div className="flex justify-between">
         <Box
           borderWidth="1px"
@@ -148,52 +187,59 @@ const Cards = (props: Props) => {
         >
           <div>
             <div className="flex justify-center">
-              <div className="w-fit mt-[2vh] p-2 flex justify-center space-x-8 text-xl text-black font-semibold items-center">
-                <Button
-                  bg={availability === "All Items" ? "#ff5841" : "white"}
-                  textColor={availability === "All Items" ? "white" : "black"}
-                  onClick={() => setAvailability("All Items")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
-                >
-                  All Items
-                </Button>
+              <Box
+                w={"fit-content"}
+                mt={"6"}
+                fontSize={"xl"}
+                fontWeight={"semibold"}
+              >
+                <HStack spacing={6}>
+                  <Button
+                    bg={mealTime === "All Items" ? "#ff5841" : "white"}
+                    textColor={mealTime === "All Items" ? "white" : "black"}
+                    onClick={() => setMealTime("All Items")}
+                    _hover={{ background: "#ff5841", textColor: "white" }}
+                  >
+                    All Items
+                  </Button>
 
-                <Button
-                  bg={availability === "All Day" ? "#ff5841" : "white"}
-                  textColor={availability === "All Day" ? "white" : "black"}
-                  onClick={() => setAvailability("All Day")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
-                >
-                  All Day
-                </Button>
+                  <Button
+                    bg={mealTime === "All Day" ? "#ff5841" : "white"}
+                    textColor={mealTime === "All Day" ? "white" : "black"}
+                    onClick={() => setMealTime("All Day")}
+                    _hover={{ background: "#ff5841", textColor: "white" }}
+                  >
+                    All Day
+                  </Button>
 
-                <Button
-                  bg={availability === "Breakfast" ? "#ff5841" : "white"}
-                  textColor={availability === "Breakfast" ? "white" : "black"}
-                  onClick={() => setAvailability("Breakfast")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
-                >
-                  Breakfast
-                </Button>
+                  <Button
+                    bg={mealTime === "Breakfast" ? "#ff5841" : "white"}
+                    textColor={mealTime === "Breakfast" ? "white" : "black"}
+                    onClick={() => setMealTime("Breakfast")}
+                    _hover={{ background: "#ff5841", textColor: "white" }}
+                  >
+                    Breakfast
+                  </Button>
 
-                <Button
-                  bg={availability === "Lunch" ? "#ff5841" : "white"}
-                  textColor={availability === "Lunch" ? "white" : "black"}
-                  onClick={() => setAvailability("Lunch")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
-                >
-                  Lunch
-                </Button>
+                  <Button
+                    bg={mealTime === "Lunch" ? "#ff5841" : "white"}
+                    textColor={mealTime === "Lunch" ? "white" : "black"}
+                    onClick={() => setMealTime("Lunch")}
+                    _hover={{ background: "#ff5841", textColor: "white" }}
+                  >
+                    Lunch
+                  </Button>
 
-                <Button
-                  bg={availability === "Dinner" ? "#ff5841" : "white"}
-                  textColor={availability === "Dinner" ? "white" : "black"}
-                  onClick={() => setAvailability("Dinner")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
-                >
-                  Dinner
-                </Button>
-              </div>
+                  <Button
+                    bg={mealTime === "Dinner" ? "#ff5841" : "white"}
+                    textColor={mealTime === "Dinner" ? "white" : "black"}
+                    onClick={() => setMealTime("Dinner")}
+                    _hover={{ background: "#ff5841", textColor: "white" }}
+                  >
+                    Dinner
+                  </Button>
+                </HStack>
+              </Box>
             </div>
 
             <div className="ml-20 space-y-8">
@@ -202,20 +248,35 @@ const Cards = (props: Props) => {
                   <div className="mt-5 flex justify-center text-2xl font-semibold w-fit text-[#ff5841]">
                     {category}
                   </div>
-
                   <Grid templateColumns="repeat(6, 0fr)" gap={6}>
                     {availableItems
                       .filter((item) => item.category === category)
                       .map((item) => (
                         <CustomCard
-                          key={item.id}
+                          key={`${item.id}`}
                           name={item.name}
                           size={item.size}
-                          price={item.price}
                           image={item.image}
+                          onClick={() => handleSubmit(item)}
                         />
                       ))}
                   </Grid>
+
+                  {/* <Grid templateColumns="repeat(6, 0fr)" gap={6}>
+                    {availableItems
+                      .filter((item) => item.category === category)
+                      .map((item) =>
+                        item.size.map((sizeObj, index) => (
+                          <CustomCard
+                            key={`${item.id}-${index}`}
+                            name={item.name}
+                            size={sizeObj.sizeName}
+                            price={sizeObj.sellingPrice}
+                            image={item.image}
+                          />
+                        ))
+                      )}
+                  </Grid> */}
                 </div>
               ))}
             </div>
@@ -224,7 +285,7 @@ const Cards = (props: Props) => {
 
         <OrderSummery />
       </div>
-    </div>
+    </Box>
   );
 };
 

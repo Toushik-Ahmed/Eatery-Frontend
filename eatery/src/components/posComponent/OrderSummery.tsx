@@ -1,3 +1,4 @@
+import { RootState } from "@/redux/store";
 import {
   Button,
   Box,
@@ -5,12 +6,22 @@ import {
   HStack,
   Spacer,
   Select,
+  Text,
+  Center,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
 
 type Props = {};
 
 const OrderSummery = (props: Props) => {
+  const [eachItemPrice, setEachItemPrice] = useState<number>(0);
+  const listOfItems = useSelector((state: RootState) => state.orderInfo);
+  const size = Array.from(
+    new Set(listOfItems.orderedItems.map((item) => item.size))
+  );
+  console.log(listOfItems.orderedItems);
+  console.log(size);
   return (
     <Box
       borderWidth="1px"
@@ -19,146 +30,74 @@ const OrderSummery = (props: Props) => {
       w={"20vw"}
       h={"90vh"}
     >
-      <div className="h-[80vh] flex flex-col items-center overflow-auto">
-        <div className="text-lg font-bold">Order Summery</div>
-        <Box
-          p={"4"}
-          mt={"4"}
-          borderWidth="1px"
-          borderRadius="md"
-          borderColor={"gray"}
-          rounded={"md"}
-        >
-          <div className="flex space-x-40">
-            <div className="text-md">
-              <h2 className="font-bold ">Mexican Tacos</h2>
-              <div className="flex justify-between items-center">
-                <Button>-</Button>
+      <Box
+        h={"80vh"}
+        display={"flex"}
+        flexDirection={"column"}
+        alignItems={"center"}
+        overflowY={"auto"}
+      >
+        <Text py={"4"} fontWeight={"bold"}>
+          Order Summery
+        </Text>
+        {listOfItems.orderedItems.map((item) => (
+          <Box
+            w={"19vw"}
+            p={"4"}
+            borderWidth="1px"
+            borderRadius="md"
+            borderColor={"gray-200"}
+            rounded={"md"}
+          >
+            <Flex>
+              <Box key={item.id}>
+                <Text fontWeight={"bold"}>{item.name}</Text>
+                <Select placeholder="Size" size={"sm"} mt={"2"}>
+                  {item.size.map((s) => (
+                    <option value={s.sizeName} key={s.sizeName}>
+                      {s.sizeName}
+                    </option>
+                  ))}
+                </Select>
+                <Flex mt={2}>
+                  <Button size={"sm"}>-</Button>
 
-                <div>1</div>
+                  <Center w={"40px"} bg="green.500">
+                    <Text>1</Text>
+                  </Center>
 
-                <Button>+</Button>
-              </div>
-              <Select placeholder="Add ons">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-              <Select placeholder="Size">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-            </div>
-            <div className="text-lg font-bold">600$</div>
-          </div>
-        </Box>
-        <Box
-          p={"4"}
-          mt={"4"}
-          borderWidth="1px"
-          borderRadius="md"
-          borderColor={"gray"}
-          rounded={"md"}
-        >
-          <div className="flex space-x-40">
-            <div className="text-md">
-              <h2 className="font-bold ">Mexican Tacos</h2>
-              <div className="flex justify-between items-center">
-                <Button>-</Button>
-
-                <div>1</div>
-
-                <Button>+</Button>
-              </div>
-              <Select placeholder="Add ons">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-              <Select placeholder="Size">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-            </div>
-            <div className="text-lg font-bold">600$</div>
-          </div>
-        </Box>
-        <Box
-          p={"4"}
-          mt={"4"}
-          borderWidth="1px"
-          borderRadius="md"
-          borderColor={"gray"}
-          rounded={"md"}
-        >
-          <div className="flex space-x-40">
-            <div className="text-md">
-              <h2 className="font-bold ">Mexican Tacos</h2>
-              <div className="flex justify-between items-center">
-                <Button>-</Button>
-
-                <div>1</div>
-
-                <Button>+</Button>
-              </div>
-              <Select placeholder="Add ons">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-              <Select placeholder="Size">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-            </div>
-            <div className="text-lg font-bold">600$</div>
-          </div>
-        </Box>
-        <Box
-          p={"4"}
-          mt={"4"}
-          borderWidth="1px"
-          borderRadius="md"
-          borderColor={"gray"}
-          rounded={"md"}
-        >
-          <div className="flex space-x-40">
-            <div className="text-md">
-              <h2 className="font-bold ">Mexican Tacos</h2>
-              <div className="flex justify-between items-center">
-                <Button>-</Button>
-
-                <div>1</div>
-
-                <Button>+</Button>
-              </div>
-              <Select placeholder="Add ons">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-              <Select placeholder="Size">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-              </Select>
-            </div>
-            <div className="text-lg font-bold">600$</div>
-          </div>
-        </Box>
-      </div>
-      <HStack spacing="5px">
-        <Box p={"4"} fontWeight={"bold"} w={"fit-content"}>
-          Total: 600$
-        </Box>
-        <Spacer />
-        <Box as="button" borderRadius="md" bg="#ff5841" color="white" h={10}>
-          Send Order
-        </Box>
-      </HStack>
+                  <Button size={"sm"}>+</Button>
+                </Flex>
+                <Select placeholder="Add ons" size={"sm"} mt={"2"}>
+                  <option value="option1">Option 1</option>
+                  <option value="option2">Option 2</option>
+                  <option value="option3">Option 3</option>
+                </Select>
+              </Box>
+              <Spacer />
+              <Text fontWeight={"bold"}>600$</Text>
+            </Flex>
+          </Box>
+        ))}
+      </Box>
+      <Box p={"6"} borderTop={"1px"} h={"10vh"}>
+        <HStack spacing="1">
+          <Box fontWeight={"bold"} w={"fit-content"}>
+            Total: 600$
+          </Box>
+          <Spacer />
+          <Box
+            as="button"
+            borderRadius="md"
+            bg="#ff5841"
+            color="white"
+            h={10}
+            p={"2"}
+          >
+            Send Order
+          </Box>
+        </HStack>
+      </Box>
     </Box>
   );
 };

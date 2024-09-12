@@ -17,12 +17,28 @@ import {
 
 type Props = {
   name: string;
-  size: string;
+  size: {
+    sizeName: string;
+    ingredients: {
+      name: string;
+      properties: {
+        quantity: number;
+        unit: string;
+      };
+    }[];
+    preparationTime: number;
+    sellingPrice: number;
+    addOns: {
+      name: string;
+      quantity: number;
+      unit: string;
+    }[];
+  }[];
   image: string;
-  price: number;
+  onClick: () => void;
 };
 
-const CustomCard = ({ name, size, image, price}: Props) => {
+const CustomCard = ({ name, size, image, onClick }: Props) => {
   return (
     <Card
       maxW="sm"
@@ -31,25 +47,24 @@ const CustomCard = ({ name, size, image, price}: Props) => {
       bg="white"
       borderRadius="lg"
       boxShadow="md"
+      onClick={onClick}
     >
       <CardBody p={"2"}>
         <Image src={image} alt={name} borderRadius="lg" h="120px" w="250px" />
         <Stack mt="2" spacing="1">
-          <Heading size="md" fontWeight={"semibold"} >
+          <Heading size="md" fontWeight={"semibold"}>
             {name}
           </Heading>
-          <Text color="black" fontSize="md">
-            The Best cheese burger you will ever have
-          </Text>
-          <Flex>
-          <Text color="#ff5841" fontSize="md" >
-            {price}
-          </Text>
-          <Spacer />
-          <Text color="#ff5841" fontSize="md" >
-            {size}
-          </Text>
-          </Flex>
+          {size.map((s) => (
+            <Flex key={s.sizeName} justify="space-between" align="center">
+              <Text color="#ff5841" fontSize="md">
+                {s.sizeName}
+              </Text>
+              <Text color="#ff5841" fontSize="md">
+                ${s.sellingPrice}
+              </Text>
+            </Flex>
+          ))}
         </Stack>
       </CardBody>
     </Card>
