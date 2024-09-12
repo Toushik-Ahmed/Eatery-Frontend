@@ -10,7 +10,6 @@ import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import DropDown from '../customComponents/DropDown';
 import Tablecomponent from '../customComponents/Table';
-import { CiEdit } from "react-icons/ci";
 
 interface Props {}
 
@@ -27,7 +26,6 @@ function IngredientsTable({}: Props) {
     'NewStock',
     'expiarydate',
     'IncomingStock',
-    'Edit',
     'Delete',
   ];
 

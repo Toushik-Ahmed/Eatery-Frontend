@@ -1,7 +1,6 @@
 'use client';
 import {
   Button,
-  Popover,
   Table,
   TableContainer,
   Tbody,
@@ -12,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 
 import { MdDeleteOutline } from 'react-icons/md';
+import PopComponent from './PopComponent';
 
 type Ingredient = {
   Name: string;
@@ -56,9 +56,9 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
                 <Td>{ingredient.NewStock}</Td>
                 <Td>{ingredient.expiarydate}</Td>
                 <Td>{ingredient.IncomingStock}</Td>
-                <Td>
-                  <Popover />
-                </Td>
+                {/* <Td>
+                 <PopComponent/>
+                </Td> */}
                 <Td>
                   <Button colorScheme="red">
                     <MdDeleteOutline />

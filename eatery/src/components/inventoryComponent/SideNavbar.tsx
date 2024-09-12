@@ -15,7 +15,7 @@ const SideNavbar = () => {
         </div>
 
         <div className="flex gap-4  items-center">
-          <DropDown actions="User Name" items={items} />
+          <DropDown selectLabel="User Name" items={items} />
         </div>
       </div>
       <div>
@@ -28,7 +28,7 @@ const SideNavbar = () => {
               Ingredient
             </li>
           </Link>
-          <Link href="#">
+          <Link href="/Inventory/addIngredients">
             <li className="flex items-center gap-1 p-2 rounded-lg   hover:bg-[#1D1842]">
               <IoIosAddCircleOutline />
               Add
