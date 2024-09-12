@@ -1,4 +1,5 @@
 import IngredientsTable from '@/components/inventoryComponent/IngredientsTable';
+import SideNavbar from '@/components/inventoryComponent/SideNavbar';
 
 type Props = {};
 

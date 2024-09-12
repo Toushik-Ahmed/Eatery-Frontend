@@ -22,7 +22,7 @@ const SideNavbar = () => {
         <div className="font-bold text-xl mt-4 p-2">Inventory</div>
         <hr />
         <ul className="flex flex-col gap-4 text-white mt-10 p-2 text-lg">
-          <Link href="Inventory">
+          <Link href="/Inventory">
             <li className="flex items-center gap-1 p-2 rounded-lg   hover:bg-[#1D1842] ">
               <IoMdBook />
               Ingredient
@@ -34,7 +34,7 @@ const SideNavbar = () => {
               Add
             </li>
           </Link>
-          <Link href="#">
+          <Link href="/Inventory/order">
             <li className="flex items-center gap-1 p-2 rounded-lg   hover:bg-[#1D1842]">
               <BsCart /> Order
             </li>
