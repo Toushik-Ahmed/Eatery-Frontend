@@ -3,17 +3,17 @@ import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
 import { IoChevronDownCircleOutline } from 'react-icons/io5';
 
 type Props = {
-  actions: string;
+  selectLabel: string;
   items: string[];
   onSelect?: (value: string) => void;
 };
 
-function DropDown({ items, actions, onSelect }: Props) {
+function DropDown({ items, selectLabel, onSelect }: Props) {
   return (
     <div className="w-fit">
       <Menu>
         <MenuButton as={Button} rightIcon={<IoChevronDownCircleOutline />}>
-          {actions}
+          {selectLabel}
         </MenuButton>
         <MenuList
           p={0}
