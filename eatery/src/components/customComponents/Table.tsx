@@ -1,5 +1,7 @@
 'use client';
 import {
+  Button,
+  Popover,
   Table,
   TableContainer,
   Tbody,
@@ -8,6 +10,8 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+
+import { MdDeleteOutline } from 'react-icons/md';
 
 type Ingredient = {
   Name: string;
@@ -52,6 +56,14 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
                 <Td>{ingredient.NewStock}</Td>
                 <Td>{ingredient.expiarydate}</Td>
                 <Td>{ingredient.IncomingStock}</Td>
+                <Td>
+                  <Popover />
+                </Td>
+                <Td>
+                  <Button colorScheme="red">
+                    <MdDeleteOutline />
+                  </Button>
+                </Td>
               </Tr>
             ))}
           </Tbody>
