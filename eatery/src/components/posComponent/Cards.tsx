@@ -3,7 +3,15 @@
 import React, { useEffect, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
-import { Box, Button, Grid, HStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  HStack,
+  Spacer,
+  Text,
+} from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch } from "@/redux/store";
@@ -65,8 +73,13 @@ const Cards = (props: Props) => {
           preparationTime: 15,
           sellingPrice: 9.99,
           addOns: [
-            { name: "Extra Cheese", quantity: 1, unit: "slice" , addonPrice: 3.00},
-            { name: "Bacon", quantity: 2, unit: "strips" , addonPrice: 3.00},
+            {
+              name: "Extra Cheese",
+              quantity: 1,
+              unit: "slice",
+              addonPrice: 3.0,
+            },
+            { name: "Bacon", quantity: 2, unit: "strips", addonPrice: 3.0 },
           ],
         },
         {
@@ -81,7 +94,14 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 12,
           sellingPrice: 7.99,
-          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice" , addonPrice: 3.00}],
+          addOns: [
+            {
+              name: "Extra Cheese",
+              quantity: 1,
+              unit: "slice",
+              addonPrice: 3.0,
+            },
+          ],
         },
         {
           sizeName: "Small",
@@ -92,7 +112,14 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 10,
           sellingPrice: 5.99,
-          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf", addonPrice: 3.00 }],
+          addOns: [
+            {
+              name: "Extra Lettuce",
+              quantity: 1,
+              unit: "leaf",
+              addonPrice: 3.0,
+            },
+          ],
         },
       ],
     },
@@ -122,8 +149,13 @@ const Cards = (props: Props) => {
           preparationTime: 15,
           sellingPrice: 9.99,
           addOns: [
-            { name: "Extra Cheese", quantity: 1, unit: "slice", addonPrice: 3.00 },
-            { name: "Bacon", quantity: 2, unit: "strips", addonPrice: 3.00 },
+            {
+              name: "Extra Cheese",
+              quantity: 1,
+              unit: "slice",
+              addonPrice: 3.0,
+            },
+            { name: "Bacon", quantity: 2, unit: "strips", addonPrice: 3.0 },
           ],
         },
         {
@@ -138,7 +170,14 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 12,
           sellingPrice: 7.99,
-          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice", addonPrice: 3.00 }],
+          addOns: [
+            {
+              name: "Extra Cheese",
+              quantity: 1,
+              unit: "slice",
+              addonPrice: 3.0,
+            },
+          ],
         },
         {
           sizeName: "Small",
@@ -149,7 +188,14 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 10,
           sellingPrice: 5.99,
-          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf", addonPrice: 3.00 }],
+          addOns: [
+            {
+              name: "Extra Lettuce",
+              quantity: 1,
+              unit: "leaf",
+              addonPrice: 3.0,
+            },
+          ],
         },
       ],
     },
@@ -176,8 +222,7 @@ const Cards = (props: Props) => {
       <Text py={"6"} fontSize={"2xl"} fontWeight={"semibold"}>
         Order Management
       </Text>
-
-      <div className="flex justify-between">
+      <Flex>
         <Box
           borderWidth="1px"
           borderRadius="md"
@@ -186,91 +231,82 @@ const Cards = (props: Props) => {
           h={"90vh"}
           overflow={"auto"}
         >
-          <div>
-            <div className="flex justify-center">
-              <Box
-                w={"fit-content"}
-                mt={"6"}
-                fontSize={"xl"}
-                fontWeight={"semibold"}
-              >
-                <HStack spacing={6}>
-                  <Button
-                    bg={mealTime === "All Items" ? "#ff5841" : "white"}
-                    textColor={mealTime === "All Items" ? "white" : "black"}
-                    onClick={() => setMealTime("All Items")}
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                  >
-                    All Items
-                  </Button>
+          <Flex justifyContent={"center"}>
+            <Box mt={"6"} fontSize={"xl"} fontWeight={"semibold"}>
+              <HStack spacing={6}>
+                <Button
+                  bg={mealTime === "All Items" ? "#ff5841" : "white"}
+                  textColor={mealTime === "All Items" ? "white" : "black"}
+                  onClick={() => setMealTime("All Items")}
+                  _hover={{ background: "#ff5841", textColor: "white" }}
+                >
+                  All Items
+                </Button>
 
-                  <Button
-                    bg={mealTime === "All Day" ? "#ff5841" : "white"}
-                    textColor={mealTime === "All Day" ? "white" : "black"}
-                    onClick={() => setMealTime("All Day")}
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                  >
-                    All Day
-                  </Button>
+                <Button
+                  bg={mealTime === "All Day" ? "#ff5841" : "white"}
+                  textColor={mealTime === "All Day" ? "white" : "black"}
+                  onClick={() => setMealTime("All Day")}
+                  _hover={{ background: "#ff5841", textColor: "white" }}
+                >
+                  All Day
+                </Button>
 
-                  <Button
-                    bg={mealTime === "Breakfast" ? "#ff5841" : "white"}
-                    textColor={mealTime === "Breakfast" ? "white" : "black"}
-                    onClick={() => setMealTime("Breakfast")}
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                  >
-                    Breakfast
-                  </Button>
+                <Button
+                  bg={mealTime === "Breakfast" ? "#ff5841" : "white"}
+                  textColor={mealTime === "Breakfast" ? "white" : "black"}
+                  onClick={() => setMealTime("Breakfast")}
+                  _hover={{ background: "#ff5841", textColor: "white" }}
+                >
+                  Breakfast
+                </Button>
 
-                  <Button
-                    bg={mealTime === "Lunch" ? "#ff5841" : "white"}
-                    textColor={mealTime === "Lunch" ? "white" : "black"}
-                    onClick={() => setMealTime("Lunch")}
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                  >
-                    Lunch
-                  </Button>
+                <Button
+                  bg={mealTime === "Lunch" ? "#ff5841" : "white"}
+                  textColor={mealTime === "Lunch" ? "white" : "black"}
+                  onClick={() => setMealTime("Lunch")}
+                  _hover={{ background: "#ff5841", textColor: "white" }}
+                >
+                  Lunch
+                </Button>
 
-                  <Button
-                    bg={mealTime === "Dinner" ? "#ff5841" : "white"}
-                    textColor={mealTime === "Dinner" ? "white" : "black"}
-                    onClick={() => setMealTime("Dinner")}
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                  >
-                    Dinner
-                  </Button>
-                </HStack>
-              </Box>
-            </div>
-
-            <div className="ml-20 space-y-8">
-              {categories.map((category) => (
-                <div key={category} className="space-y-4">
-                  <div className="mt-5 flex justify-center text-2xl font-semibold w-fit text-[#ff5841]">
-                    {category}
-                  </div>
-                  <Grid templateColumns="repeat(6, 0fr)" gap={6}>
-                    {availableItems
-                      .filter((item) => item.category === category)
-                      .map((item) => (
-                        <CustomCard
-                          key={`${item.id}`}
-                          name={item.name}
-                          size={item.size}
-                          image={item.image}
-                          onClick={() => handleSubmit(item)}
-                        />
-                      ))}
-                  </Grid>
-
+                <Button
+                  bg={mealTime === "Dinner" ? "#ff5841" : "white"}
+                  textColor={mealTime === "Dinner" ? "white" : "black"}
+                  onClick={() => setMealTime("Dinner")}
+                  _hover={{ background: "#ff5841", textColor: "white" }}
+                >
+                  Dinner
+                </Button>
+              </HStack>
+            </Box>
+          </Flex>
+          <Box>
+            {categories.map((category) => (
+              <div key={category} className="space-y-4">
+                <div className="mt-5 flex justify-center text-2xl font-semibold w-fit text-[#ff5841]">
+                  {category}
                 </div>
-              ))}
-            </div>
-          </div>
+                <Grid templateColumns="repeat(6, 0fr)" gap={6}>
+                  {availableItems
+                    .filter((item) => item.category === category)
+                    .map((item) => (
+                      <CustomCard
+                        key={`${item.id}`}
+                        name={item.name}
+                        size={item.size}
+                        image={item.image}
+                        onClick={() => handleSubmit(item)}
+                      />
+                    ))}
+                </Grid>
+              </div>
+            ))}
+          </Box>
         </Box>
-
+        <Spacer />
         <OrderSummery />
-      </div>
+      </Flex>
     </Box>
   );
 };
