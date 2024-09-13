@@ -10,6 +10,7 @@ import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import DropDown from '../customComponents/DropDown';
 import Tablecomponent from '../customComponents/Table';
+import Pagination from '../../shared/components/Pagination/pagination';
 
 interface Props {}
 
@@ -118,6 +119,9 @@ function IngredientsTable({}: Props) {
         </div>
       </div>
       <Tablecomponent tableHead={th} ingredients={ingredients} />
+      <Pagination totalData={100} onPageChange={(ev) => {
+        console.log(ev)
+      }}></Pagination>
     </div>
   );
 }
