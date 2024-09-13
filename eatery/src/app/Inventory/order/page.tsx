@@ -1,14 +1,13 @@
-import OrderComponent from '@/components/inventoryComponent/OrderComponent'
-import React from 'react'
+import OrderComponent from '@/components/inventoryComponent/OrderComponent';
 
-type Props = {}
+type Props = {};
 
 const page = (props: Props) => {
   return (
-    <div>
-      <OrderComponent/>
+    <div className="w-fit flex justify-center items-center text-center">
+      <OrderComponent />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

@@ -6,11 +6,10 @@ type Props = {};
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-    <div className='flex gap-4'>
-    <SideNavbar />
-    <div>{children}</div>
-    </div>
-
+      <div className="flex gap-4">
+        <SideNavbar />
+        <div className="w-full  ">{children}</div>
+      </div>
     </>
   );
 }
