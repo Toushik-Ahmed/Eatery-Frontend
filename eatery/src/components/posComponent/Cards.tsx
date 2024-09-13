@@ -32,6 +32,7 @@ interface Items {
       name: string;
       quantity: number;
       unit: string;
+      addonPrice: number;
     }[];
   }[];
 }
@@ -64,8 +65,8 @@ const Cards = (props: Props) => {
           preparationTime: 15,
           sellingPrice: 9.99,
           addOns: [
-            { name: "Extra Cheese", quantity: 1, unit: "slice" },
-            { name: "Bacon", quantity: 2, unit: "strips" },
+            { name: "Extra Cheese", quantity: 1, unit: "slice" , addonPrice: 3.00},
+            { name: "Bacon", quantity: 2, unit: "strips" , addonPrice: 3.00},
           ],
         },
         {
@@ -80,7 +81,7 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 12,
           sellingPrice: 7.99,
-          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice" }],
+          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice" , addonPrice: 3.00}],
         },
         {
           sizeName: "Small",
@@ -91,7 +92,7 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 10,
           sellingPrice: 5.99,
-          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf" }],
+          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf", addonPrice: 3.00 }],
         },
       ],
     },
@@ -121,8 +122,8 @@ const Cards = (props: Props) => {
           preparationTime: 15,
           sellingPrice: 9.99,
           addOns: [
-            { name: "Extra Cheese", quantity: 1, unit: "slice" },
-            { name: "Bacon", quantity: 2, unit: "strips" },
+            { name: "Extra Cheese", quantity: 1, unit: "slice", addonPrice: 3.00 },
+            { name: "Bacon", quantity: 2, unit: "strips", addonPrice: 3.00 },
           ],
         },
         {
@@ -137,7 +138,7 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 12,
           sellingPrice: 7.99,
-          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice" }],
+          addOns: [{ name: "Extra Cheese", quantity: 1, unit: "slice", addonPrice: 3.00 }],
         },
         {
           sizeName: "Small",
@@ -148,7 +149,7 @@ const Cards = (props: Props) => {
           ],
           preparationTime: 10,
           sellingPrice: 5.99,
-          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf" }],
+          addOns: [{ name: "Extra Lettuce", quantity: 1, unit: "leaf", addonPrice: 3.00 }],
         },
       ],
     },
@@ -262,21 +263,6 @@ const Cards = (props: Props) => {
                       ))}
                   </Grid>
 
-                  {/* <Grid templateColumns="repeat(6, 0fr)" gap={6}>
-                    {availableItems
-                      .filter((item) => item.category === category)
-                      .map((item) =>
-                        item.size.map((sizeObj, index) => (
-                          <CustomCard
-                            key={`${item.id}-${index}`}
-                            name={item.name}
-                            size={sizeObj.sizeName}
-                            price={sizeObj.sellingPrice}
-                            image={item.image}
-                          />
-                        ))
-                      )}
-                  </Grid> */}
                 </div>
               ))}
             </div>
