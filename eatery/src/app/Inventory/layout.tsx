@@ -8,7 +8,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <>
     <div className='flex gap-4'>
     <SideNavbar />
-    <div>{children}</div>
+    <div className='w-full'>{children}</div>
     </div>
 
     </>

@@ -94,7 +94,7 @@ function IngredientsTable({}: Props) {
     <div className="w-full">
       <div className="flex justify-between mb-8">
         <p className="font-bold text-lg">Ingredient-Lists</p>
-        <div className="flex gap-4">
+        <div className="flex gap-4 mr-10">
           <InputGroup w={'8vw'} borderRadius="28px">
             <Input
               placeholder="Search"

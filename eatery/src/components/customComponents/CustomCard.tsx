@@ -13,7 +13,9 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-type Props = {};
+type Props = {
+  
+};
 
 const CustomCard = (props: Props) => {
   return (
