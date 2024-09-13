@@ -10,6 +10,7 @@ import {
   Grid,
   HStack,
   Spacer,
+  Stack,
   Text,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
@@ -283,24 +284,32 @@ const Cards = (props: Props) => {
           </Flex>
           <Box>
             {categories.map((category) => (
-              <div key={category} className="space-y-4">
-                <div className="mt-5 flex justify-center text-2xl font-semibold w-fit text-[#ff5841]">
-                  {category}
-                </div>
-                <Grid templateColumns="repeat(6, 0fr)" gap={6}>
-                  {availableItems
-                    .filter((item) => item.category === category)
-                    .map((item) => (
-                      <CustomCard
-                        key={`${item.id}`}
-                        name={item.name}
-                        size={item.size}
-                        image={item.image}
-                        onClick={() => handleSubmit(item)}
-                      />
-                    ))}
-                </Grid>
-              </div>
+              <Box mx={"8"} mt={"6"}>
+                <Stack spacing={"6"}>
+                  <Text
+                    fontSize={"2xl"}
+                    fontWeight={"semiBold"}
+                    w={"fit"}
+                    textColor={"#ff5841"}
+                  >
+                    {category}
+                  </Text>
+
+                  <Grid templateColumns="repeat(6, 0fr)" gap={6}>
+                    {availableItems
+                      .filter((item) => item.category === category)
+                      .map((item) => (
+                        <CustomCard
+                          key={`${item.id}`}
+                          name={item.name}
+                          size={item.size}
+                          image={item.image}
+                          onClick={() => handleSubmit(item)}
+                        />
+                      ))}
+                  </Grid>
+                </Stack>
+              </Box>
             ))}
           </Box>
         </Box>

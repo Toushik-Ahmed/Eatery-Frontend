@@ -28,7 +28,6 @@ const OrderSummery = (props: Props) => {
 
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
 
- 
   const calculateTotalPrice = () => {
     const newTotalPrices: { [key: number]: number } = {};
 
@@ -62,7 +61,6 @@ const OrderSummery = (props: Props) => {
     }));
   };
 
-
   const handleAddonChange = (
     itemId: number,
     addonName: string,
@@ -81,7 +79,6 @@ const OrderSummery = (props: Props) => {
     });
   };
 
-  
   const handleQuantityChange = (
     itemId: number,
     action: "increment" | "decrement"
@@ -99,7 +96,6 @@ const OrderSummery = (props: Props) => {
       };
     });
   };
-
 
   useEffect(() => {
     calculateTotalPrice();
