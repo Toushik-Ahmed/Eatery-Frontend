@@ -1,5 +1,6 @@
-'use client'
+'use client';
 import {
+  Button,
   Table,
   TableContainer,
   Tbody,
@@ -9,38 +10,63 @@ import {
   Tr,
 } from '@chakra-ui/react';
 
-type Props = {
-  tableHead: string[];
+import { MdDeleteOutline } from 'react-icons/md';
+import PopComponent from './PopComponent';
+
+type Ingredient = {
+  Name: string;
+  UOM: string;
+  CurrentStock: number;
+  UnitCost: number;
+  OrderPoint: number;
+  Prevstock: number;
+  Expiarydate: string;
+  NewStock: number;
+  expiarydate: string;
+  IncomingStock: string;
 };
 
-const Tablecomponent = ({ tableHead }: Props) => {
+type Props = {
+  tableHead: string[];
+  ingredients: Ingredient[];
+};
+
+const Tablecomponent = ({ tableHead, ingredients }: Props) => {
   return (
-    <div className='flex justify-center'>
+    <div className="flex justify-center">
       <TableContainer>
         <Table size="sm">
-          <Thead display={'flex'}>
-            {tableHead.map(el=><Tr>
-              <Th>{el}</Th>
-            </Tr>)}
-
+          <Thead>
+            <Tr>
+              {tableHead.map((el, id) => (
+                <Th key={id}>{el}</Th>
+              ))}
+            </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              <Td>inches</Td>
-            </Tr>
-            <Tr>
-              <Td>centimetres</Td>
-            </Tr>
-            <Tr>
-              <Td>yards</Td>
-            </Tr>
+            {ingredients.map((ingredient, index) => (
+              <Tr key={index}>
+                <Td>{ingredient.Name}</Td>
+                <Td>{ingredient.UOM}</Td>
+                <Td>{ingredient.CurrentStock}</Td>
+                <Td>{ingredient.UnitCost}</Td>
+                <Td>{ingredient.OrderPoint}</Td>
+                <Td>{ingredient.Prevstock}</Td>
+                <Td>{ingredient.Expiarydate}</Td>
+                <Td>{ingredient.NewStock}</Td>
+                <Td>{ingredient.expiarydate}</Td>
+                <Td>{ingredient.IncomingStock}</Td>
+                {/* <Td>
+                 <PopComponent/>
+                </Td> */}
+                <Td>
+                  <Button colorScheme="red">
+                    <MdDeleteOutline />
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
           </Tbody>
-          {/* <Tfoot>
-            <Tr>
-              <Th>To convert</Th>
-
-            </Tr>
-          </Tfoot> */}
         </Table>
       </TableContainer>
     </div>
