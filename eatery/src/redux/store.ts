@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import {OrderSlice} from './Pos/OrderSlice';
+import {PlaceOrderSlice} from './Pos/PlaceOrderSlice';
 
 export const store = configureStore({
   reducer: {
-    orderInfo : OrderSlice.reducer
+    orderInfo : OrderSlice.reducer,
+    placeOrder: PlaceOrderSlice.reducer
   },
 });
 
