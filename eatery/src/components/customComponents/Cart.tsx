@@ -40,13 +40,13 @@ export function DrawerExample({
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
   const [units, setUnits] = useState<string[]>(
-    Array(selectedItems.length).fill('')
-  );
+   [])
+  ;
   const [deliveryDates, setDeliveryDates] = useState<string[]>(
-    Array(selectedItems.length).fill(format(new Date(), 'yyyy-MM-dd'))
+    []
   );
   const [quantities, setQuantities] = useState<number[]>(
-    Array(selectedItems.length).fill(1)
+   []
   );
   const [checkoutData, setCheckoutData] = useState<CartData[]>([]);
 
