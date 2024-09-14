@@ -23,20 +23,42 @@ export interface Items {
 
 type Props = {
   handleClick: () => void;
+  handleSelectItems:()=>void
 };
 
 const VendorItems = ({ handleClick }: Props) => {
   const [selectedItems, setSelectedItems] = useState<Items[]>([]);
+  const [clickedItems, setClickedItems] = useState<number[]>([]);
 
-  const handleSelectItems = (newItem: Items) => {
-    setSelectedItems((prev) => [...prev, newItem]);
+  const handleSelectItems = (newItem: Items, index: number) => {
+    if (clickedItems.includes(index)) {
+      // Deselect if already selected
+      setSelectedItems((prev) => prev.filter((item) => item !== newItem));
+      setClickedItems((prev) => prev.filter((i) => i !== index));
+    } else {
+      // Select if not already selected
+      setSelectedItems((prev) => [...prev, newItem]);
+      setClickedItems((prev) => [...prev, index]);
+    }
   };
 
   const removeItem = (index: number) => {
     setSelectedItems((prev) => prev.filter((_, i) => i !== index));
+    setClickedItems((prev) => prev.filter((i) => i !== index)); // Unmark the item
   };
 
-  // Log state changes after update using useEffect
+  // Clear all selections and reset button state
+  const clearSelections = () => {
+    setSelectedItems([]);
+    setClickedItems([]);
+  };
+
+  // Simulate closing the cart or checking out
+  const handleCheckoutOrClose = () => {
+    clearSelections();
+    handleClick(); //
+  };
+
   useEffect(() => {
     console.log('Selected items updated:', selectedItems);
   }, [selectedItems]);
@@ -68,6 +90,7 @@ const VendorItems = ({ handleClick }: Props) => {
       Cost: 60,
       Available: 100,
     },
+
   ];
 
   return (
@@ -80,19 +103,20 @@ const VendorItems = ({ handleClick }: Props) => {
             h="auto"
             minW="auto"
             minH="auto"
+            bg="white"
             _hover={{ bg: '#ff5841' }}
-            onClick={() => handleClick()}
+            onClick={handleCheckoutOrClose}
           >
-            {' '}
             <FaLongArrowAltLeft />
           </Button>
         </div>
         Back
       </div>
       <div className="flex justify-between">
-        <div className="text-3xl font-bold mb-10 ">List of Items</div>
+        <div className="text-3xl font-bold mb-10">List of Items</div>
         <div className="mr-10">
           <DrawerExample
+            setSelectedItems={setSelectedItems}
             selectedItems={selectedItems}
             removeItem={removeItem}
           />
@@ -121,8 +145,9 @@ const VendorItems = ({ handleClick }: Props) => {
                     h="auto"
                     minW="auto"
                     minH="auto"
+                    bg={clickedItems.includes(id) ? '#ff5841' : 'white'} // Change bg based on clicked state
                     _hover={{ bg: '#ff5841' }}
-                    onClick={() => handleSelectItems(el)}
+                    onClick={() => handleSelectItems(el, id)}
                   >
                     <IoBagAddOutline />
                   </Button>
@@ -132,7 +157,14 @@ const VendorItems = ({ handleClick }: Props) => {
           </Tbody>
         </Table>
       </TableContainer>
-      <Pagination />
+      <div className="flex justify-center mt-4">
+        <Pagination
+          totalData={100}
+          onPageChange={(ev) => {
+            console.log(ev);
+          }}
+        ></Pagination>
+      </div>
     </div>
   );
 };

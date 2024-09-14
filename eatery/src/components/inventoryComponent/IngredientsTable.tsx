@@ -119,12 +119,14 @@ function IngredientsTable({}: Props) {
         </div>
       </div>
       <Tablecomponent tableHead={th} ingredients={ingredients} />
-      <Pagination
-        totalData={100}
-        onPageChange={(ev) => {
-          console.log(ev);
-        }}
-      ></Pagination>
+      <div className='flex justify-center mt-4'>
+        <Pagination
+          totalData={100}
+          onPageChange={(ev) => {
+            console.log(ev);
+          }}
+        ></Pagination>
+      </div>
     </div>
   );
 }

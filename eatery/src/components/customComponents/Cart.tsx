@@ -10,6 +10,7 @@ import {
   Input,
   Select,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
@@ -19,16 +20,35 @@ import { Items } from '../inventoryComponent/VendorItems';
 type DrawerProps = {
   selectedItems: Items[];
   removeItem: (index: number) => void;
+  setSelectedItems: React.Dispatch<React.SetStateAction<Items[]>>;
 };
 
-export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
+export interface CartData {
+  Name: string;
+  Unit: string;
+  Quantity: number;
+  DeliveryDate: string;
+}
+
+export function DrawerExample({
+  selectedItems,
+  removeItem,
+  setSelectedItems,
+}: DrawerProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
-  // Quantity state for each item
+  const [units, setUnits] = useState<string[]>(
+    Array(selectedItems.length).fill('')
+  );
+  const [deliveryDates, setDeliveryDates] = useState<string[]>(
+    Array(selectedItems.length).fill(format(new Date(), 'yyyy-MM-dd'))
+  );
   const [quantities, setQuantities] = useState<number[]>(
     Array(selectedItems.length).fill(1)
   );
+  const [checkoutData, setCheckoutData] = useState<CartData[]>([]);
 
   // Handle quantity change
   const handleQuantityChange = (index: number, value: number) => {
@@ -37,9 +57,62 @@ export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
     setQuantities(newQuantities);
   };
 
+  // Handle unit change
+  const handleUnitChange = (index: number, value: string) => {
+    const newUnits = [...units];
+    newUnits[index] = value;
+    setUnits(newUnits);
+  };
+
+  // Handle delivery date change
+  const handleDeliveryDateChange = (index: number, value: string) => {
+    const newDates = [...deliveryDates];
+    newDates[index] = value;
+    setDeliveryDates(newDates);
+  };
+
+  // Checkout function
+  const handleCheckout = () => {
+    const cartData = selectedItems.map((item, index) => ({
+      Name: item.Name,
+      Unit: units[index],
+      Quantity: quantities[index],
+      DeliveryDate: deliveryDates[index],
+    }));
+
+    setCheckoutData(cartData);
+    console.log('Checkout data:', cartData);
+
+    // Display toast message
+    toast({
+      title: 'Order placed.',
+      status: 'success',
+      position: 'top-right',
+      duration: 3000, // 3 seconds
+      isClosable: true,
+    });
+
+    // Clear the cart after checkout
+    setSelectedItems([]);
+
+    // Clear all input fields
+    setCheckoutData([]);
+    setUnits(Array(selectedItems.length).fill(''));
+    setQuantities(Array(selectedItems.length).fill(1));
+    setDeliveryDates(
+      Array(selectedItems.length).fill(format(new Date(), 'yyyy-MM-dd'))
+    );
+  };
+
+  // Clear cart on cancel
+  const handleCancel = () => {
+    setSelectedItems([]);
+    onClose();
+  };
+
   // Calculate total cost of all items
   const totalCost = selectedItems.reduce(
-    (acc, item, index) => acc + item.Cost * quantities[index],
+    (acc, item, index) => acc + item.Cost * (quantities[index] || 1),
     0
   );
 
@@ -69,12 +142,17 @@ export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
                     <strong>Name:</strong> {item.Name}
                   </p>
                   <p>
-                    <strong>Cost(p/u):</strong> {item.Cost} Taka
+                    <strong>Cost (p/u):</strong> {item.Cost} Taka
                   </p>
 
                   <div className="my-2">
                     <label>Unit: </label>
-                    <Select placeholder="Select unit" size="sm">
+                    <Select
+                      placeholder="Select unit"
+                      size="sm"
+                      value={units[index] || ''}
+                      onChange={(e) => handleUnitChange(index, e.target.value)}
+                    >
                       <option value="kg">K.G</option>
                       <option value="liter">Liter</option>
                     </Select>
@@ -86,6 +164,7 @@ export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
                       type="number"
                       size="sm"
                       min={1}
+                      defaultValue={1}
                       value={quantities[index]}
                       onChange={(e) =>
                         handleQuantityChange(index, parseInt(e.target.value))
@@ -98,7 +177,11 @@ export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
                     <Input
                       type="date"
                       size="sm"
-                      min={format(new Date(), 'yyyy-MM-dd')} // Using date-fns to format the date
+                      min={format(new Date(), 'yyyy-MM-dd')}
+                      value={deliveryDates[index]}
+                      onChange={(e) =>
+                        handleDeliveryDateChange(index, e.target.value)
+                      }
                     />
                   </div>
                   <Button
@@ -111,8 +194,6 @@ export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
                 </div>
               ))
             )}
-
-            {/* Total Cost Section */}
             {selectedItems.length > 0 && (
               <div className="mt-4 font-bold text-lg">
                 <p>Total Cost: {totalCost} Taka</p>
@@ -121,10 +202,12 @@ export function DrawerExample({ selectedItems, removeItem }: DrawerProps) {
           </DrawerBody>
 
           <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={onClose}>
-              Close
+            <Button variant="outline" mr={3} onClick={handleCancel}>
+              Cancel
             </Button>
-            <Button colorScheme="blue">Checkout</Button>
+            <Button colorScheme="blue" onClick={handleCheckout}>
+              Checkout
+            </Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
