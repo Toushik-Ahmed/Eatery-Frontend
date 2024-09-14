@@ -50,19 +50,11 @@ const InventoryForm = (props: Props) => {
       p={6}
       bg="#FFFFF0"
       borderRadius="lg"
-      w={{ base: '100%', md: '80%', lg: '100%' }}
+      width={'fit-content'}
       boxShadow="lg"
       h="100%"
     >
-      {/* Header Section */}
-      {/* <Flex justify="flex-end">
-          <CloseButton />
-        </Flex> */}
-      <Flex align="center" mt={2} mb={2}>
-        <Box fontSize="2xl" fontWeight="bold">
-          Add Ingredients
-        </Box>
-      </Flex>
+      <Flex align="center" mt={2} mb={2}></Flex>
 
       <Image
         src="https://img.freepik.com/premium-vector/vector-menu-illustration-food-meat-meal-restaurant-popular-set-lunch-icon-dinner-snack_1013341-40254.jpg?w=100"

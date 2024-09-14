@@ -2,10 +2,13 @@
 import { useState } from 'react';
 import VendorCard from './VendorCard';
 import vendor from './assets/meatVendor.avif';
+import vegetable from './assets/vegetables-and-fruits-farmers-market.webp';
 
-type Props = {};
+type Props = {
+  handleClick: () => void;
+};
 
-const OrderComponent = (props: Props) => {
+const OrderComponent = ({ handleClick }: Props) => {
   const [ingredient, setIngredient] = useState('');
   const [quantity, setQuantity] = useState('');
   const [unit, setUnit] = useState('');
@@ -18,6 +21,7 @@ const OrderComponent = (props: Props) => {
       unit,
       alergens,
     };
+    console.log(orderForm); // for testing
   };
 
   const handleCancel = () => {
@@ -29,15 +33,24 @@ const OrderComponent = (props: Props) => {
 
   return (
     <div className="m-4">
-      <div className="font-semibold">Vendor-Lists</div>
+      <div className="font-semibold text-3xl mb-10">Vendor-Lists</div>
 
-      <div className="grid grid-cols-3 gap-4 m-4 ">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
         <VendorCard
           src={vendor.src}
           alt="vendorPic"
           Email="meat24@gmail.com"
           Phone="0187909092"
           heading="Meat-Vendor"
+          handleClick={handleClick}
+        />
+        <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
         />
         <VendorCard
           src={vendor.src}
@@ -45,6 +58,15 @@ const OrderComponent = (props: Props) => {
           Email="meat24@gmail.com"
           Phone="0187909092"
           heading="Meat-Vendor"
+          handleClick={handleClick}
+        />
+        <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
         />
         <VendorCard
           src={vendor.src}
@@ -52,6 +74,15 @@ const OrderComponent = (props: Props) => {
           Email="meat24@gmail.com"
           Phone="0187909092"
           heading="Meat-Vendor"
+          handleClick={handleClick}
+        />
+        <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
         />
         <VendorCard
           src={vendor.src}
@@ -59,6 +90,15 @@ const OrderComponent = (props: Props) => {
           Email="meat24@gmail.com"
           Phone="0187909092"
           heading="Meat-Vendor"
+          handleClick={handleClick}
+        />
+        <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
         />
         <VendorCard
           src={vendor.src}
@@ -66,6 +106,15 @@ const OrderComponent = (props: Props) => {
           Email="meat24@gmail.com"
           Phone="0187909092"
           heading="Meat-Vendor"
+          handleClick={handleClick}
+        />
+        <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
         />
         <VendorCard
           src={vendor.src}
@@ -73,6 +122,15 @@ const OrderComponent = (props: Props) => {
           Email="meat24@gmail.com"
           Phone="0187909092"
           heading="Meat-Vendor"
+          handleClick={handleClick}
+        />
+        <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
         />
       </div>
     </div>

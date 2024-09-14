@@ -8,9 +8,9 @@ import {
 import { parse } from 'date-fns';
 import { useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
+import Pagination from '../../shared/components/Pagination/pagination';
 import DropDown from '../customComponents/DropDown';
 import Tablecomponent from '../customComponents/Table';
-import Pagination from '../../shared/components/Pagination/pagination';
 
 interface Props {}
 
@@ -19,14 +19,14 @@ function IngredientsTable({}: Props) {
   const th = [
     'Name',
     'UOM',
-    'CurrentStcok',
-    'UnitCost',
-    'OrderPoint',
-    'Prevstock',
-    'Expiarydate',
-    'NewStock',
-    'expiarydate',
-    'IncomingStock',
+    'Current-Stcok',
+    'Unit-Cost',
+    'Order-Point',
+    'Prev-Stock',
+    'Expiary-Date',
+    'New-Stock',
+    'expiary-Date',
+    'Incoming-Stock',
     'Delete',
   ];
 
@@ -93,8 +93,8 @@ function IngredientsTable({}: Props) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mb-8">
-        <p className="font-bold text-lg">Ingredient-Lists</p>
+      <div className="flex justify-between mb-10">
+        <p className="font-bold text-3xl">Ingredient-Lists</p>
         <div className="flex gap-4 mr-10">
           <InputGroup w={'8vw'} borderRadius="28px">
             <Input
@@ -119,9 +119,12 @@ function IngredientsTable({}: Props) {
         </div>
       </div>
       <Tablecomponent tableHead={th} ingredients={ingredients} />
-      <Pagination totalData={100} onPageChange={(ev) => {
-        console.log(ev)
-      }}></Pagination>
+      <Pagination
+        totalData={100}
+        onPageChange={(ev) => {
+          console.log(ev);
+        }}
+      ></Pagination>
     </div>
   );
 }

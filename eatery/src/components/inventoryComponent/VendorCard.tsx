@@ -14,9 +14,10 @@ type Props = {
   Phone: string;
   Email: string;
   heading: string;
+  handleClick:Function
 };
 
-const VendorCard = ({ src, alt, Phone, Email, heading }: Props) => {
+const VendorCard = ({ src, alt, Phone, Email, heading,handleClick }: Props) => {
   return (
     <Card
       w={'fit-content'}
@@ -52,7 +53,7 @@ const VendorCard = ({ src, alt, Phone, Email, heading }: Props) => {
           <Text color="black" fontSize="1rem">
             Email: {Email}
           </Text>
-          <Button bg="#ff5841" color="white">
+          <Button bg="#ff5841" color="white" onClick={()=>handleClick()}>
             Go
           </Button>
         </Stack>
