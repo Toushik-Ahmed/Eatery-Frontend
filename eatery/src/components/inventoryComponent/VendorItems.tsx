@@ -140,12 +140,12 @@ const VendorItems = ({ handleClick }: Props) => {
                 <Td>{el.Available}</Td>
                 <Td>
                   <Button
-                    p={0}
+                    p={2}
                     w="auto"
                     h="auto"
                     minW="auto"
                     minH="auto"
-                    bg={clickedItems.includes(id) ? '#ff5841' : 'white'} // Change bg based on clicked state
+                    bg={clickedItems.includes(id) ? '#6EC207' : 'white'} // Change bg based on clicked state
                     _hover={{ bg: '#ff5841' }}
                     onClick={() => handleSelectItems(el, id)}
                   >
