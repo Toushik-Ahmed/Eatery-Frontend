@@ -42,8 +42,8 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
   return (
     <Card
       maxW="sm"
-      h="26vh"
-      w="10vw"
+      h="40vh"
+      w="15vw"
       bg="white"
       borderRadius="lg"
       boxShadow="md"
@@ -56,14 +56,15 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
             {name}
           </Heading>
           {size.map((s) => (
-            <Flex key={s.sizeName} justify="space-between" align="center">
-              <Text color="#ff5841" fontSize="md">
-                {s.sizeName}
-              </Text>
-              <Text color="#ff5841" fontSize="md">
-                ${s.sellingPrice}
-              </Text>
-            </Flex>
+            
+              <Flex key={s.sizeName} justify="space-between" align="center">
+                <Text color="#ff5841" fontSize="md">
+                  {s.sizeName}
+                </Text>
+                <Text color="#ff5841" fontSize="md">
+                  ${s.sellingPrice}
+                </Text>
+              </Flex>
           ))}
         </Stack>
       </CardBody>
