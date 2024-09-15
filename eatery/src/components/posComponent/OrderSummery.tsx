@@ -1,6 +1,7 @@
 import { addPlaceOrderInfo } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
+import { RiDeleteBin6Fill } from "react-icons/ri";
 import {
   Button,
   Box,
@@ -16,31 +17,30 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { removeItemFromOrder } from "@/redux/Pos/OrderSlice";
 
 type Props = {};
 
 interface OrderDetails {
   table_no: number;
   menu_items: {
-    menu_item_details: {
-      itemName: string;
-      quantity: number;
-      selectedSize: string;
-      itemPrice: number;
-      ingredients: {
-        name: string;
-        properties: {
-          quantity: number;
-          unit: string;
-        };
-      }[];
-      addOns: {
-        name: string;
+    itemName: string;
+    quantity: number;
+    selectedSize: string;
+    itemPrice: number;
+    ingredients: {
+      name: string;
+      properties: {
         quantity: number;
         unit: string;
-        addonPrice: number;
-      }[];
-    };
+      };
+    }[];
+    addOns: {
+      name: string;
+      quantity: number;
+      unit: string;
+      addonPrice: number;
+    }[];
   }[];
   preparationTime: number;
   totalPrice: number;
@@ -169,6 +169,10 @@ const OrderSummery = (props: Props) => {
     });
   };
 
+  const handleDeleteItem = (itemId: number, index: number) => {
+    dispatch(removeItemFromOrder({ itemId, index }));
+  };
+
   useEffect(() => {
     calculateTotalPrice();
     calculatePreparationTime();
@@ -178,31 +182,29 @@ const OrderSummery = (props: Props) => {
     const orderDetails: OrderDetails = {
       table_no: 5,
       menu_items: listOfItems.orderedItems.map((item, index) => ({
-        menu_item_details: {
-          itemName: item.name,
-          quantity: quantities[`${item.id}-${index}`] || 1,
-          selectedSize: selectedSizes[`${item.id}-${index}`],
-          itemPrice: totalPrices[`${item.id}-${index}`] || 0,
-          ingredients:
-            item.size.find(
+        itemName: item.name,
+        quantity: quantities[`${item.id}-${index}`] || 1,
+        selectedSize: selectedSizes[`${item.id}-${index}`],
+        itemPrice: totalPrices[`${item.id}-${index}`] || 0,
+        ingredients:
+          item.size.find(
+            (s) => s.sizeName === selectedSizes[`${item.id}-${index}`]
+          )?.ingredients || [],
+        addOns:
+          selectedAddons[`${item.id}-${index}`]?.map((addonName) => {
+            const selectedSize = item.size.find(
               (s) => s.sizeName === selectedSizes[`${item.id}-${index}`]
-            )?.ingredients || [],
-          addOns:
-            selectedAddons[`${item.id}-${index}`]?.map((addonName) => {
-              const selectedSize = item.size.find(
-                (s) => s.sizeName === selectedSizes[`${item.id}-${index}`]
-              );
-              const addon = selectedSize?.addOns.find(
-                (addon) => addon.name === addonName
-              );
-              return {
-                name: addon?.name || "",
-                quantity: addon?.quantity || 0,
-                unit: addon?.unit || "",
-                addonPrice: addon?.addonPrice || 0,
-              };
-            }) || [],
-        },
+            );
+            const addon = selectedSize?.addOns.find(
+              (addon) => addon.name === addonName
+            );
+            return {
+              name: addon?.name || "",
+              quantity: addon?.quantity || 0,
+              unit: addon?.unit || "",
+              addonPrice: addon?.addonPrice || 0,
+            };
+          }) || [],
       })),
       preparationTime: preparationTime.maxPreparationTime,
       totalPrice: Object.values(totalPrices).reduce(
@@ -219,11 +221,11 @@ const OrderSummery = (props: Props) => {
       borderWidth="1px"
       borderRadius="md"
       bg={"#FFFFF6"}
-      w={"20vw"}
-      h={"90vh"}
+      w={["90vw", "70vw", "40vw", "20vw"]}
+      h={["70vh", "80vh", "85vh", "90vh"]}
     >
       <Box
-        h={"80vh"}
+        h={["60vh", "70vh", "75vh", "80vh"]}
         display={"flex"}
         flexDirection={"column"}
         alignItems={"center"}
@@ -235,8 +237,8 @@ const OrderSummery = (props: Props) => {
         {listOfItems.orderedItems.map((item, index) => (
           <Box
             key={`${item.id}-${index}`}
-            w={"19vw"}
-            p={"4"}
+            w={["85vw", "65vw", "45vw", "19vw"]}
+            p={["2", "3", "4"]}
             borderWidth="1px"
             borderRadius="md"
             borderColor={"gray-200"}
@@ -349,10 +351,20 @@ const OrderSummery = (props: Props) => {
                 </Flex>
               </Box>
             </Flex>
+            <Box
+              as="button"
+              borderRadius="md"
+              bg="white"
+              color="#ff5841"
+              mt={"2"}
+              onClick={() => handleDeleteItem(item.id, index)}
+            >
+              <Icon as={RiDeleteBin6Fill} />
+            </Box>
           </Box>
         ))}
       </Box>
-      <Box p={"6"} borderTop={"1px"} h={"10vh"}>
+      <Box p={"2"} borderTop={"1px"}>
         <HStack spacing="1">
           <Box>
             <Box>
@@ -372,7 +384,6 @@ const OrderSummery = (props: Props) => {
             borderRadius="md"
             bg="#ff5841"
             color="white"
-            h={10}
             p={"2"}
             onClick={handleSendOrder}
           >
