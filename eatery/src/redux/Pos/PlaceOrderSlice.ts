@@ -2,25 +2,23 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface OrderDetails {
   table_no: number;
   menu_items: {
-    menu_item_details: {
-      itemName: string;
-      quantity: number;
-      selectedSize: string;
-      itemPrice: number;
-      ingredients: {
-        name: string;
-        properties: {
-          quantity: number;
-          unit: string;
-        };
-      }[];
-      addOns: {
-        name: string;
+    itemName: string;
+    quantity: number;
+    selectedSize: string;
+    itemPrice: number;
+    ingredients: {
+      name: string;
+      properties: {
         quantity: number;
         unit: string;
-        addonPrice: number;
-      }[];
-    };
+      };
+    }[];
+    addOns: {
+      name: string;
+      quantity: number;
+      unit: string;
+      addonPrice: number;
+    }[];
   }[];
   preparationTime: number;
   totalPrice: number;

@@ -37,17 +37,24 @@ const initialState: ItemState = {
 };
 
 export const OrderSlice = createSlice({
-    name: "order",
-    initialState,
-    reducers: {
-      addOrderInfo: (
-        state,
-        action: PayloadAction<Item[]>
-      ) => {
-        state.orderedItems.push(...action.payload);
-      },
+  name: "order",
+  initialState,
+  reducers: {
+    addOrderInfo: (state, action: PayloadAction<Item[]>) => {
+      state.orderedItems.push(...action.payload);
     },
-  });
+    removeItemFromOrder: (
+      state,
+      action: PayloadAction<{ itemId: number; index: number }>
+    ) => {
+      const { itemId, index } = action.payload;
+
+      state.orderedItems = state.orderedItems.filter(
+        (item, i) => !(item.id === itemId && i === index)
+      );
+    },
+  },
+});
 
 export default OrderSlice.reducer;
-export const { addOrderInfo } = OrderSlice.actions;
+export const { addOrderInfo, removeItemFromOrder } = OrderSlice.actions;
