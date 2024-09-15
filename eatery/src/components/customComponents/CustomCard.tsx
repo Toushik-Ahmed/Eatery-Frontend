@@ -41,16 +41,20 @@ type Props = {
 const CustomCard = ({ name, size, image, onClick }: Props) => {
   return (
     <Card
-      maxW="sm"
-      h="26vh"
-      w="10vw"
+      w={["10vw", "20vw", "15vw", "10vw"]}
       bg="white"
       borderRadius="lg"
       boxShadow="md"
       onClick={onClick}
     >
       <CardBody p={"2"}>
-        <Image src={image} alt={name} borderRadius="lg" h="120px" w="250px" />
+        <Image
+          src={image}
+          alt={name}
+          borderRadius="lg"
+          boxSize={"130px"}
+          objectFit={"cover"}
+        />
         <Stack mt="2" spacing="1">
           <Heading size="md" fontWeight={"semibold"}>
             {name}
