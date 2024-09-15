@@ -1,14 +1,26 @@
-import OrderComponent from '@/components/inventoryComponent/OrderComponent'
-import React from 'react'
+'use client';
+import OrderComponent from '@/components/inventoryComponent/OrderComponent';
+import VendorItems from '@/components/inventoryComponent/VendorItems';
+import { useState } from 'react';
 
-type Props = {}
+type Props = {};
 
 const page = (props: Props) => {
+  const [vendor, setVendor] = useState(false);
+  const handleClick = () => {
+    setVendor((prevVendor) => !prevVendor);
+    console.log(vendor);
+  };
+
   return (
     <div>
-      <OrderComponent/>
+      {vendor ? (
+        <VendorItems handleClick={handleClick} />
+      ) : (
+        <OrderComponent handleClick={handleClick} />
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;
