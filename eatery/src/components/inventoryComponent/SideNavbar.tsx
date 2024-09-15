@@ -1,11 +1,11 @@
-import Link from 'next/link';
-import { BsCart } from 'react-icons/bs';
-import { IoIosAddCircleOutline, IoMdBook } from 'react-icons/io';
-import { LuTrash } from 'react-icons/lu';
-import DropDown from '../customComponents/DropDown';
+import Link from "next/link";
+import { BsCart } from "react-icons/bs";
+import { IoIosAddCircleOutline, IoMdBook } from "react-icons/io";
+import { LuTrash } from "react-icons/lu";
+import DropDown from "../customComponents/DropDown";
 
 const SideNavbar = () => {
-  const items = ['Logout'];
+  const items = ["Logout"];
   return (
     <nav className="bg-[#FF5841] min-h-screen max-h-full w-fit sticky top-0">
       <div className="p-2 flex gap-8">
@@ -39,7 +39,7 @@ const SideNavbar = () => {
               <BsCart /> Order
             </li>
           </Link>
-          <Link href="#">
+          <Link href="/Inventory/wastage">
             <li className="flex items-center gap-1 p-2 rounded-lg hover:bg-[#1D1842]">
               <LuTrash /> Wastage
             </li>
