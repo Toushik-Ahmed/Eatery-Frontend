@@ -11,26 +11,60 @@ import {
   Divider,
   ButtonGroup,
   Image,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
 
-type Props = {};
+type Props = {
+  name: string;
+  size: {
+    sizeName: string;
+    ingredients: {
+      name: string;
+      properties: {
+        quantity: number;
+        unit: string;
+      };
+    }[];
+    preparationTime: number;
+    sellingPrice: number;
+    addOns: {
+      name: string;
+      quantity: number;
+      unit: string;
+    }[];
+  }[];
+  image: string;
+  onClick: () => void;
+};
 
-const CustomCard = (props: Props) => {
+const CustomCard = ({ name, size, image, onClick }: Props) => {
   return (
-    <Card maxW="sm" h="200px" w="250px" bg="#fffafa" borderRadius="lg" boxShadow='2xl'>
-      <CardBody p="15px">
-        <Image
-          src="https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg"
-          alt="Beef Cheese Burger"
-          borderRadius="lg"
-          h="120px"
-          w="250px"
-        />
+    <Card
+      maxW="sm"
+      h="26vh"
+      w="10vw"
+      bg="white"
+      borderRadius="lg"
+      boxShadow="md"
+      onClick={onClick}
+    >
+      <CardBody p={"2"}>
+        <Image src={image} alt={name} borderRadius="lg" h="120px" w="250px" />
         <Stack mt="2" spacing="1">
-          <Heading size="md">Beef Cheese Burger</Heading>
-          <Text color="orange.600" fontSize="1rem" >
-            $10
-          </Text>
+          <Heading size="md" fontWeight={"semibold"}>
+            {name}
+          </Heading>
+          {size.map((s) => (
+            <Flex key={s.sizeName} justify="space-between" align="center">
+              <Text color="#ff5841" fontSize="md">
+                {s.sizeName}
+              </Text>
+              <Text color="#ff5841" fontSize="md">
+                ${s.sellingPrice}
+              </Text>
+            </Flex>
+          ))}
         </Stack>
       </CardBody>
     </Card>

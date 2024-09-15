@@ -9,43 +9,37 @@ import {
   Input,
   Select,
 } from '@chakra-ui/react';
-
 type Props = {};
 
-const InventoryForm = (props: Props) => {
+const OrderComponent = (props: Props) => {
   return (
-
+    <div>
       <Box
         p={6}
-
         bg="#FFFFF0"
         borderRadius="lg"
         w={{ base: '100%', md: '80%', lg: '100%' }}
         boxShadow="lg"
         h="100%"
       >
-        {/* Header Section */}
-        {/* <Flex justify="flex-end">
-          <CloseButton />
-        </Flex> */}
         <Flex align="center" mt={2} mb={2}>
           <Box fontSize="2xl" fontWeight="bold">
-            Add Ingredients
+            Order Item
           </Box>
         </Flex>
 
         <Image
-          src="https://img.freepik.com/premium-vector/vector-menu-illustration-food-meat-meal-restaurant-popular-set-lunch-icon-dinner-snack_1013341-40254.jpg?w=100"
+          src="https://img.freepik.com/free-photo/seasoning-ingredients-wooden-board_23-2148601149.jpg?t=st=1726141583~exp=1726145183~hmac=d2f86f78636cd3ce16707dfafcdef8fe97a7f6c988e4224df66fa941954ed19c&w=100"
           mx="auto"
           my={4}
-          borderRadius="full"
+          borderRadius="md"
           width={{ base: '50%', md: '30%' }}
         />
 
         <FormControl>
           <FormLabel>Ingredient</FormLabel>
           <Input
-            placeholder="Please Enter Ingredient Name"
+            placeholder=" Enter Ingredient Name"
             variant="outline"
             borderColor="purple.300"
           />
@@ -75,38 +69,10 @@ const InventoryForm = (props: Props) => {
           </FormControl>
         </Grid>
 
-        <FormControl>
-          <FormLabel>Point of order</FormLabel>
-          <Input
-            placeholder="Please Enter Order Point"
-            variant="outline"
-            borderColor="purple.300"
-          />
-        </FormControl>
-
-        <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
-          <FormControl>
-            <FormLabel>Capacity</FormLabel>
-            <Input
-              placeholder="Please Enter base capacity"
-              variant="outline"
-              borderColor="purple.300"
-            />
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>Unit</FormLabel>
-            <Select
-              placeholder="Select Unit"
-              variant="outline"
-              borderColor="purple.300"
-            >
-              <option value="g">Grams</option>
-              <option value="kg">Kilograms</option>
-              <option value="l">Liters</option>
-            </Select>
-          </FormControl>
-        </Grid>
+        <Grid
+          templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }}
+          gap={4}
+        ></Grid>
 
         <FormControl>
           <FormLabel>Alergens</FormLabel>
@@ -126,12 +92,12 @@ const InventoryForm = (props: Props) => {
             Cancel
           </Button>
           <Button colorScheme="pink" color="white">
-            Add Item
+            Order
           </Button>
         </Flex>
       </Box>
-
+    </div>
   );
 };
 
-export default InventoryForm;
+export default OrderComponent;

@@ -15,26 +15,26 @@ const SideNavbar = () => {
         </div>
 
         <div className="flex gap-4  items-center">
-          <DropDown actions="User Name" items={items} />
+          <DropDown selectLabel="User Name" items={items} />
         </div>
       </div>
       <div>
         <div className="font-bold text-xl mt-4 p-2">Inventory</div>
         <hr />
         <ul className="flex flex-col gap-4 text-white mt-10 p-2 text-lg">
-          <Link href="Inventory">
+          <Link href="/Inventory">
             <li className="flex items-center gap-1 p-2 rounded-lg   hover:bg-[#1D1842] ">
               <IoMdBook />
               Ingredient
             </li>
           </Link>
-          <Link href="#">
+          <Link href="/Inventory/addIngredients">
             <li className="flex items-center gap-1 p-2 rounded-lg   hover:bg-[#1D1842]">
               <IoIosAddCircleOutline />
               Add
             </li>
           </Link>
-          <Link href="#">
+          <Link href="/Inventory/order">
             <li className="flex items-center gap-1 p-2 rounded-lg   hover:bg-[#1D1842]">
               <BsCart /> Order
             </li>

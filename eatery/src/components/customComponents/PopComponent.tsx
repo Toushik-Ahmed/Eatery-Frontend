@@ -8,18 +8,18 @@ import {
   PopoverHeader,
   PopoverTrigger,
 } from '@chakra-ui/react';
-import { CiEdit } from "react-icons/ci";
+import { CiEdit } from 'react-icons/ci';
 
-type Props = {
-  label:string
-};
+type Props = {};
 
-const popOver = ({label}: Props) => {
+const PopComponent = (props: Props) => {
   return (
     <div>
       <Popover>
         <PopoverTrigger>
-          <Button>{}</Button>
+          <Button backgroundColor={'greenyellow'}>
+            <CiEdit />
+          </Button>
         </PopoverTrigger>
         <PopoverContent>
           <PopoverArrow />
@@ -34,4 +34,4 @@ const popOver = ({label}: Props) => {
   );
 };
 
-export default popOver;
+export default PopComponent;
