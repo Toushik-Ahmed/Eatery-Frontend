@@ -1,4 +1,4 @@
-import Form from "@/components/menuBuilderComponent/Form";
+import Form from "@/components/menuBuilderComponent/MenuCreateForm";
 import React from "react";
 import InventoryForm from "@/components/inventoryComponent/InventoryForm";
 
