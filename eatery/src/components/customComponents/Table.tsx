@@ -27,7 +27,7 @@ type Ingredient = {
 
 type Props = {
   tableHead: string[];
-  ingredients: Ingredient[];
+  ingredients: Partial<Ingredient>[];
 };
 
 const Tablecomponent = ({ tableHead, ingredients }: Props) => {

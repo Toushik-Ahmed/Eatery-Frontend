@@ -128,7 +128,7 @@ function WastageTable({}: Props) {
       CurrentStock: 20,
     },
     {
-      Name: "potato",
+      Name: "potato",  
       UOM: "K.G",
       CurrentStock: 20,
     },
