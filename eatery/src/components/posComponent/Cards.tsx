@@ -139,8 +139,8 @@ const Cards = (props: Props) => {
             </Box>
           </Flex>
           <Box>
-            {categories.map((category) => (
-              <Box mx={{ base: "4", md: "8" }} mt={{ base: "4", md: "6" }}>
+            {categories.map((category, index) => (
+              <Box mx={{ base: "4", md: "8" }} mt={{ base: "4", md: "6" }} key={`${index}`}>
                 <Stack spacing={{ base: "4", md: "6" }}>
                   <Text
                     fontSize={{ base: "xl", md: "2xl" }}
@@ -157,7 +157,7 @@ const Cards = (props: Props) => {
                       md: "repeat(3, 1fr)",
                       lg: "repeat(6, 1fr)",
                     }}
-                    gap={4}
+                    gap={8}
                   >
                     {availableItems
                       .filter((item) => item.category === category)

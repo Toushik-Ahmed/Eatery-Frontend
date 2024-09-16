@@ -43,15 +43,10 @@ export const OrderSlice = createSlice({
     addOrderInfo: (state, action: PayloadAction<Item[]>) => {
       state.orderedItems.push(...action.payload);
     },
-    removeItemFromOrder: (
-      state,
-      action: PayloadAction<{ itemId: number; index: number }>
-    ) => {
-      const { itemId, index } = action.payload;
+    removeItemFromOrder: (state, action: PayloadAction<{ itemId: number }>) => {
+      const { itemId } = action.payload;
 
-      state.orderedItems = state.orderedItems.filter(
-        (item, i) => !(item.id === itemId && i === index)
-      );
+      state.orderedItems = state.orderedItems.filter((item) => item.id !== itemId);
     },
   },
 });
