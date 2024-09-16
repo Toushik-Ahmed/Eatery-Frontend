@@ -23,7 +23,6 @@ export interface Items {
 
 type Props = {
   handleClick: () => void;
-  handleSelectItems:()=>void
 };
 
 const VendorItems = ({ handleClick }: Props) => {
@@ -43,8 +42,8 @@ const VendorItems = ({ handleClick }: Props) => {
   };
 
   const removeItem = (index: number) => {
-    setSelectedItems((prev) => prev.filter((_, i) => i !== index));
-    setClickedItems((prev) => prev.filter((i) => i !== index)); // Unmark the item
+    setSelectedItems((prev) => prev.filter((item, id) => id !== index));
+    setClickedItems((prev) => prev.filter((_, i) => i !== index)); // Unmark the item
   };
 
   // Clear all selections and reset button state
@@ -90,7 +89,6 @@ const VendorItems = ({ handleClick }: Props) => {
       Cost: 60,
       Available: 100,
     },
-
   ];
 
   return (

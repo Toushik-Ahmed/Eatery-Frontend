@@ -9,27 +9,27 @@ type Props = {
 };
 
 const OrderComponent = ({ handleClick }: Props) => {
-  const [ingredient, setIngredient] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
-  const [alergens, setAlergens] = useState<string>('No');
+  // const [ingredient, setIngredient] = useState('');
+  // const [quantity, setQuantity] = useState('');
+  // const [unit, setUnit] = useState('');
+  // const [alergens, setAlergens] = useState<string>('No');
 
-  const handleSubmit = () => {
-    const orderForm = {
-      ingredient,
-      quantity,
-      unit,
-      alergens,
-    };
-    console.log(orderForm); // for testing
-  };
+  // const handleSubmit = () => {
+  //   const orderForm = {
+  //     ingredient,
+  //     quantity,
+  //     unit,
 
-  const handleCancel = () => {
-    setAlergens('');
-    setIngredient('');
-    setQuantity('');
-    setUnit('');
-  };
+  //   };
+  //   console.log(orderForm); // for testing
+  // };
+
+  // const handleCancel = () => {
+  //   setAlergens('');
+  //   setIngredient('');
+  //   setQuantity('');
+  //   setUnit('');
+  // };
 
   return (
     <div className="m-4">

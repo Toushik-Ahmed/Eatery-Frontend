@@ -1,3 +1,5 @@
+import { postOrder } from '@/redux/inventory/AddIngredientsSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 import {
   Button,
   Drawer,
@@ -13,8 +15,9 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
 import { Items } from '../inventoryComponent/VendorItems';
 
 type DrawerProps = {
@@ -24,10 +27,14 @@ type DrawerProps = {
 };
 
 export interface CartData {
-  Name: string;
-  Unit: string;
-  Quantity: number;
-  DeliveryDate: string;
+  ingredient: string;
+  unit: string;
+  quantity: number;
+  deliveryDate: string;
+}
+export interface OrderHistory {
+  ingredients: CartData[];
+  cost: number;
 }
 
 export function DrawerExample({
@@ -39,16 +46,22 @@ export function DrawerExample({
   const toast = useToast();
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
-  const [units, setUnits] = useState<string[]>(
-   [])
-  ;
-  const [deliveryDates, setDeliveryDates] = useState<string[]>(
-    []
-  );
-  const [quantities, setQuantities] = useState<number[]>(
-   []
-  );
+  const [units, setUnits] = useState<string[]>([]);
+  const [deliveryDates, setDeliveryDates] = useState<string[]>([]);
+  const [quantities, setQuantities] = useState<number[]>([]);
   const [checkoutData, setCheckoutData] = useState<CartData[]>([]);
+  const [orderHistory, setOrderHistory] = useState<OrderHistory | undefined>();
+  const dispatch = useDispatch<AppDispatch>();
+  const oderedData = useSelector(
+    (state: RootState) => state.addIngredients.ingredients
+  );
+
+  // Update state arrays when selectedItems changes
+  useEffect(() => {
+    setUnits(selectedItems.map(() => ''));
+    setQuantities(selectedItems.map(() => 1));
+    setDeliveryDates(selectedItems.map(() => ''));
+  }, [selectedItems]);
 
   // Handle quantity change
   const handleQuantityChange = (index: number, value: number) => {
@@ -71,37 +84,51 @@ export function DrawerExample({
     setDeliveryDates(newDates);
   };
 
+  // Calculate total cost of all items
+  const calculateTotalCost = () => {
+    return selectedItems.reduce(
+      (acc, item, index) => acc + (item.Cost || 0) * (quantities[index] || 1),
+      0
+    );
+  };
+
   // Checkout function
   const handleCheckout = () => {
     const cartData = selectedItems.map((item, index) => ({
-      Name: item.Name,
-      Unit: units[index],
-      Quantity: quantities[index],
-      DeliveryDate: deliveryDates[index],
+      ingredient: item.Name,
+      unit: units[index],
+      quantity: quantities[index],
+      deliveryDate: deliveryDates[index],
     }));
 
-    setCheckoutData(cartData);
-    console.log('Checkout data:', cartData);
+    const totalCost = calculateTotalCost();
 
-    // Display toast message
+    const newOrderHistory: OrderHistory = {
+      ingredients: cartData,
+      cost: totalCost,
+    };
+
+    setOrderHistory(newOrderHistory);
+    dispatch(postOrder(newOrderHistory));
+    setCheckoutData(cartData);
+
+    console.log('Checkout data:', cartData);
+    console.log('Order history:', newOrderHistory);
+
     toast({
       title: 'Order placed.',
+      description: `Total cost: ${totalCost} Taka`,
       status: 'success',
       position: 'top-right',
-      duration: 3000, // 3 seconds
+      duration: 3000,
       isClosable: true,
     });
 
-    // Clear the cart after checkout
     setSelectedItems([]);
-
-    // Clear all input fields
     setCheckoutData([]);
-    setUnits(Array(selectedItems.length).fill(''));
-    setQuantities(Array(selectedItems.length).fill(1));
-    setDeliveryDates(
-      Array(selectedItems.length).fill(format(new Date(), 'yyyy-MM-dd'))
-    );
+    setUnits([]);
+    setQuantities([]);
+    setDeliveryDates([]);
   };
 
   // Clear cart on cancel
@@ -110,11 +137,23 @@ export function DrawerExample({
     onClose();
   };
 
-  // Calculate total cost of all items
-  const totalCost = selectedItems.reduce(
-    (acc, item, index) => acc + item.Cost * (quantities[index] || 1),
-    0
-  );
+  // Handle remove item
+  const handleRemoveItem = (index: number) => {
+    removeItem(index);
+
+    // Update the state arrays
+    const newUnits = [...units];
+    newUnits.splice(index, 1);
+    setUnits(newUnits);
+
+    const newQuantities = [...quantities];
+    newQuantities.splice(index, 1);
+    setQuantities(newQuantities);
+
+    const newDates = [...deliveryDates];
+    newDates.splice(index, 1);
+    setDeliveryDates(newDates);
+  };
 
   return (
     <>
@@ -164,8 +203,7 @@ export function DrawerExample({
                       type="number"
                       size="sm"
                       min={1}
-                      defaultValue={1}
-                      value={quantities[index]}
+                      value={quantities[index] || 1}
                       onChange={(e) =>
                         handleQuantityChange(index, parseInt(e.target.value))
                       }
@@ -178,7 +216,7 @@ export function DrawerExample({
                       type="date"
                       size="sm"
                       min={format(new Date(), 'yyyy-MM-dd')}
-                      value={deliveryDates[index]}
+                      value={deliveryDates[index] || ''}
                       onChange={(e) =>
                         handleDeliveryDateChange(index, e.target.value)
                       }
@@ -187,7 +225,7 @@ export function DrawerExample({
                   <Button
                     size="sm"
                     colorScheme="red"
-                    onClick={() => removeItem(index)}
+                    onClick={() => handleRemoveItem(index)}
                   >
                     Remove
                   </Button>
@@ -196,7 +234,7 @@ export function DrawerExample({
             )}
             {selectedItems.length > 0 && (
               <div className="mt-4 font-bold text-lg">
-                <p>Total Cost: {totalCost} Taka</p>
+                <p>Total Cost: {calculateTotalCost()} Taka</p>
               </div>
             )}
           </DrawerBody>
