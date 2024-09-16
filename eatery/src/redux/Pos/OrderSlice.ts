@@ -26,6 +26,7 @@ export interface Item {
       addonPrice: number;
     }[];
   }[];
+  uniqueKey: number;
 }
 
 export interface ItemState {
@@ -43,10 +44,15 @@ export const OrderSlice = createSlice({
     addOrderInfo: (state, action: PayloadAction<Item[]>) => {
       state.orderedItems.push(...action.payload);
     },
-    removeItemFromOrder: (state, action: PayloadAction<{ itemId: number }>) => {
-      const { itemId } = action.payload;
+    removeItemFromOrder: (
+      state,
+      action: PayloadAction<{ uniqueKey: number }>
+    ) => {
+      const { uniqueKey } = action.payload;
 
-      state.orderedItems = state.orderedItems.filter((item) => item.id !== itemId);
+      state.orderedItems = state.orderedItems.filter(
+        (item) => item.uniqueKey !== uniqueKey
+      );
     },
   },
 });

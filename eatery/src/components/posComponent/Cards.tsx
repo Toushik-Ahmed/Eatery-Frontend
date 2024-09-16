@@ -61,9 +61,15 @@ const Cards = (props: Props) => {
     );
     setAvailableItems(filteredItems);
   }, [mealTime]);
-
+  let uniqueKeyCounter = 0;
   const handleSubmit = (item: Items) => {
-    dispatch(addOrderInfo([item]));
+    const uniqueKey = uniqueKeyCounter++;
+
+    const newItem = {
+      ...item,
+      uniqueKey,
+    };
+    dispatch(addOrderInfo([newItem]));
   };
 
   return (
@@ -140,7 +146,11 @@ const Cards = (props: Props) => {
           </Flex>
           <Box>
             {categories.map((category, index) => (
-              <Box mx={{ base: "4", md: "8" }} mt={{ base: "4", md: "6" }} key={`${index}`}>
+              <Box
+                mx={{ base: "4", md: "8" }}
+                mt={{ base: "4", md: "6" }}
+                key={`${index}`}
+              >
                 <Stack spacing={{ base: "4", md: "6" }}>
                   <Text
                     fontSize={{ base: "xl", md: "2xl" }}

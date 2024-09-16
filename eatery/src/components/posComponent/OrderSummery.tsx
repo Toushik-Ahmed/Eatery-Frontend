@@ -1,4 +1,4 @@
-import { addPlaceOrderInfo } from "@/redux/Pos/PlaceOrderSlice";
+import { addPlaceOrderInfo, placeOrder } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
@@ -22,12 +22,13 @@ import { removeItemFromOrder } from "@/redux/Pos/OrderSlice";
 type Props = {};
 
 interface OrderDetails {
-  table_no: number;
-  menu_items: {
+  tableNo: number;
+  tableStatus: string;
+  menuItems: {
     itemName: string;
     quantity: number;
     selectedSize: string;
-    itemPrice: number;
+    sellingPrice: number;
     ingredients: {
       name: string;
       properties: {
@@ -63,7 +64,7 @@ const OrderSummery = (props: Props) => {
   const calculateTotalPrice = () => {
     const newTotalPrices: { [key: string]: number } = {};
     listOfItems.orderedItems.forEach((item) => {
-      const itemId = item.id;
+      const itemId = item.uniqueKey;
       const selectedSize = item.size.find(
         (s) => s.sizeName === selectedSizes[itemId]
       );
@@ -87,7 +88,7 @@ const OrderSummery = (props: Props) => {
   const calculatePreparationTime = () => {
     let maxPreparationTime = 0;
     listOfItems.orderedItems.forEach((item) => {
-      const itemId = item.id;
+      const itemId = item.uniqueKey;
       const selectedSize = item.size.find(
         (s) => s.sizeName === selectedSizes[itemId]
       );
@@ -101,64 +102,64 @@ const OrderSummery = (props: Props) => {
     setPreparationTime(maxPreparationTime);
   };
 
-  const handleSizeChange = (itemId: number, sizeName: string) => {
+  const handleSizeChange = (uniqueKey: number, sizeName: string) => {
     setSelectedSizes((prevSizes) => ({
       ...prevSizes,
-      [itemId]: sizeName,
+      [uniqueKey]: sizeName,
     }));
   };
 
   const handleAddonChange = (
-    itemId: number,
+    uniqueKey: number,
     addonName: string,
     isChecked: boolean
   ) => {
     setSelectedAddons((prevAddons) => {
-      const currentAddons = prevAddons[itemId] || [];
+      const currentAddons = prevAddons[uniqueKey] || [];
       const newAddons = isChecked
         ? [...currentAddons, addonName]
         : currentAddons.filter((addon) => addon !== addonName);
       return {
         ...prevAddons,
-        [itemId]: newAddons,
+        [uniqueKey]: newAddons,
       };
     });
   };
 
   const handleQuantityChange = (
-    itemId: number,
+    uniqueKey: number,
     action: "increment" | "decrement"
   ) => {
     setQuantities((prevQuantities) => {
-      const currentQuantity = prevQuantities[itemId] || 1;
+      const currentQuantity = prevQuantities[uniqueKey] || 1;
       const newQuantity =
         action === "increment"
           ? currentQuantity + 1
           : Math.max(1, currentQuantity - 1);
       return {
         ...prevQuantities,
-        [itemId]: newQuantity,
+        [uniqueKey]: newQuantity,
       };
     });
   };
 
-  const handleDeleteItem = (itemId: number) => {
-    dispatch(removeItemFromOrder({ itemId }));
+  const handleDeleteItem = (uniqueKey: number) => {
+    dispatch(removeItemFromOrder({ uniqueKey }));
 
     setSelectedSizes((prev) => {
-      const { [itemId]: _, ...rest } = prev;
+      const { [uniqueKey]: _, ...rest } = prev;
       return rest;
     });
     setSelectedAddons((prev) => {
-      const { [itemId]: _, ...rest } = prev;
+      const { [uniqueKey]: _, ...rest } = prev;
       return rest;
     });
     setQuantities((prev) => {
-      const { [itemId]: _, ...rest } = prev;
+      const { [uniqueKey]: _, ...rest } = prev;
       return rest;
     });
     setTotalPrices((prev) => {
-      const { [itemId]: _, ...rest } = prev;
+      const { [uniqueKey]: _, ...rest } = prev;
       return rest;
     });
   };
@@ -170,19 +171,20 @@ const OrderSummery = (props: Props) => {
 
   const handleSendOrder = () => {
     const orderDetails: OrderDetails = {
-      table_no: 5,
-      menu_items: listOfItems.orderedItems.map((item) => ({
+      tableNo: 5,
+      tableStatus: "Occupied",
+      menuItems: listOfItems.orderedItems.map((item) => ({
         itemName: item.name,
-        quantity: quantities[item.id] || 1,
-        selectedSize: selectedSizes[item.id],
-        itemPrice: totalPrices[item.id] || 0,
+        quantity: quantities[item.uniqueKey] || 1,
+        selectedSize: selectedSizes[item.uniqueKey],
+        sellingPrice: totalPrices[item.uniqueKey] || 0,
         ingredients:
-          item.size.find((s) => s.sizeName === selectedSizes[item.id])
+          item.size.find((s) => s.sizeName === selectedSizes[item.uniqueKey])
             ?.ingredients || [],
         addOns:
-          selectedAddons[item.id]?.map((addonName) => {
+          selectedAddons[item.uniqueKey]?.map((addonName) => {
             const selectedSize = item.size.find(
-              (s) => s.sizeName === selectedSizes[item.id]
+              (s) => s.sizeName === selectedSizes[item.uniqueKey]
             );
             const addon = selectedSize?.addOns.find(
               (addon) => addon.name === addonName
@@ -201,7 +203,8 @@ const OrderSummery = (props: Props) => {
         0
       ),
     };
-    dispatch(addPlaceOrderInfo([orderDetails]));
+    console.log(orderDetails);
+    dispatch(placeOrder(orderDetails));
   };
 
   return (
@@ -224,7 +227,7 @@ const OrderSummery = (props: Props) => {
         </Text>
         {listOfItems.orderedItems.map((item) => (
           <Box
-            key={`${item.id}`}
+            key={`${item.uniqueKey}`}
             w={["85vw", "65vw", "45vw", "19vw"]}
             p={["2", "3", "4"]}
             borderWidth="1px"
@@ -238,7 +241,7 @@ const OrderSummery = (props: Props) => {
               </Box>
               <Spacer />
               <Text fontWeight={"bold"}>
-                ${totalPrices[`${item.id}`]?.toFixed(2) || "0.00"}
+                ${totalPrices[`${item.uniqueKey}`]?.toFixed(2) || "0.00"}
               </Text>
             </Flex>
 
@@ -248,8 +251,10 @@ const OrderSummery = (props: Props) => {
                   placeholder="Size"
                   size={"sm"}
                   mt={"2"}
-                  onChange={(e) => handleSizeChange(item.id, e.target.value)}
-                  value={selectedSizes[`${item.id}`] || ""}
+                  onChange={(e) =>
+                    handleSizeChange(item.uniqueKey, e.target.value)
+                  }
+                  value={selectedSizes[`${item.uniqueKey}`] || ""}
                 >
                   {item.size.map((s) => (
                     <option value={s.sizeName} key={s.sizeName}>
@@ -258,30 +263,32 @@ const OrderSummery = (props: Props) => {
                   ))}
                 </Select>
 
-                {selectedSizes[`${item.id}`] && (
+                {selectedSizes[`${item.uniqueKey}`] && (
                   <Box mt={"2"}>
                     <Text fontSize="sm" color="gray.900">
-                      Size: {selectedSizes[`${item.id}`]}
+                      Size: {selectedSizes[`${item.uniqueKey}`]}
                     </Text>
                   </Box>
                 )}
 
-                {selectedSizes[`${item.id}`] && (
+                {selectedSizes[`${item.uniqueKey}`] && (
                   <VStack align={"start"} mt={"2"}>
                     <Text fontSize="sm" color="gray.900">
                       Add-ons:
                     </Text>
                     {item.size
-                      .find((s) => s.sizeName === selectedSizes[`${item.id}`])
+                      .find(
+                        (s) => s.sizeName === selectedSizes[`${item.uniqueKey}`]
+                      )
                       ?.addOns.map((addon) => (
                         <Checkbox
                           key={addon.name}
-                          isChecked={selectedAddons[`${item.id}`]?.includes(
-                            addon.name
-                          )}
+                          isChecked={selectedAddons[
+                            `${item.uniqueKey}`
+                          ]?.includes(addon.name)}
                           onChange={(e) =>
                             handleAddonChange(
-                              item.id,
+                              item.uniqueKey,
                               addon.name,
                               e.target.checked
                             )
@@ -305,13 +312,15 @@ const OrderSummery = (props: Props) => {
                     borderWidth={"1px"}
                     borderRadius={"6px"}
                     borderColor={"#ff5841"}
-                    onClick={() => handleQuantityChange(item.id, "decrement")}
+                    onClick={() =>
+                      handleQuantityChange(item.uniqueKey, "decrement")
+                    }
                   >
                     -
                   </Button>
 
                   <Center w={"8"}>
-                    <Text>{quantities[`${item.id}`] || 1}</Text>
+                    <Text>{quantities[`${item.uniqueKey}`] || 1}</Text>
                   </Center>
 
                   <Button
@@ -322,7 +331,9 @@ const OrderSummery = (props: Props) => {
                     borderWidth={"1px"}
                     borderRadius={"6px"}
                     borderColor={"#ff5841"}
-                    onClick={() => handleQuantityChange(item.id, "increment")}
+                    onClick={() =>
+                      handleQuantityChange(item.uniqueKey, "increment")
+                    }
                   >
                     +
                   </Button>
@@ -335,7 +346,7 @@ const OrderSummery = (props: Props) => {
               bg="white"
               color="#ff5841"
               mt={"2"}
-              onClick={() => handleDeleteItem(item.id)}
+              onClick={() => handleDeleteItem(item.uniqueKey)}
             >
               <Icon as={RiDeleteBin6Fill} />
             </Box>
