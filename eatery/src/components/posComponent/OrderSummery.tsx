@@ -341,16 +341,16 @@ const OrderSummery = (props: Props) => {
               </Box>
             </Flex>
             <Flex justifyContent={"flex-end"}>
-            <Box
-              as="button"
-              borderRadius="md"
-              bg="white"
-              color="#ff5841"
-              mt={"2"}
-              onClick={() => handleDeleteItem(item.uniqueKey)}
-            >
-              <Icon as={RiDeleteBin6Fill} />
-            </Box>
+              <Box
+                as="button"
+                borderRadius="md"
+                bg="white"
+                color="#ff5841"
+                mt={"2"}
+                onClick={() => handleDeleteItem(item.uniqueKey)}
+              >
+                <Icon as={RiDeleteBin6Fill} />
+              </Box>
             </Flex>
           </Box>
         ))}
