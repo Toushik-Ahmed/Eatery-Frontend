@@ -5,18 +5,18 @@ import CustomCard from "../customComponents/CustomCard";
 import {
   Box,
   Button,
-  Center,
   Flex,
   Grid,
   HStack,
   Spacer,
   Stack,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch } from "@/redux/store";
-import { relative } from "path";
+import ItemDrawer from "../customComponents/ItemDrawer";
 
 type Props = {};
 interface Items {
@@ -46,8 +46,13 @@ interface Items {
     }[];
   }[];
 }
+
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedItem, setSelectedItem] = useState<Items | null>(null);
+  const [selectedSize, setSelectedSize] = useState(0); // Track selected size index
+
   const items = [
     {
       id: 1,
@@ -125,10 +130,11 @@ const Cards = (props: Props) => {
         },
       ],
     },
+  
     {
       id: 2,
       name: "Pizza",
-      category: "Fast Food",
+      category: "Deshi",
       tastyTag: "Delicious",
       mealTime: ["All Items", "All Day", "Lunch"],
       description: "A classic burger with fresh ingredients",
@@ -205,7 +211,6 @@ const Cards = (props: Props) => {
 
   const categories = Array.from(new Set(items.map((item) => item.category)));
   const [mealTime, setMealTime] = useState<string>("All Items");
-
   const [availableItems, setAvailableItems] = useState<Items[]>(items);
 
   useEffect(() => {
@@ -217,6 +222,12 @@ const Cards = (props: Props) => {
 
   const handleSubmit = (item: Items) => {
     dispatch(addOrderInfo([item]));
+  };
+
+  const handleCardClick = (item: Items) => {
+    setSelectedItem(item);
+    setSelectedSize(0); // Reset to default size
+    onOpen();
   };
 
   return (
@@ -244,7 +255,6 @@ const Cards = (props: Props) => {
                 >
                   All Items
                 </Button>
-
                 <Button
                   bg={mealTime === "All Day" ? "#ff5841" : "white"}
                   textColor={mealTime === "All Day" ? "white" : "black"}
@@ -253,7 +263,6 @@ const Cards = (props: Props) => {
                 >
                   All Day
                 </Button>
-
                 <Button
                   bg={mealTime === "Breakfast" ? "#ff5841" : "white"}
                   textColor={mealTime === "Breakfast" ? "white" : "black"}
@@ -262,7 +271,6 @@ const Cards = (props: Props) => {
                 >
                   Breakfast
                 </Button>
-
                 <Button
                   bg={mealTime === "Lunch" ? "#ff5841" : "white"}
                   textColor={mealTime === "Lunch" ? "white" : "black"}
@@ -271,7 +279,6 @@ const Cards = (props: Props) => {
                 >
                   Lunch
                 </Button>
-
                 <Button
                   bg={mealTime === "Dinner" ? "#ff5841" : "white"}
                   textColor={mealTime === "Dinner" ? "white" : "black"}
@@ -286,8 +293,7 @@ const Cards = (props: Props) => {
 
           <Box>
             {categories.map((category) => (
-              
-              <Box mx={10} mt={10} key={category} position='relative'>
+              <Box mx={10} mt={10} key={category} position="relative">
                 <Stack spacing={6}>
                   <Text
                     fontSize={"2xl"}
@@ -297,36 +303,48 @@ const Cards = (props: Props) => {
                     {category}
                   </Text>
                   <center>
-                  <Grid
-                    templateColumns={{
-                      base: "repeat(1, 1fr)",
-                      sm: "repeat(2, 1fr)",
-                      md: "repeat(3, 1fr)",
-                      lg: "repeat(4, 1fr)",
-                      xl: "repeat(6, 1fr)",
-                    }}
-                    gap={6}
-                  >
-                    {availableItems
-                      .filter((item) => item.category === category)
-                      .map((item) => (
-                        <CustomCard
-                          key={item.id}
-                          name={item.name}
-                          size={item.size}
-                          image={item.image}
-                          onClick={() => handleSubmit(item)}
-                        />
-                      ))}
-                  </Grid>
+                    <Grid
+                      templateColumns={{
+                        base: "repeat(1, 1fr)",
+                        sm: "repeat(2, 1fr)",
+                        md: "repeat(3, 1fr)",
+                        lg: "repeat(4, 1fr)",
+                        xl: "repeat(6, 1fr)",
+                      }}
+                      gap={6}
+                    >
+                      {availableItems
+                        .filter((item) => item.category === category)
+                        .map((item) => (
+                          <CustomCard
+                            key={item.id}
+                            name={item.name}
+                            description={item.description}
+                            size={item.size}
+                            image={item.image}
+                            onClick={() => handleCardClick(item)}
+                          />
+                        ))}
+                    </Grid>
                   </center>
                 </Stack>
               </Box>
-              
             ))}
           </Box>
         </Box>
         <Spacer />
+
+        {/* Drawer Implementation */}
+        <ItemDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          selectedItem={selectedItem}
+          selectedSize={selectedSize}
+          setSelectedSize={setSelectedSize}
+          onDelete={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
       </Flex>
     </Box>
   );

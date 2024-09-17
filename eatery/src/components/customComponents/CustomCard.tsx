@@ -17,6 +17,7 @@ import {
 
 type Props = {
   name: string;
+  description: string;
   size: {
     sizeName: string;
     ingredients: {
@@ -28,6 +29,7 @@ type Props = {
     }[];
     preparationTime: number;
     sellingPrice: number;
+    
     addOns: {
       name: string;
       quantity: number;
@@ -38,7 +40,7 @@ type Props = {
   onClick: () => void;
 };
 
-const CustomCard = ({ name, size, image, onClick }: Props) => {
+const CustomCard = ({ name,description, size, image, onClick }: Props) => {
   return (
     <Card
       maxW="sm"
@@ -51,21 +53,25 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
     >
       <CardBody p={"2"}>
         <Image src={image} alt={name} borderRadius="lg" h="120px" w="250px" />
-        <Stack mt="2" spacing="1">
+        <Stack mt="3" spacing="1">
           <Heading size="md" fontWeight={"semibold"}>
             {name}
           </Heading>
           {size.map((s) => (
-            
-              <Flex key={s.sizeName} justify="space-between" align="center">
-                <Text color="#ff5841" fontSize="md">
-                  {s.sizeName}
-                </Text>
-                <Text color="#ff5841" fontSize="md">
-                  ${s.sellingPrice}
-                </Text>
-              </Flex>
+            <Flex key={s.sizeName} justify="space-between" align="center">
+              <Text color="#ff5841" fontSize="md">
+                {s.sizeName}
+              </Text>
+              <Text color="#ff5841" fontSize="md">
+                ${s.sellingPrice}
+              </Text>
+            </Flex>
           ))}
+        </Stack>
+        <Stack>
+          <text>
+            {description}
+          </text>
         </Stack>
       </CardBody>
     </Card>
