@@ -75,16 +75,19 @@ export const AddIngredientsSlice = createSlice({
         state.ingredients.push(action.payload);
       }
     );
+    builder.addCase(
+      getAllIngredients.fulfilled,
+      (state, action: PayloadAction<IngredientsTable[]>) => {
+        state.ingredients = action.payload;
+      }
+    );
   },
 });
 
 export const postOrder = createAsyncThunk(
   'ingredients/order',
   async (order: OrderHistory) => {
-    const response = await axios.post(
-      'http://localhost:5000/ingredient/order-ingredient',
-      order
-    );
+    const response = await axios.post('http://localhost:5000/stock/new', order);
     return response.data;
   }
 );
@@ -95,6 +98,16 @@ export const postAddIngredient = createAsyncThunk(
     const response = await axios.post(
       'http://localhost:5000/ingredient/addingredient',
       addIngredient
+    );
+    return response.data;
+  }
+);
+
+export const getAllIngredients = createAsyncThunk(
+  'inventory/allIngredients',
+  async () => {
+    const response = await axios.get(
+      'http://localhost:5000/ingredient/allingredient'
     );
     return response.data;
   }

@@ -1,4 +1,6 @@
 'use client';
+import { getAllIngredients } from '@/redux/inventory/AddIngredientsSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 import {
   IconButton,
   Input,
@@ -6,14 +8,12 @@ import {
   InputRightElement,
 } from '@chakra-ui/react';
 import { parse } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
+import { useDispatch, useSelector } from 'react-redux';
 import Pagination from '../../shared/components/Pagination/pagination';
 import DropDown from '../customComponents/DropDown';
 import Tablecomponent from '../customComponents/Table';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
-
 
 interface Props {}
 
@@ -59,13 +59,20 @@ function IngredientsTable({}: Props) {
       IncomingStock: '31-5-2024',
     },
   ];
+
   const [ingredients, setIngredients] = useState(dummyIngredients);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
   const [selectLabel, setSelectLabel] = useState('Sort-By');
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(getAllIngredients());
+  }, [dispatch]);
 
-
-
+  const allIngredients = useSelector(
+    (state: RootState) => state.addIngredients
+  );
+  console.log(allIngredients);
 
   const handleFilter = (value: string) => {
     setFilter(value);
@@ -125,7 +132,7 @@ function IngredientsTable({}: Props) {
         </div>
       </div>
       <Tablecomponent tableHead={th} ingredients={ingredients} />
-      <div className='flex justify-center mt-4'>
+      <div className="flex justify-center mt-4">
         <Pagination
           totalData={100}
           onPageChange={(ev) => {

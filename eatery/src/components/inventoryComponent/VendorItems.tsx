@@ -65,7 +65,7 @@ const VendorItems = ({ handleClick }: Props) => {
   const th = ['Name', 'Cost(taka)', 'Available(K.G)', 'Add to Cart'];
   const dummyItems = [
     {
-      Name: 'Potato',
+      Name: 'Lettuce',
       Cost: 60,
       Available: 100,
     },
