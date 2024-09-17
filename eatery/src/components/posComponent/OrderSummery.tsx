@@ -340,6 +340,7 @@ const OrderSummery = (props: Props) => {
                 </Flex>
               </Box>
             </Flex>
+            <Flex justifyContent={"flex-end"}>
             <Box
               as="button"
               borderRadius="md"
@@ -350,6 +351,7 @@ const OrderSummery = (props: Props) => {
             >
               <Icon as={RiDeleteBin6Fill} />
             </Box>
+            </Flex>
           </Box>
         ))}
       </Box>

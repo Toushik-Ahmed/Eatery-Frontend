@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export interface Item {
   id: number;
   name: string;
   category: string;
-  tastyTag: string;
   mealTime: string[];
   description: string;
   image: string;

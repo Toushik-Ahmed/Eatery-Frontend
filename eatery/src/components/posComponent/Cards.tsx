@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
-import items from "../../data";
 
 import {
   Box,
@@ -15,54 +14,45 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
-import { AppDispatch } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
+import { getmenuItems, MenuItem } from "@/redux/Pos/MenuItemSlice";
 
 type Props = {};
-interface Items {
-  id: number;
-  name: string;
-  category: string;
-  tastyTag: string;
-  mealTime: string[];
-  description: string;
-  image: string;
-  size: {
-    sizeName: string;
-    ingredients: {
-      name: string;
-      properties: {
-        quantity: number;
-        unit: string;
-      };
-    }[];
-    preparationTime: number;
-    sellingPrice: number;
-    addOns: {
-      name: string;
-      quantity: number;
-      unit: string;
-      addonPrice: number;
-    }[];
-  }[];
-}
+
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const categories = Array.from(new Set(items.map((item) => item.category)));
   const [mealTime, setMealTime] = useState<string>("All Items");
 
-  const [availableItems, setAvailableItems] = useState<Items[]>(items);
-
   useEffect(() => {
-    const filteredItems = items.filter((item) =>
-      item.mealTime.includes(mealTime)
-    );
-    setAvailableItems(filteredItems);
-  }, [mealTime]);
+    dispatch(getmenuItems());
+  }, [dispatch]);
+
+  
+  const list = useSelector((state: RootState) => state.allItem);
+  const allItems = list.allItems;
+  
+  console.log(allItems);
+
+  
+  const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
+
+  
+  useEffect(() => {
+    if (mealTime === "All Items") {
+      setAvailableItems(allItems); 
+    } else {
+      const filteredItems = allItems.filter((item:any) => item.mealTime.includes(mealTime));
+      setAvailableItems(filteredItems);
+    }
+  }, [mealTime, allItems]);
+
   let uniqueKeyCounter = 0;
-  const handleSubmit = (item: Items) => {
+
+
+  const handleSubmit = (item: MenuItem) => {
     const uniqueKey = uniqueKeyCounter++;
 
     const newItem = {
@@ -71,6 +61,8 @@ const Cards = (props: Props) => {
     };
     dispatch(addOrderInfo([newItem]));
   };
+
+  const categories = Array.from(new Set(allItems.map((item:any) => item.category)));
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
@@ -149,7 +141,7 @@ const Cards = (props: Props) => {
               <Box
                 mx={{ base: "4", md: "8" }}
                 mt={{ base: "4", md: "6" }}
-                key={`${index}`}
+                key={index}
               >
                 <Stack spacing={{ base: "4", md: "6" }}>
                   <Text
@@ -173,7 +165,7 @@ const Cards = (props: Props) => {
                       .filter((item) => item.category === category)
                       .map((item) => (
                         <CustomCard
-                          key={`${item.id}`}
+                          key={item.id}
                           name={item.name}
                           size={item.size}
                           image={item.image}
