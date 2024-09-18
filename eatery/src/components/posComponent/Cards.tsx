@@ -20,38 +20,42 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { getmenuItems, MenuItem } from "@/redux/Pos/MenuItemSlice";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 
+interface MealTime {
+  mealtime: string;
+}
+
 type Props = {};
 
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const [mealTime, setMealTime] = useState<string>("All Items");
+  const [meal, setMealTime] = useState<string>("All Items");
 
   useEffect(() => {
     dispatch(getmenuItems());
   }, [dispatch]);
 
-  
   const list = useSelector((state: RootState) => state.allItem);
   const allItems = list.allItems;
-  
-  console.log(allItems);
 
-  
+  //console.log(allItems);
+  const a = allItems.map((e) => e.mealTime);
+  console.log(a);
+
   const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
 
-  
   useEffect(() => {
-    if (mealTime === "All Items") {
-      setAvailableItems(allItems); 
+    if (meal === "All Items") {
+      setAvailableItems(allItems);
     } else {
-      const filteredItems = allItems.filter((item:any) => item.mealTime.includes(mealTime));
+      const filteredItems = allItems.filter((item: any) =>
+        item.mealTime.some((m: MealTime) => m.mealtime === meal)
+      );
       setAvailableItems(filteredItems);
     }
-  }, [mealTime, allItems]);
+  }, [meal, allItems]);
 
   let uniqueKeyCounter = 0;
-
 
   const handleSubmit = (item: MenuItem) => {
     const uniqueKey = uniqueKeyCounter++;
@@ -63,7 +67,9 @@ const Cards = (props: Props) => {
     dispatch(addOrderInfo([newItem]));
   };
 
-  const categories = Array.from(new Set(allItems.map((item:any) => item.category)));
+  const categories = Array.from(
+    new Set(allItems.map((item: any) => item.category))
+  );
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
@@ -91,8 +97,8 @@ const Cards = (props: Props) => {
             >
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
-                  bg={mealTime === "All Items" ? "#ff5841" : "white"}
-                  textColor={mealTime === "All Items" ? "white" : "black"}
+                  bg={meal === "All Items" ? "#ff5841" : "white"}
+                  textColor={meal === "All Items" ? "white" : "black"}
                   onClick={() => setMealTime("All Items")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
@@ -100,8 +106,8 @@ const Cards = (props: Props) => {
                 </Button>
 
                 <Button
-                  bg={mealTime === "All Day" ? "#ff5841" : "white"}
-                  textColor={mealTime === "All Day" ? "white" : "black"}
+                  bg={meal === "All Day" ? "#ff5841" : "white"}
+                  textColor={meal === "All Day" ? "white" : "black"}
                   onClick={() => setMealTime("All Day")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
@@ -109,8 +115,8 @@ const Cards = (props: Props) => {
                 </Button>
 
                 <Button
-                  bg={mealTime === "Breakfast" ? "#ff5841" : "white"}
-                  textColor={mealTime === "Breakfast" ? "white" : "black"}
+                  bg={meal === "Breakfast" ? "#ff5841" : "white"}
+                  textColor={meal === "Breakfast" ? "white" : "black"}
                   onClick={() => setMealTime("Breakfast")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
@@ -118,8 +124,8 @@ const Cards = (props: Props) => {
                 </Button>
 
                 <Button
-                  bg={mealTime === "Lunch" ? "#ff5841" : "white"}
-                  textColor={mealTime === "Lunch" ? "white" : "black"}
+                  bg={meal === "Lunch" ? "#ff5841" : "white"}
+                  textColor={meal === "Lunch" ? "white" : "black"}
                   onClick={() => setMealTime("Lunch")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >
@@ -127,8 +133,8 @@ const Cards = (props: Props) => {
                 </Button>
 
                 <Button
-                  bg={mealTime === "Dinner" ? "#ff5841" : "white"}
-                  textColor={mealTime === "Dinner" ? "white" : "black"}
+                  bg={meal === "Dinner" ? "#ff5841" : "white"}
+                  textColor={meal === "Dinner" ? "white" : "black"}
                   onClick={() => setMealTime("Dinner")}
                   _hover={{ background: "#ff5841", textColor: "white" }}
                 >

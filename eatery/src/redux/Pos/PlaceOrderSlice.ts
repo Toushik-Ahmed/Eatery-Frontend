@@ -53,6 +53,16 @@ export const PlaceOrderSlice = createSlice({
         state.totalPrice = action.payload.totalPrice;
       }
     );
+    builder.addCase(
+      getOrders.fulfilled,
+      (state, action: PayloadAction<OrderDetails>) => {
+        state.tableNo = action.payload.tableNo;
+        state.tableStatus = action.payload.tableStatus;
+        state.menuItems = action.payload.menuItems;
+        state.preparationTime = action.payload.preparationTime;
+        state.totalPrice = action.payload.totalPrice;
+      }
+    );
   },
 });
 
@@ -65,6 +75,11 @@ export const placeOrder = createAsyncThunk(
     return response.data;
   }
 );
+
+export const getOrders = createAsyncThunk("placeorder/getOrders", async () => {
+  const response = await axios.get("http://localhost:5000/menu/allmenu");
+  return response.data;
+});
 
 export default PlaceOrderSlice.reducer;
 export const { addPlaceOrderInfo } = PlaceOrderSlice.actions;
