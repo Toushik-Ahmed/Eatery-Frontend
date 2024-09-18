@@ -1,5 +1,8 @@
 'use client';
-import { getAllIngredients } from '@/redux/inventory/AddIngredientsSlice';
+import {
+  getAllIngredients,
+  IngredientsTable,
+} from '@/redux/inventory/AddIngredientsSlice';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
   IconButton,
@@ -17,11 +20,12 @@ import Tablecomponent from '../customComponents/Table';
 
 interface Props {}
 
-function IngredientsTable({}: Props) {
+function IngredientsTablecomponent({}: Props) {
   const filterITems = ['Date', 'Name'];
   const th = [
     'Name',
     'UOM',
+    'capacity',
     'Current-Stcok',
     'Unit-Cost',
     'Order-Point',
@@ -33,45 +37,25 @@ function IngredientsTable({}: Props) {
     'Delete',
   ];
 
-  let dummyIngredients = [
-    {
-      Name: 'zotato',
-      UOM: 'K.G',
-      CurrentStock: 20,
-      UnitCost: 60,
-      OrderPoint: 5,
-      Prevstock: 15,
-      Expiarydate: '20-5-2024',
-      NewStock: 20,
-      expiarydate: '10-6-2024',
-      IncomingStock: '19-5-2024',
-    },
-    {
-      Name: 'potato',
-      UOM: 'K.G',
-      CurrentStock: 20,
-      UnitCost: 60,
-      OrderPoint: 5,
-      Prevstock: 15,
-      Expiarydate: '20-5-2024',
-      NewStock: 20,
-      expiarydate: '10-6-2024',
-      IncomingStock: '31-5-2024',
-    },
-  ];
-
-  const [ingredients, setIngredients] = useState(dummyIngredients);
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
-  const [selectLabel, setSelectLabel] = useState('Sort-By');
   const dispatch = useDispatch<AppDispatch>();
+
+  // Fetch all ingredients on mount
   useEffect(() => {
     dispatch(getAllIngredients());
   }, [dispatch]);
-
+  const [ingredients, setIngredients] = useState<IngredientsTable[]>([]);
   const allIngredients = useSelector(
-    (state: RootState) => state.addIngredients
+    (state: RootState) => state.addIngredients.ingredients
   );
+
+  useEffect(() => {
+    setIngredients(allIngredients as IngredientsTable[]);
+  }, [allIngredients]);
+
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState('');
+  const [selectLabel, setSelectLabel] = useState('Sort-By');
+
   console.log(allIngredients);
 
   const handleFilter = (value: string) => {
@@ -80,14 +64,14 @@ function IngredientsTable({}: Props) {
     setSelectLabel(value);
 
     if (filter === 'Name') {
-      const sortedIngredients = ingredients.toSorted((a, b) =>
-        a.Name > b.Name ? 1 : a.Name < b.Name ? -1 : 0
+      const sortedIngredients = [...ingredients].sort((a, b) =>
+        a.ingredient > b.ingredient ? 1 : a.ingredient < b.ingredient ? -1 : 0
       );
       setIngredients(sortedIngredients);
     } else if (filter === 'Date') {
-      const sortedIngredientsByDate = ingredients.toSorted((a, b) => {
-        const dateA = parse(a.IncomingStock, 'dd-MM-yyyy', new Date());
-        const dateB = parse(b.IncomingStock, 'dd-MM-yyyy', new Date());
+      const sortedIngredientsByDate = [...ingredients].sort((a, b) => {
+        const dateA = parse(a.incomingStock, 'dd-MM-yyyy', new Date());
+        const dateB = parse(b.incomingStock, 'dd-MM-yyyy', new Date());
 
         return dateA.getTime() - dateB.getTime();
       });
@@ -97,11 +81,10 @@ function IngredientsTable({}: Props) {
   };
 
   const handleSearch = () => {
-    const searchedItems = dummyIngredients.filter((el) =>
-      el.Name.toLowerCase().includes(search.toLowerCase())
+    const searchedIngredients = allIngredients.filter((item) =>
+      item.ingredient?.toLowerCase().includes(search.toLowerCase())
     );
-    dummyIngredients = searchedItems;
-    setIngredients(dummyIngredients);
+    setIngredients(searchedIngredients as IngredientsTable[]);
   };
 
   return (
@@ -120,7 +103,7 @@ function IngredientsTable({}: Props) {
                 aria-label="Search database"
                 icon={<IoIosSearch />}
                 size="sm"
-                onClick={() => handleSearch()}
+                onClick={handleSearch}
               />
             </InputRightElement>
           </InputGroup>
@@ -134,14 +117,13 @@ function IngredientsTable({}: Props) {
       <Tablecomponent tableHead={th} ingredients={ingredients} />
       <div className="flex justify-center mt-4">
         <Pagination
-          totalData={100}
-          onPageChange={(ev) => {
-            console.log(ev);
-          }}
+        // totalData={100}
+        // onPageChange={(ev) => {
+        //   console.log(ev);
+        // }}
         ></Pagination>
       </div>
     </div>
   );
 }
-
-export default IngredientsTable;
+export default IngredientsTablecomponent;

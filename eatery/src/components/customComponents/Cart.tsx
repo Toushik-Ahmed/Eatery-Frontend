@@ -59,7 +59,7 @@ export function DrawerExample({
   // Update state arrays when selectedItems changes
   useEffect(() => {
     setUnits(selectedItems.map(() => ''));
-    setQuantities(selectedItems.map(() => 1));
+    setQuantities(selectedItems.map(() => 0));
     setDeliveryDates(selectedItems.map(() => ''));
   }, [selectedItems]);
 
@@ -87,7 +87,7 @@ export function DrawerExample({
   // Calculate total cost of all items
   const calculateTotalCost = () => {
     return selectedItems.reduce(
-      (acc, item, index) => acc + (item.Cost || 0) * (quantities[index] || 1),
+      (acc, item, index) => acc + (item.price || 0) * (quantities[index] || 1),
       0
     );
   };
@@ -95,7 +95,7 @@ export function DrawerExample({
   // Checkout function
   const handleCheckout = () => {
     const cartData = selectedItems.map((item, index) => ({
-      ingredient: item.Name,
+      ingredient: item.itemName,
       unit: units[index],
       quantity: quantities[index],
       deliveryDate: deliveryDates[index],
@@ -178,10 +178,10 @@ export function DrawerExample({
               selectedItems.map((item, index) => (
                 <div key={index} className="mb-4 border-b pb-2">
                   <p>
-                    <strong>Name:</strong> {item.Name}
+                    <strong>Name:</strong> {item.itemName}
                   </p>
                   <p>
-                    <strong>Cost (p/u):</strong> {item.Cost} Taka
+                    <strong>Cost (p/u):</strong> {item.price} Taka
                   </p>
 
                   <div className="my-2">
@@ -202,8 +202,8 @@ export function DrawerExample({
                     <Input
                       type="number"
                       size="sm"
-                      min={1}
-                      value={quantities[index] || 1}
+
+                      value={quantities[index] }
                       onChange={(e) =>
                         handleQuantityChange(index, parseInt(e.target.value))
                       }

@@ -1,4 +1,5 @@
 'use client';
+import { getAllVendorItems } from '@/app/services/inventoryServices';
 import Pagination from '@/shared/components/Pagination/pagination';
 import {
   Button,
@@ -16,9 +17,8 @@ import { IoBagAddOutline } from 'react-icons/io5';
 import { DrawerExample } from '../customComponents/Cart';
 
 export interface Items {
-  Name: string;
-  Cost: number;
-  Available: number;
+  itemName: string;
+  price: number;
 }
 
 type Props = {
@@ -28,7 +28,7 @@ type Props = {
 const VendorItems = ({ handleClick }: Props) => {
   const [selectedItems, setSelectedItems] = useState<Items[]>([]);
   const [clickedItems, setClickedItems] = useState<number[]>([]);
-
+  const [vendorItems, setVendorItems] = useState<Items[]>([]);
   const handleSelectItems = (newItem: Items, index: number) => {
     if (clickedItems.includes(index)) {
       // Deselect if already selected
@@ -59,37 +59,18 @@ const VendorItems = ({ handleClick }: Props) => {
   };
 
   useEffect(() => {
+    const getVendorBudgets = async () => {
+      const response = await getAllVendorItems();
+      setVendorItems(response);
+    };
+    getVendorBudgets();
+  }, []);
+  console.log(vendorItems);
+  useEffect(() => {
     console.log('Selected items updated:', selectedItems);
   }, [selectedItems]);
 
-  const th = ['Name', 'Cost(taka)', 'Available(K.G)', 'Add to Cart'];
-  const dummyItems = [
-    {
-      Name: 'Lettuce',
-      Cost: 60,
-      Available: 100,
-    },
-    {
-      Name: 'Green-Salad',
-      Cost: 60,
-      Available: 100,
-    },
-    {
-      Name: 'Tomato',
-      Cost: 60,
-      Available: 100,
-    },
-    {
-      Name: 'Broccoli',
-      Cost: 60,
-      Available: 100,
-    },
-    {
-      Name: 'Onion',
-      Cost: 60,
-      Available: 100,
-    },
-  ];
+  const th = ['Name', 'Cost(taka)', 'Add to Cart'];
 
   return (
     <div className="mt-4">
@@ -131,11 +112,11 @@ const VendorItems = ({ handleClick }: Props) => {
             </Tr>
           </Thead>
           <Tbody>
-            {dummyItems.map((el, id) => (
+            {vendorItems.map((el, id) => (
               <Tr key={id}>
-                <Td>{el.Name}</Td>
-                <Td>{el.Cost}</Td>
-                <Td>{el.Available}</Td>
+                <Td>{el.itemName}</Td>
+                <Td>{el.price}</Td>
+
                 <Td>
                   <Button
                     p={2}
@@ -166,5 +147,4 @@ const VendorItems = ({ handleClick }: Props) => {
     </div>
   );
 };
-
 export default VendorItems;

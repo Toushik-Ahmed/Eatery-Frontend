@@ -8,13 +8,13 @@ export interface IngredientsTable {
   currentStock: number;
   unit: string;
   cost: number;
-  deliveryDate: string;
+  incomingStock: string;
   poo: number;
   capacity: number;
   prevStock: number;
-  prevExpiary: Date;
+  prevExpiry: string;
   newStock: number;
-  newExpiary: Date;
+  newStockExpiry: string;
 }
 
 export interface AddIngredient {

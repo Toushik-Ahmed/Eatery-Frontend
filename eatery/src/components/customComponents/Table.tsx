@@ -1,4 +1,5 @@
 'use client';
+import { IngredientsTable } from '@/redux/inventory/AddIngredientsSlice';
 import {
   Button,
   Table,
@@ -9,28 +10,18 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { format, parse } from 'date-fns';
 
 import { MdDeleteOutline } from 'react-icons/md';
 
-type Ingredient = {
-  Name: string;
-  UOM: string;
-  CurrentStock: number;
-  UnitCost: number;
-  OrderPoint: number;
-  Prevstock: number;
-  Expiarydate: string;
-  NewStock: number;
-  expiarydate: string;
-  IncomingStock: string;
-};
-
 type Props = {
   tableHead: string[];
-  ingredients: Partial<Ingredient>[];
+  ingredients: Partial<IngredientsTable>[];
 };
 
 const Tablecomponent = ({ tableHead, ingredients }: Props) => {
+  console.log(ingredients);
+
   return (
     <div className="flex justify-center">
       <TableContainer>
@@ -45,17 +36,25 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
           <Tbody>
             {ingredients.map((ingredient, index) => (
               <Tr key={index}>
-                <Td>{ingredient.Name}</Td>
-                <Td>{ingredient.UOM}</Td>
-                <Td>{ingredient.CurrentStock}</Td>
-                <Td>{ingredient.UnitCost}</Td>
-                <Td>{ingredient.OrderPoint}</Td>
-                <Td>{ingredient.Prevstock}</Td>
-                <Td>{ingredient.Expiarydate}</Td>
-                <Td>{ingredient.NewStock}</Td>
-                <Td>{ingredient.expiarydate}</Td>
-                <Td>{ingredient.IncomingStock}</Td>
+                <Td>{ingredient.ingredient}</Td>
+                <Td>{ingredient.unit}</Td>
+                <Td>{ingredient.capacity}</Td>
+                <Td>{ingredient.currentStock}</Td>
+                <Td>{ingredient.cost}</Td>
+                <Td>{ingredient.poo}</Td>
+                <Td>{ingredient.prevStock}</Td>
 
+                <Td>
+                  {ingredient.prevExpiry
+                    ? format(
+                        parse(ingredient.prevExpiry, 'dd-MM-yyyy', new Date()),
+                        'dd-MM-yyyy'
+                      )
+                    : ''}
+                </Td>
+                <Td>{ingredient.newStock}</Td>
+                <Td>{ingredient.newStockExpiry}</Td>
+                <Td>{ingredient.incomingStock}</Td>
                 <Td>
                   <Button colorScheme="red">
                     <MdDeleteOutline />
