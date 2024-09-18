@@ -4,6 +4,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BasicPie from "@/components/dashboardComponents/Pie";
 import BasicBarsOrder from "@/components/dashboardComponents/BarOrder";
 import BasicBarsRevenue from "@/components/dashboardComponents/LineRevenue";
+import Order from "@/components/dashboardComponents/Order";
+import Revenue from "@/components/dashboardComponents/Revenue";
 
 const theme = createTheme();
 
@@ -16,6 +18,8 @@ function Page({}: Props) {
         <BasicPie />
         <BasicBarsOrder />
         <BasicBarsRevenue />
+        <Order />
+        <Revenue />
       </div>
     </ThemeProvider>
   );

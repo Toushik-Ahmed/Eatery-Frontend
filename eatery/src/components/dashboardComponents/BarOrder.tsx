@@ -31,11 +31,14 @@ export default function BasicBarsOrder() {
   }, []);
 
   return (
-    <BarChart
-      xAxis={[{ scaleType: "band", data: labels }]} // Set the dates on the X-axis
-      series={[{ data: barData }]} // Set the order counts on the series
-      width={500}
-      height={300}
-    />
+    <div>
+      <h1>Order Chart</h1>
+      <BarChart
+        xAxis={[{ scaleType: "band", data: labels }]} // Set the dates on the X-axis
+        series={[{ data: barData }]} // Set the order counts on the series
+        width={500}
+        height={300}
+      />
+    </div>
   );
 }
