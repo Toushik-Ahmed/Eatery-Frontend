@@ -16,7 +16,7 @@ export default function BasicBarsRevenue() {
 
         // Extract orders and dates for BarChart
         const orderValues = response.map(
-          (item: { orders: number }) => item.orders
+          (item: { revenue: number }) => item.revenue
         );
         const dateLabels = response.map((item: { date: string }) => item.date);
 

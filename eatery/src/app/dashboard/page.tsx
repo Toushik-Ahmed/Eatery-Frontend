@@ -14,7 +14,7 @@ function Page({}: Props) {
     <ThemeProvider theme={theme}>
       <div>
         <BasicPie />
-        {/* <BasicBarsOrder /> */}
+        <BasicBarsOrder />
         <BasicBarsRevenue />
       </div>
     </ThemeProvider>
