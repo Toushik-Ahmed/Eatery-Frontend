@@ -59,10 +59,10 @@ const CustomCard = ({ name,description, size, image, onClick }: Props) => {
           </Heading>
           {size.map((s) => (
             <Flex key={s.sizeName} justify="space-between" align="center">
-              <Text color="#ff5841" fontSize="md">
+              <Text color="#ff5841" fontSize={["md", "md", "md", "md"]} objectFit={"cover"}>
                 {s.sizeName}
               </Text>
-              <Text color="#ff5841" fontSize="md">
+              <Text color="#ff5841" fontSize={["md", "md", "md", "md"]} objectFit={"cover"}>
                 ${s.sellingPrice}
               </Text>
             </Flex>

@@ -1,48 +1,70 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 interface OrderDetails {
-  table_no: number;
-  menu_items: {
-    menu_item_details: {
-      itemName: string;
-      quantity: number;
-      selectedSize: string;
-      itemPrice: number;
-      ingredients: {
-        name: string;
-        properties: {
-          quantity: number;
-          unit: string;
-        };
-      }[];
-      addOns: {
-        name: string;
+  tableNo: number;
+  tableStatus: string;
+  menuItems: {
+    itemName: string;
+    quantity: number;
+    selectedSize: string;
+    sellingPrice: number;
+    ingredients: {
+      name: string;
+      properties: {
         quantity: number;
         unit: string;
-        addonPrice: number;
-      }[];
-    };
+      };
+    }[];
+    addOns: {
+      name: string;
+      quantity: number;
+      unit: string;
+      addonPrice: number;
+    }[];
   }[];
   preparationTime: number;
   totalPrice: number;
 }
 
-export interface OrderDetailsState {
-  totalItems: OrderDetails[];
-}
-
-const initialState: OrderDetailsState = {
-  totalItems: [],
+const initialState: OrderDetails = {
+  tableNo: 0,
+  tableStatus: "",
+  menuItems: [],
+  preparationTime: 0,
+  totalPrice: 0,
 };
 
 export const PlaceOrderSlice = createSlice({
   name: "placeorder",
   initialState,
   reducers: {
-    addPlaceOrderInfo: (state, action: PayloadAction<OrderDetails[]>) => {
-      state.totalItems.push(...action.payload);
+    addPlaceOrderInfo: (state, action: PayloadAction<OrderDetails>) => {
+      return { ...state, ...action.payload };
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(
+      placeOrder.fulfilled,
+      (state, action: PayloadAction<OrderDetails>) => {
+        state.tableNo = action.payload.tableNo;
+        state.tableStatus = action.payload.tableStatus;
+        state.menuItems = action.payload.menuItems;
+        state.preparationTime = action.payload.preparationTime;
+        state.totalPrice = action.payload.totalPrice;
+      }
+    );
+  },
 });
+
+export const placeOrder = createAsyncThunk(
+  "placeorder/placeOrder",
+  async (orderDetails: OrderDetails) => {
+    const response = await axios.post("http://localhost:5000/pos/new", {
+      orderDetails,
+    });
+    return response.data;
+  }
+);
 
 export default PlaceOrderSlice.reducer;
 export const { addPlaceOrderInfo } = PlaceOrderSlice.actions;

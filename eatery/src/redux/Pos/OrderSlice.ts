@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export interface Item {
   id: number;
   name: string;
   category: string;
-  tastyTag: string;
   mealTime: string[];
   description: string;
   image: string;
@@ -26,6 +26,7 @@ export interface Item {
       addonPrice: number;
     }[];
   }[];
+  uniqueKey: number;
 }
 
 export interface ItemState {
@@ -37,17 +38,24 @@ const initialState: ItemState = {
 };
 
 export const OrderSlice = createSlice({
-    name: "order",
-    initialState,
-    reducers: {
-      addOrderInfo: (
-        state,
-        action: PayloadAction<Item[]>
-      ) => {
-        state.orderedItems.push(...action.payload);
-      },
+  name: "order",
+  initialState,
+  reducers: {
+    addOrderInfo: (state, action: PayloadAction<Item[]>) => {
+      state.orderedItems.push(...action.payload);
     },
-  });
+    removeItemFromOrder: (
+      state,
+      action: PayloadAction<{ uniqueKey: number }>
+    ) => {
+      const { uniqueKey } = action.payload;
+
+      state.orderedItems = state.orderedItems.filter(
+        (item) => item.uniqueKey !== uniqueKey
+      );
+    },
+  },
+});
 
 export default OrderSlice.reducer;
-export const { addOrderInfo } = OrderSlice.actions;
+export const { addOrderInfo, removeItemFromOrder } = OrderSlice.actions;
