@@ -50,7 +50,7 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
       <CardBody p={"2"}>
         <Image src={image} alt={name} borderRadius="lg" objectFit={"cover"} />
         <Stack mt="2" spacing="1">
-          <Heading size="md" fontWeight={"semibold"} objectFit={"cover"}>
+          <Heading size="md" fontWeight={"bold"} objectFit={"cover"}>
             {name}
           </Heading>
           {size.map((s) => (
