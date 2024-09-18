@@ -15,21 +15,21 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
 import { useDispatch, useSelector } from 'react-redux';
-import { Items } from '../inventoryComponent/VendorItems';
 
 type DrawerProps = {
-  selectedItems: Items[];
   removeItem: (index: number) => void;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Items[]>>;
+  cartData: CartData[];
+  setCartData: React.Dispatch<React.SetStateAction<CartData[]>>;
 };
 
 export interface CartData {
   ingredient: string;
   unit: string;
   quantity: number;
+  price: number;
   deliveryDate: string;
 }
 export interface OrderHistory {
@@ -38,80 +38,72 @@ export interface OrderHistory {
 }
 
 export function DrawerExample({
-  selectedItems,
   removeItem,
-  setSelectedItems,
+  cartData,
+  setCartData,
 }: DrawerProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
-  const [units, setUnits] = useState<string[]>([]);
-  const [deliveryDates, setDeliveryDates] = useState<string[]>([]);
-  const [quantities, setQuantities] = useState<number[]>([]);
-  const [checkoutData, setCheckoutData] = useState<CartData[]>([]);
   const [orderHistory, setOrderHistory] = useState<OrderHistory | undefined>();
   const dispatch = useDispatch<AppDispatch>();
   const oderedData = useSelector(
     (state: RootState) => state.addIngredients.ingredients
   );
 
-  // Update state arrays when selectedItems changes
-  useEffect(() => {
-    setUnits(selectedItems.map(() => ''));
-    setQuantities(selectedItems.map(() => 0));
-    setDeliveryDates(selectedItems.map(() => ''));
-  }, [selectedItems]);
-
   // Handle quantity change
   const handleQuantityChange = (index: number, value: number) => {
-    const newQuantities = [...quantities];
-    newQuantities[index] = value;
-    setQuantities(newQuantities);
+    setCartData((data) => {
+      return data.map((el, idx) =>
+        idx === index ? { ...el, quantity: value } : { ...el }
+      );
+    });
   };
 
   // Handle unit change
   const handleUnitChange = (index: number, value: string) => {
-    const newUnits = [...units];
-    newUnits[index] = value;
-    setUnits(newUnits);
+    setCartData((data) => {
+      return data.map((el, idx) =>
+        idx === index ? { ...el, unit: value } : { ...el }
+      );
+    });
   };
 
   // Handle delivery date change
   const handleDeliveryDateChange = (index: number, value: string) => {
-    const newDates = [...deliveryDates];
-    newDates[index] = value;
-    setDeliveryDates(newDates);
+    setCartData((data) => {
+      return data.map((el, idx) =>
+        idx === index ? { ...el, deliveryDate: value } : { ...el }
+      );
+    });
   };
 
   // Calculate total cost of all items
   const calculateTotalCost = () => {
-    return selectedItems.reduce(
-      (acc, item, index) => acc + (item.price || 0) * (quantities[index] || 1),
-      0
-    );
+    return cartData.reduce((acc, curr) => {
+      return acc + curr.quantity * curr.price;
+    }, 0);
   };
 
   // Checkout function
   const handleCheckout = () => {
-    const cartData = selectedItems.map((item, index) => ({
-      ingredient: item.itemName,
-      unit: units[index],
-      quantity: quantities[index],
-      deliveryDate: deliveryDates[index],
+    const checkOutData = cartData.map((item) => ({
+      ingredient: item.ingredient,
+      unit: item.unit,
+      quantity: item.quantity,
+      deliveryDate: item.deliveryDate,
+      price: item.price,
     }));
-
     const totalCost = calculateTotalCost();
 
     const newOrderHistory: OrderHistory = {
-      ingredients: cartData,
+      ingredients: checkOutData,
       cost: totalCost,
     };
-
     setOrderHistory(newOrderHistory);
     dispatch(postOrder(newOrderHistory));
-    setCheckoutData(cartData);
-
+    setCartData(checkOutData);
     console.log('Checkout data:', cartData);
     console.log('Order history:', newOrderHistory);
 
@@ -123,36 +115,18 @@ export function DrawerExample({
       duration: 3000,
       isClosable: true,
     });
-
-    setSelectedItems([]);
-    setCheckoutData([]);
-    setUnits([]);
-    setQuantities([]);
-    setDeliveryDates([]);
+    setCartData([]);
   };
 
   // Clear cart on cancel
   const handleCancel = () => {
-    setSelectedItems([]);
+    setCartData([]);
     onClose();
   };
 
   // Handle remove item
   const handleRemoveItem = (index: number) => {
     removeItem(index);
-
-    // Update the state arrays
-    const newUnits = [...units];
-    newUnits.splice(index, 1);
-    setUnits(newUnits);
-
-    const newQuantities = [...quantities];
-    newQuantities.splice(index, 1);
-    setQuantities(newQuantities);
-
-    const newDates = [...deliveryDates];
-    newDates.splice(index, 1);
-    setDeliveryDates(newDates);
   };
 
   return (
@@ -172,13 +146,13 @@ export function DrawerExample({
           <DrawerHeader>Your Cart</DrawerHeader>
 
           <DrawerBody>
-            {selectedItems.length === 0 ? (
+            {cartData.length === 0 ? (
               <p>No items in the cart</p>
             ) : (
-              selectedItems.map((item, index) => (
+              cartData.map((item, index) => (
                 <div key={index} className="mb-4 border-b pb-2">
                   <p>
-                    <strong>Name:</strong> {item.itemName}
+                    <strong>Name:</strong> {item.ingredient}
                   </p>
                   <p>
                     <strong>Cost (p/u):</strong> {item.price} Taka
@@ -189,7 +163,7 @@ export function DrawerExample({
                     <Select
                       placeholder="Select unit"
                       size="sm"
-                      value={units[index] || ''}
+                      value={item.unit || ''}
                       onChange={(e) => handleUnitChange(index, e.target.value)}
                     >
                       <option value="kg">K.G</option>
@@ -202,8 +176,7 @@ export function DrawerExample({
                     <Input
                       type="number"
                       size="sm"
-
-                      value={quantities[index] }
+                      value={item.quantity}
                       onChange={(e) =>
                         handleQuantityChange(index, parseInt(e.target.value))
                       }
@@ -216,7 +189,7 @@ export function DrawerExample({
                       type="date"
                       size="sm"
                       min={format(new Date(), 'yyyy-MM-dd')}
-                      value={deliveryDates[index] || ''}
+                      value={item.deliveryDate || ''}
                       onChange={(e) =>
                         handleDeliveryDateChange(index, e.target.value)
                       }
@@ -232,7 +205,7 @@ export function DrawerExample({
                 </div>
               ))
             )}
-            {selectedItems.length > 0 && (
+            {cartData.length > 0 && (
               <div className="mt-4 font-bold text-lg">
                 <p>Total Cost: {calculateTotalCost()} Taka</p>
               </div>

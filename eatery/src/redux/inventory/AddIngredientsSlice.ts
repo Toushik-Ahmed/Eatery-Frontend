@@ -12,7 +12,7 @@ export interface IngredientsTable {
   poo: number;
   capacity: number;
   prevStock: number;
-  prevExpiry: string;
+  prevExpiary: string;
   newStock: number;
   newStockExpiry: string;
 }

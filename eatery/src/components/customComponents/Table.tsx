@@ -10,7 +10,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { format, parse } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 
 import { MdDeleteOutline } from 'react-icons/md';
 
@@ -45,16 +45,22 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
                 <Td>{ingredient.prevStock}</Td>
 
                 <Td>
-                  {ingredient.prevExpiry
-                    ? format(
-                        parse(ingredient.prevExpiry, 'dd-MM-yyyy', new Date()),
-                        'dd-MM-yyyy'
-                      )
+                  {ingredient.prevExpiary
+                    ? format(parseISO(ingredient.prevExpiary), 'dd-MM-yyyy')
                     : ''}
                 </Td>
                 <Td>{ingredient.newStock}</Td>
-                <Td>{ingredient.newStockExpiry}</Td>
-                <Td>{ingredient.incomingStock}</Td>
+                <Td>
+                  {' '}
+                  {ingredient.newStockExpiry
+                    ? format(parseISO(ingredient.newStockExpiry), 'dd-MM-yyyy')
+                    : ''}
+                </Td>
+                <Td>
+                  {ingredient.incomingStock
+                    ? format(parseISO(ingredient.incomingStock), 'dd-MM-yyyy')
+                    : ''}
+                </Td>
                 <Td>
                   <Button colorScheme="red">
                     <MdDeleteOutline />

@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { IoBagAddOutline } from 'react-icons/io5';
-import { DrawerExample } from '../customComponents/Cart';
+import { CartData, DrawerExample } from '../customComponents/Cart';
 
 export interface Items {
   itemName: string;
@@ -29,21 +29,35 @@ const VendorItems = ({ handleClick }: Props) => {
   const [selectedItems, setSelectedItems] = useState<Items[]>([]);
   const [clickedItems, setClickedItems] = useState<number[]>([]);
   const [vendorItems, setVendorItems] = useState<Items[]>([]);
+  const [cartData, setCartData] = useState<CartData[]>([]);
+
   const handleSelectItems = (newItem: Items, index: number) => {
     if (clickedItems.includes(index)) {
       // Deselect if already selected
       setSelectedItems((prev) => prev.filter((item) => item !== newItem));
       setClickedItems((prev) => prev.filter((i) => i !== index));
+      setCartData((prev) => prev.filter((_, i) => i !== index));
     } else {
       // Select if not already selected
       setSelectedItems((prev) => [...prev, newItem]);
       setClickedItems((prev) => [...prev, index]);
+      setCartData((prev) => [
+        ...prev,
+        {
+          ingredient: newItem.itemName,
+          unit: '',
+          quantity: 0,
+          price: newItem.price,
+          deliveryDate: '',
+        },
+      ]);
     }
   };
 
   const removeItem = (index: number) => {
     setSelectedItems((prev) => prev.filter((item, id) => id !== index));
     setClickedItems((prev) => prev.filter((_, i) => i !== index)); // Unmark the item
+    setCartData((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Clear all selections and reset button state
@@ -72,6 +86,8 @@ const VendorItems = ({ handleClick }: Props) => {
 
   const th = ['Name', 'Cost(taka)', 'Add to Cart'];
 
+  const handleSetCartData = () => {};
+
   return (
     <div className="mt-4">
       <div className="flex items-center gap-2">
@@ -95,9 +111,9 @@ const VendorItems = ({ handleClick }: Props) => {
         <div className="text-3xl font-bold mb-10">List of Items</div>
         <div className="mr-10">
           <DrawerExample
-            setSelectedItems={setSelectedItems}
-            selectedItems={selectedItems}
             removeItem={removeItem}
+            cartData={cartData}
+            setCartData={(data) => setCartData(data)}
           />
         </div>
       </div>
