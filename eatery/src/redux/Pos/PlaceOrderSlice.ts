@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-interface OrderDetails {
+export interface OrderDetails {
+  _id?: number;
   tableNo: number;
   tableStatus: string;
   menuItems: {
     itemName: string;
     quantity: number;
     selectedSize: string;
+    unitPrice: number;
     sellingPrice: number;
     ingredients: {
       name: string;
@@ -77,7 +79,7 @@ export const placeOrder = createAsyncThunk(
 );
 
 export const getOrders = createAsyncThunk("placeorder/getOrders", async () => {
-  const response = await axios.get("http://localhost:5000/menu/allmenu");
+  const response = await axios.get("http://localhost:5000/pos/orders");
   return response.data;
 });
 

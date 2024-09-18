@@ -28,6 +28,7 @@ interface OrderDetails {
     itemName: string;
     quantity: number;
     selectedSize: string;
+    unitPrice: number;
     sellingPrice: number;
     ingredients: {
       name: string;
@@ -58,8 +59,19 @@ const OrderSummery = (props: Props) => {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [totalPrices, setTotalPrices] = useState<{ [key: string]: number }>({});
   const [preparationTime, setPreparationTime] = useState<number>(0);
-
+  const [unitPrice, setUnitPrice] = useState<number>(0);
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
+
+  const calculateUnitPrice = () => {
+    listOfItems.orderedItems.forEach((item) => {
+      const itemId = item.uniqueKey;
+      const selectedSize = item.size.find(
+        (s) => s.sizeName === selectedSizes[itemId]
+      );
+      const sizePrice = selectedSize ? selectedSize.sellingPrice : 0;
+      setUnitPrice(sizePrice);
+    });
+  };
 
   const calculateTotalPrice = () => {
     const newTotalPrices: { [key: string]: number } = {};
@@ -84,7 +96,6 @@ const OrderSummery = (props: Props) => {
     });
     setTotalPrices(newTotalPrices);
   };
-
   const calculatePreparationTime = () => {
     let maxPreparationTime = 0;
     listOfItems.orderedItems.forEach((item) => {
@@ -101,14 +112,12 @@ const OrderSummery = (props: Props) => {
     });
     setPreparationTime(maxPreparationTime);
   };
-
   const handleSizeChange = (uniqueKey: number, sizeName: string) => {
     setSelectedSizes((prevSizes) => ({
       ...prevSizes,
       [uniqueKey]: sizeName,
     }));
   };
-
   const handleAddonChange = (
     uniqueKey: number,
     addonName: string,
@@ -125,7 +134,6 @@ const OrderSummery = (props: Props) => {
       };
     });
   };
-
   const handleQuantityChange = (
     uniqueKey: number,
     action: "increment" | "decrement"
@@ -142,7 +150,6 @@ const OrderSummery = (props: Props) => {
       };
     });
   };
-
   const handleDeleteItem = (uniqueKey: number) => {
     dispatch(removeItemFromOrder({ uniqueKey }));
 
@@ -163,12 +170,11 @@ const OrderSummery = (props: Props) => {
       return rest;
     });
   };
-
   useEffect(() => {
+    calculateUnitPrice();
     calculateTotalPrice();
     calculatePreparationTime();
   }, [selectedSizes, selectedAddons, quantities, listOfItems.orderedItems]);
-
   const handleSendOrder = () => {
     const orderDetails: OrderDetails = {
       tableNo: 5,
@@ -177,6 +183,7 @@ const OrderSummery = (props: Props) => {
         itemName: item.name,
         quantity: quantities[item.uniqueKey] || 1,
         selectedSize: selectedSizes[item.uniqueKey],
+        unitPrice: unitPrice,
         sellingPrice: totalPrices[item.uniqueKey] || 0,
         ingredients:
           item.size.find((s) => s.sizeName === selectedSizes[item.uniqueKey])
@@ -206,7 +213,6 @@ const OrderSummery = (props: Props) => {
     console.log(orderDetails);
     dispatch(placeOrder(orderDetails));
   };
-
   return (
     <Box
       borderWidth="1px"
@@ -245,7 +251,6 @@ const OrderSummery = (props: Props) => {
                 ${totalPrices[`${item.uniqueKey}`]?.toFixed(2) || "0.00"}
               </Text>
             </Flex>
-
             <Flex>
               <Box>
                 <Select
@@ -263,7 +268,6 @@ const OrderSummery = (props: Props) => {
                     </option>
                   ))}
                 </Select>
-
                 {selectedSizes[`${item.uniqueKey}`] && (
                   <Box mt={"2"}>
                     <Text fontSize="sm" color="gray.900">
@@ -271,7 +275,6 @@ const OrderSummery = (props: Props) => {
                     </Text>
                   </Box>
                 )}
-
                 {selectedSizes[`${item.uniqueKey}`] && (
                   <VStack align={"start"} mt={"2"}>
                     <Text fontSize="sm" color="gray.900">
@@ -301,7 +304,6 @@ const OrderSummery = (props: Props) => {
                   </VStack>
                 )}
               </Box>
-
               <Spacer />
               <Box mt={"2"}>
                 <Flex alignItems={"center"}>
@@ -319,7 +321,6 @@ const OrderSummery = (props: Props) => {
                   >
                     -
                   </Button>
-
                   <Center w={"8"}>
                     <Text>{quantities[`${item.uniqueKey}`] || 1}</Text>
                   </Center>
@@ -385,5 +386,4 @@ const OrderSummery = (props: Props) => {
     </Box>
   );
 };
-
 export default OrderSummery;
