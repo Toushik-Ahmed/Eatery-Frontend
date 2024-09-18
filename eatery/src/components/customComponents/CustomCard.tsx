@@ -48,23 +48,27 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
       onClick={onClick}
     >
       <CardBody p={"2"}>
-        <Image
-          src={image}
-          alt={name}
-          borderRadius="lg"
-          
-          objectFit={"cover"}
-        />
+        <Image src={image} alt={name} borderRadius="lg" objectFit={"cover"} />
         <Stack mt="2" spacing="1">
           <Heading size="md" fontWeight={"semibold"} objectFit={"cover"}>
             {name}
           </Heading>
           {size.map((s) => (
             <Flex key={s.sizeName} justify="space-between" align="center">
-              <Text color="#ff5841" fontSize={["md", "md", "md", "md"]} objectFit={"cover"}>
+              <Text
+                color="#d91656"
+                fontSize={["md", "md", "md", "md"]}
+                fontWeight={"semibold"}
+                objectFit={"cover"}
+              >
                 {s.sizeName}
               </Text>
-              <Text color="#ff5841" fontSize={["md", "md", "md", "md"]} objectFit={"cover"}>
+              <Text
+                color="#ff5841"
+                fontSize={["md", "md", "md", "md"]}
+                fontWeight={"semibold"}
+                objectFit={"cover"}
+              >
                 ${s.sellingPrice}
               </Text>
             </Flex>
