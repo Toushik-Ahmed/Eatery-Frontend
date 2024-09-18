@@ -155,14 +155,14 @@ const ItemDrawer: React.FC<Props> = ({
                 <Text fontWeight="bold" fontSize="lg">
                   Available at:
                 </Text>
-                <HStack spacing={2}>
+                {/* <HStack spacing={2}>
                   {Array.isArray(selectedItem.mealTime) &&
                     selectedItem.mealTime.map((time, idx) => (
                       <Tag key={idx} colorScheme="blue">
                         {time}
                       </Tag>
                     ))}
-                </HStack>
+                </HStack> */}
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
 
