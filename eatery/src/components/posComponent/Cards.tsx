@@ -37,10 +37,6 @@ const Cards = (props: Props) => {
   const list = useSelector((state: RootState) => state.allItem);
   const allItems = list.allItems;
 
-  //console.log(allItems);
-  const a = allItems.map((e) => e.mealTime);
-  console.log(a);
-
   const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
@@ -69,6 +65,13 @@ const Cards = (props: Props) => {
   const categories = Array.from(
     new Set(allItems.map((item: any) => item.category))
   );
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  useEffect(() => {
+    if (categories.length > 0 && !selectedCategory) {
+      setSelectedCategory(categories[0]);
+    }
+  }, [categories, selectedCategory]);
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
@@ -93,6 +96,7 @@ const Cards = (props: Props) => {
               mt={"6"}
               fontSize={{ base: "lg", md: "xl" }}
               fontWeight={"semibold"}
+              mb={{ base: "4", md: "10" }}
             >
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
@@ -142,47 +146,71 @@ const Cards = (props: Props) => {
               </HStack>
             </Box>
           </Flex>
-          <Box>
-            {categories.map((category, index) => (
-              <Box
-                mx={{ base: "4", md: "8" }}
-                mt={{ base: "4", md: "6" }}
-                key={index}
-              >
-                <Stack spacing={{ base: "4", md: "6" }}>
-                  <Text
+          <Flex>
+            <Box
+              p={"4"}
+              fontSize={{ base: "lg", md: "xl" }}
+              fontWeight={"semiBold"}
+            >
+              <Stack spacing={{ base: 3, md: 16 }}>
+                {categories.map((category, index) => (
+                  <Button
+                    bg={category === selectedCategory ? "#ff5841" : "white"}
+                    textColor={
+                      category === selectedCategory ? "white" : "black"
+                    }
+                    _hover={{ background: "#ff5841", textColor: "white" }}
+                    borderRadius={"full"}
+                    w={"fit"}
+                    onClick={() => setSelectedCategory(category)}
+                    key={index}
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </Stack>
+            </Box>
+
+            <Box>
+              {categories.map((category, index) => (
+                <Box mx={{ base: "4", md: "4" }} key={index}>
+                  <Stack spacing={{ base: "4", md: "6" }}>
+                    {/* <Text
                     fontSize={{ base: "xl", md: "2xl" }}
                     fontWeight={"semiBold"}
                     w={"fit"}
                     textColor={"#ff5841"}
+                    onClick={() => setSelectedCategory(category)}
                   >
                     {category}
-                  </Text>
-
-                  <Grid
-                    templateColumns={{
-                      base: "repeat(1, 1fr)",
-                      md: "repeat(3, 1fr)",
-                      lg: "repeat(6, 1fr)",
-                    }}
-                    gap={8}
-                  >
-                    {availableItems
-                      .filter((item) => item.category === category)
-                      .map((item) => (
-                        <CustomCard
-                          key={item.id}
-                          name={item.name}
-                          size={item.size}
-                          image={item.image}
-                          onClick={() => handleSubmit(item)}
-                        />
-                      ))}
-                  </Grid>
-                </Stack>
-              </Box>
-            ))}
-          </Box>
+                  </Text> */}
+                    {selectedCategory === category && (
+                      <Grid
+                        templateColumns={{
+                          base: "repeat(1, 1fr)",
+                          md: "repeat(3, 1fr)",
+                          lg: "repeat(6, 1fr)",
+                        }}
+                        gap={5}
+                      >
+                        {availableItems
+                          .filter((item) => item.category === category)
+                          .map((item) => (
+                            <CustomCard
+                              key={item.id}
+                              name={item.name}
+                              size={item.size}
+                              image={item.image}
+                              onClick={() => handleSubmit(item)}
+                            />
+                          ))}
+                      </Grid>
+                    )}
+                  </Stack>
+                </Box>
+              ))}
+            </Box>
+          </Flex>
         </Box>
         <Spacer />
         <OrderSummery />

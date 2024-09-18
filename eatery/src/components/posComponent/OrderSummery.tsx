@@ -234,6 +234,7 @@ const OrderSummery = (props: Props) => {
             borderRadius="md"
             borderColor={"gray-200"}
             rounded={"md"}
+            mb={"1vh"}
           >
             <Flex>
               <Box>
