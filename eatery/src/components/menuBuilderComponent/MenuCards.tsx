@@ -220,9 +220,9 @@ const Cards = (props: Props) => {
     setAvailableItems(filteredItems);
   }, [mealTime]);
 
-  const handleSubmit = (item: Items) => {
-    dispatch(addOrderInfo([item]));
-  };
+  // const handleSubmit = (item: Items) => {
+  //   dispatch(addOrderInfo([item]));
+  // };
 
   const handleCardClick = (item: Items) => {
     setSelectedItem(item);
