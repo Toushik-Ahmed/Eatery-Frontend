@@ -50,7 +50,7 @@ interface SelectedItem {
   name: string;
   image: string;
   description: string;
-  tastyTag: string;
+  tastyTag?: string;
   mealTime: string[];
   size: Size[];
 }
@@ -75,9 +75,8 @@ const ItemDrawer: React.FC<Props> = ({
   const toast = useToast();
 
   const handleDelete = () => {
-    
     onDelete();
-    
+
     toast({
       title: "Item deleted.",
       description: "The selected item has been deleted.",
@@ -107,7 +106,6 @@ const ItemDrawer: React.FC<Props> = ({
         <DrawerBody p={6}>
           {selectedItem ? (
             <VStack spacing={6} align="flex-start">
-
               {/* Image and Size Selector part */}
               <Grid templateColumns="1fr" gap={6}>
                 <GridItem>
@@ -116,13 +114,11 @@ const ItemDrawer: React.FC<Props> = ({
                     alt={selectedItem.name}
                     borderRadius="md"
                     boxShadow="md"
-                    width="100%" 
+                    width="100%"
                   />
                 </GridItem>
                 <GridItem>
-                  <Text fontWeight="bold">
-                    Size:
-                  </Text>
+                  <Text fontWeight="bold">Size:</Text>
                   <Select
                     value={selectedSize}
                     onChange={(e) => setSelectedSize(Number(e.target.value))}
@@ -139,25 +135,33 @@ const ItemDrawer: React.FC<Props> = ({
               </Grid>
               <Divider borderColor="black" borderWidth="2px" />
 
-              {/* Description and Details part*/}
+              {/* Description and Details part */}
               <VStack align="flex-start" spacing={3}>
                 <Text fontWeight="bold" fontSize="lg">
                   Description:
                 </Text>
                 <Text>{selectedItem.description}</Text>
-                <Text fontWeight="bold" fontSize="lg">
-                  Tasty Tag:
-                </Text>
-                <Tag colorScheme="teal">{selectedItem.tastyTag}</Tag>
+
+                {/* Conditionally Render Tasty Tag */}
+                {/* {selectedItem.tastyTag && (
+                  <>
+                    <Text fontWeight="bold" fontSize="lg">
+                      Tasty Tag:
+                    </Text>
+                    <Tag colorScheme="teal">{selectedItem.tastyTag}</Tag>
+                  </>
+                )} */}
+
                 <Text fontWeight="bold" fontSize="lg">
                   Available at:
                 </Text>
                 <HStack spacing={2}>
-                  {selectedItem.mealTime.map((time, idx) => (
-                    <Tag key={idx} colorScheme="blue">
-                      {time}
-                    </Tag>
-                  ))}
+                  {Array.isArray(selectedItem.mealTime) &&
+                    selectedItem.mealTime.map((time, idx) => (
+                      <Tag key={idx} colorScheme="blue">
+                        {time}
+                      </Tag>
+                    ))}
                 </HStack>
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
@@ -180,7 +184,7 @@ const ItemDrawer: React.FC<Props> = ({
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
 
-              {/* Add-ons part*/}
+              {/* Add-ons part */}
               {selectedItem.size[selectedSize].addOns.length > 0 && (
                 <VStack align="flex-start" spacing={3}>
                   <Text fontWeight="bold" fontSize="lg">
@@ -200,7 +204,7 @@ const ItemDrawer: React.FC<Props> = ({
               )}
               <Divider borderColor="black" borderWidth="2px" />
 
-              {/* Price and Preparation Time part*/}
+              {/* Price and Preparation Time part */}
               <Text fontWeight="bold">
                 Preparation Time:{" "}
                 {selectedItem.size[selectedSize].preparationTime} minutes
@@ -208,7 +212,6 @@ const ItemDrawer: React.FC<Props> = ({
               <Text fontWeight="bold" fontSize="xl">
                 Price: ${selectedItem.size[selectedSize].sellingPrice}
               </Text>
-              Delete Button
               <Box mt={6}>
                 <Button
                   colorScheme="red"
