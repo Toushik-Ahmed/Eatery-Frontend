@@ -2,13 +2,20 @@
 
 import { AppDispatch, RootState } from "@/redux/store";
 import { Box, Flex, Spacer, Stack, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { OrderDetails } from "@/redux/Pos/PlaceOrderSlice";
 
 type Props = {};
 
 const Invoice = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
+  /* const searchParams = useSearchParams();
+
+  const Value = searchParams.get("orderdetails"); */
+  const list = useSelector((state: RootState) => state.placeOrder);
+
   return (
     <Box
       borderWidth={"1px"}
@@ -23,10 +30,14 @@ const Invoice = (props: Props) => {
         </Text>
       </Box>
       <Flex>
-        <Box mb={"4"}>
-          <Text>Order Id: </Text>
-          <Text>Table No: </Text>
-        </Box>
+        {list.orderDetails.tableNo ? (
+          <Box mb={"4"}>
+            <Text>Order Id: </Text>
+            <Text>Table No: {list.orderDetails.tableNo}</Text>
+          </Box>
+        ) : (
+          ""
+        )}
         <Spacer />
         <Box>Date: 19/3/2024</Box>
       </Flex>

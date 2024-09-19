@@ -1,3 +1,4 @@
+"use client";
 import { addPlaceOrderInfo, placeOrder } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
@@ -18,37 +19,14 @@ import {
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { removeItemFromOrder } from "@/redux/Pos/OrderSlice";
+import { useRouter } from "next/navigation";
+import { OrderDetails } from "@/redux/Pos/PlaceOrderSlice";
 
 type Props = {};
 
-interface OrderDetails {
-  tableNo: number;
-  tableStatus: string;
-  menuItems: {
-    itemName: string;
-    quantity: number;
-    selectedSize: string;
-    unitPrice: number;
-    sellingPrice: number;
-    ingredients: {
-      name: string;
-      properties: {
-        quantity: number;
-        unit: string;
-      };
-    }[];
-    addOns: {
-      name: string;
-      quantity: number;
-      unit: string;
-      addonPrice: number;
-    }[];
-  }[];
-  preparationTime: number;
-  totalPrice: number;
-}
-
 const OrderSummery = (props: Props) => {
+  const router = useRouter();
+  const [a, setA] = useState<number>(0);
   const dispatch = useDispatch<AppDispatch>();
   const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: string }>(
     {}
@@ -61,6 +39,14 @@ const OrderSummery = (props: Props) => {
   const [preparationTime, setPreparationTime] = useState<number>(0);
   const [unitPrice, setUnitPrice] = useState<number>(0);
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
+
+  const list = useSelector((state: RootState) => state.placeOrder);
+
+  useEffect(() => {
+    setA(list.orderDetails.tableNo);
+  }, [list]);
+
+  console.log(a);
 
   const calculateUnitPrice = () => {
     listOfItems.orderedItems.forEach((item) => {
@@ -75,13 +61,13 @@ const OrderSummery = (props: Props) => {
 
   const calculateTotalPrice = () => {
     const newTotalPrices: { [key: string]: number } = {};
+
     listOfItems.orderedItems.forEach((item) => {
       const itemId = item.uniqueKey;
       const selectedSize = item.size.find(
         (s) => s.sizeName === selectedSizes[itemId]
       );
       const sizePrice = selectedSize ? selectedSize.sellingPrice : 0;
-
       const addonPrices =
         selectedAddons[itemId]?.reduce((acc, addonName) => {
           const addonPrice =
@@ -91,6 +77,7 @@ const OrderSummery = (props: Props) => {
         }, 0) || 0;
 
       const quantity = quantities[itemId] || 1;
+
       const totalPrice = (sizePrice + addonPrices) * quantity;
       newTotalPrices[itemId] = totalPrice;
     });
@@ -175,9 +162,9 @@ const OrderSummery = (props: Props) => {
     calculateTotalPrice();
     calculatePreparationTime();
   }, [selectedSizes, selectedAddons, quantities, listOfItems.orderedItems]);
-  const handleSendOrder = () => {
+  const handleSendOrder =  () => {
     const orderDetails: OrderDetails = {
-      tableNo: 5,
+      tableNo: 7,
       tableStatus: "Occupied",
       menuItems: listOfItems.orderedItems.map((item) => ({
         itemName: item.name,
@@ -210,8 +197,11 @@ const OrderSummery = (props: Props) => {
         0
       ),
     };
-    console.log(orderDetails);
-    dispatch(placeOrder(orderDetails));
+   dispatch(addPlaceOrderInfo(orderDetails));
+     dispatch(placeOrder(orderDetails));
+
+    //const serializedOrderDetails = JSON.stringify(list.orderDetails);
+    router.push(`/invoice`);
   };
   return (
     <Box

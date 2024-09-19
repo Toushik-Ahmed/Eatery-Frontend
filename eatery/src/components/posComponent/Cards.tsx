@@ -160,7 +160,7 @@ const Cards = (props: Props) => {
                       category === selectedCategory ? "white" : "black"
                     }
                     _hover={{ background: "#ff5841", textColor: "white" }}
-                    borderRadius={"full"}
+                    borderRightRadius={"full"}
                     w={"fit"}
                     onClick={() => setSelectedCategory(category)}
                     key={index}
