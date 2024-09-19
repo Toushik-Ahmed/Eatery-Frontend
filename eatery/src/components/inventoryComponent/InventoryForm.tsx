@@ -90,9 +90,10 @@ const InventoryForm = (props: Props) => {
           value={unit}
           onChange={(e) => setUnit(e.target.value)}
         >
-          <option value="g">Grams</option>
-          <option value="kg">Kilograms</option>
-          <option value="l">Liters</option>
+          <option value="Gram">Gram</option>
+          <option value="K.G">Kilograms</option>
+          <option value="Liter">Liters</option>
+          <option value="Pieces">Pieces</option>
         </Select>
       </FormControl>
 

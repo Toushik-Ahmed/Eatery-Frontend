@@ -3,7 +3,7 @@ import axios from 'axios';
 import { OrderHistory } from './OrderHistorySlice';
 
 export interface IngredientsTable {
-  id?: number;
+  _id?: string;
   ingredient: string;
   currentStock: number;
   unit: string;
@@ -47,7 +47,7 @@ export const AddIngredientsSlice = createSlice({
     orderIng: (state, action: PayloadAction<Partial<IngredientsTable>>) => {
       const newItem = action.payload;
       const existingItemIndex = state.ingredients.findIndex(
-        (item) => item.id === newItem.id
+        (item) => item._id === newItem
       );
 
       if (existingItemIndex >= 0) {
@@ -81,6 +81,14 @@ export const AddIngredientsSlice = createSlice({
         state.ingredients = action.payload;
       }
     );
+    builder.addCase(
+      deleteIngredient.fulfilled,
+      (state, action: PayloadAction<string>) => {
+        state.ingredients = state.ingredients.filter(
+          (item) => item._id !== action.payload
+        );
+      }
+    );
   },
 });
 
@@ -110,6 +118,17 @@ export const getAllIngredients = createAsyncThunk(
       'http://localhost:5000/ingredient/allingredient'
     );
     return response.data;
+  }
+);
+
+export const deleteIngredient = createAsyncThunk(
+  'inventory/deleteIngredient',
+  async (id: string) => {
+    const response = await axios.delete(
+      `http://localhost:5000/ingredient/delete-ingredient`,
+      { data: { id } }
+    );
+    return id;
   }
 );
 

@@ -84,7 +84,7 @@ const VendorItems = ({ handleClick }: Props) => {
     console.log('Selected items updated:', selectedItems);
   }, [selectedItems]);
 
-  const th = ['Name', 'Cost(taka)', 'Add to Cart'];
+  const th = ['Name', 'Cost($)', 'Add to Cart'];
 
   const handleSetCartData = () => {};
 

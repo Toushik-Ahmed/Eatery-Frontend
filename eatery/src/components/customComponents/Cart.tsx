@@ -94,7 +94,9 @@ export function DrawerExample({
       quantity: item.quantity,
       deliveryDate: item.deliveryDate,
       price: item.price,
+
     }));
+    console.log('Checkout data:', cartData);
     const totalCost = calculateTotalCost();
 
     const newOrderHistory: OrderHistory = {
@@ -166,8 +168,10 @@ export function DrawerExample({
                       value={item.unit || ''}
                       onChange={(e) => handleUnitChange(index, e.target.value)}
                     >
-                      <option value="kg">K.G</option>
-                      <option value="liter">Liter</option>
+                      <option value="K.G">K.G</option>
+                      <option value="Liter">Liter</option>
+                      <option value="Gram">Gram</option>
+                      <option value="Piece">Pieces</option>
                     </Select>
                   </div>
 

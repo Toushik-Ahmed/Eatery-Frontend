@@ -1,5 +1,10 @@
 'use client';
-import { IngredientsTable } from '@/redux/inventory/AddIngredientsSlice';
+import {
+  deleteIngredient,
+  getAllIngredients,
+  IngredientsTable,
+} from '@/redux/inventory/AddIngredientsSlice';
+import { AppDispatch } from '@/redux/store';
 import {
   Button,
   Table,
@@ -11,8 +16,10 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { format, parseISO } from 'date-fns';
+import { useEffect } from 'react';
 
 import { MdDeleteOutline } from 'react-icons/md';
+import { useDispatch } from 'react-redux';
 
 type Props = {
   tableHead: string[];
@@ -20,7 +27,15 @@ type Props = {
 };
 
 const Tablecomponent = ({ tableHead, ingredients }: Props) => {
-  console.log(ingredients);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleDelete = (id?: string) => {
+    if (id) dispatch(deleteIngredient(id));
+  };
+
+  useEffect(() => {
+    dispatch(getAllIngredients());
+  }, [dispatch]);
 
   return (
     <div className="flex justify-center">
@@ -62,7 +77,12 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
                     : ''}
                 </Td>
                 <Td>
-                  <Button colorScheme="red">
+                  <Button
+                    colorScheme="red"
+                    onClick={() => {
+                      handleDelete(ingredient._id);
+                    }}
+                  >
                     <MdDeleteOutline />
                   </Button>
                 </Td>

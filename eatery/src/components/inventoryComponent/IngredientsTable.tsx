@@ -47,6 +47,7 @@ function IngredientsTablecomponent({}: Props) {
   const allIngredients = useSelector(
     (state: RootState) => state.addIngredients.ingredients
   );
+   console.log(ingredients);
 
   useEffect(() => {
     setIngredients(allIngredients as IngredientsTable[]);
