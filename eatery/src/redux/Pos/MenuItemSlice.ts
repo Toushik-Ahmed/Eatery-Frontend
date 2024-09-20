@@ -5,7 +5,7 @@ export interface MenuItem {
   id: number;
   name: string;
   category: string;
-  mealTime: string[];
+  mealTime: MealTime[];
   description: string;
   image: string;
   size: {
@@ -28,6 +28,9 @@ export interface MenuItem {
   }[];
 }
 
+export interface MealTime {
+  mealtime: string;
+}
 export interface MenuItemState {
   allItems: MenuItem[];
 }
