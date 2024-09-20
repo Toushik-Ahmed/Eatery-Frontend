@@ -56,4 +56,3 @@ export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
 });
 
 export default MenuItemSlice.reducer;
-//   export const { getmenuItems } = MenuItemSlice.actions;

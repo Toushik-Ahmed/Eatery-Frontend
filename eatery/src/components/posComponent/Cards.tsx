@@ -100,46 +100,46 @@ const Cards = (props: Props) => {
             >
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
-                  bg={meal === "All Items" ? "#ff5841" : "white"}
+                  bg={meal === "All Items" ? "#7e16f6" : "white"}
                   textColor={meal === "All Items" ? "white" : "black"}
                   onClick={() => setMealTime("All Items")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#14967e", textColor: "white" }}
                 >
                   All Items
                 </Button>
 
                 <Button
-                  bg={meal === "All Day" ? "#ff5841" : "white"}
+                  bg={meal === "All Day" ? "#14967e" : "white"}
                   textColor={meal === "All Day" ? "white" : "black"}
                   onClick={() => setMealTime("All Day")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#14967e", textColor: "white" }}
                 >
                   All Day
                 </Button>
 
                 <Button
-                  bg={meal === "Breakfast" ? "#ff5841" : "white"}
+                  bg={meal === "Breakfast" ? "#14967e" : "white"}
                   textColor={meal === "Breakfast" ? "white" : "black"}
                   onClick={() => setMealTime("Breakfast")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#14967e", textColor: "white" }}
                 >
                   Breakfast
                 </Button>
 
                 <Button
-                  bg={meal === "Lunch" ? "#ff5841" : "white"}
+                  bg={meal === "Lunch" ? "#14967e" : "white"}
                   textColor={meal === "Lunch" ? "white" : "black"}
                   onClick={() => setMealTime("Lunch")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#14967e", textColor: "white" }}
                 >
                   Lunch
                 </Button>
 
                 <Button
-                  bg={meal === "Dinner" ? "#ff5841" : "white"}
+                  bg={meal === "Dinner" ? "#14967e" : "white"}
                   textColor={meal === "Dinner" ? "white" : "black"}
                   onClick={() => setMealTime("Dinner")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#14967e", textColor: "white" }}
                 >
                   Dinner
                 </Button>
@@ -155,12 +155,13 @@ const Cards = (props: Props) => {
               <Stack spacing={{ base: 3, md: 16 }}>
                 {categories.map((category, index) => (
                   <Button
-                    bg={category === selectedCategory ? "#ff5841" : "white"}
+                    bg={category === selectedCategory ? "#14967e" : "white"}
                     textColor={
                       category === selectedCategory ? "white" : "black"
                     }
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                    borderRightRadius={"full"}
+                    _hover={{ background: "#14967e", textColor: "white" }}
+                    borderBottomLeftRadius={"full"}
+                    borderTopRightRadius={"full"}
                     w={"fit"}
                     onClick={() => setSelectedCategory(category)}
                     key={index}
@@ -175,15 +176,6 @@ const Cards = (props: Props) => {
               {categories.map((category, index) => (
                 <Box mx={{ base: "4", md: "4" }} key={index}>
                   <Stack spacing={{ base: "4", md: "6" }}>
-                    {/* <Text
-                    fontSize={{ base: "xl", md: "2xl" }}
-                    fontWeight={"semiBold"}
-                    w={"fit"}
-                    textColor={"#ff5841"}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </Text> */}
                     {selectedCategory === category && (
                       <Grid
                         templateColumns={{

@@ -1,5 +1,5 @@
 "use client";
-import { addPlaceOrderInfo, placeOrder } from "@/redux/Pos/PlaceOrderSlice";
+import { placeOrder } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
@@ -26,7 +26,6 @@ type Props = {};
 
 const OrderSummery = (props: Props) => {
   const router = useRouter();
-  const [a, setA] = useState<number>(0);
   const dispatch = useDispatch<AppDispatch>();
   const [selectedSizes, setSelectedSizes] = useState<{ [key: string]: string }>(
     {}
@@ -39,14 +38,6 @@ const OrderSummery = (props: Props) => {
   const [preparationTime, setPreparationTime] = useState<number>(0);
   const [unitPrice, setUnitPrice] = useState<number>(0);
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
-
-  const list = useSelector((state: RootState) => state.placeOrder);
-
-  useEffect(() => {
-    setA(list.orderDetails.tableNo);
-  }, [list]);
-
-  console.log(a);
 
   const calculateUnitPrice = () => {
     listOfItems.orderedItems.forEach((item) => {
@@ -197,17 +188,14 @@ const OrderSummery = (props: Props) => {
         0
       ),
     };
-   dispatch(addPlaceOrderInfo(orderDetails));
-     dispatch(placeOrder(orderDetails));
-
-    //const serializedOrderDetails = JSON.stringify(list.orderDetails);
+    dispatch(placeOrder(orderDetails));
     router.push(`/invoice`);
   };
   return (
     <Box
       borderWidth="1px"
       borderRadius="md"
-      bg={"#FFFFF6"}
+      bg={"#f0efe8"}
       w={["fit", "fit", "40vw", "20vw"]}
       h={["fit", "fit", "fit", "fit"]}
     >
@@ -364,7 +352,7 @@ const OrderSummery = (props: Props) => {
           <Box
             as="button"
             borderRadius="md"
-            bg="#ff5841"
+            bg="#fa123f"
             color="white"
             p={["1", "1", "2"]}
             onClick={handleSendOrder}
