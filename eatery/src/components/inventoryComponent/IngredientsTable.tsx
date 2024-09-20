@@ -47,7 +47,7 @@ function IngredientsTablecomponent({}: Props) {
   const allIngredients = useSelector(
     (state: RootState) => state.addIngredients.ingredients
   );
-   console.log(ingredients);
+  console.log(ingredients);
 
   useEffect(() => {
     setIngredients(allIngredients as IngredientsTable[]);
@@ -60,16 +60,16 @@ function IngredientsTablecomponent({}: Props) {
   console.log(allIngredients);
 
   const handleFilter = (value: string) => {
-    setFilter(value);
     console.log(filter);
     setSelectLabel(value);
+    setFilter(value);
 
-    if (filter === 'Name') {
+    if (value === 'Name') {
       const sortedIngredients = [...ingredients].sort((a, b) =>
         a.ingredient > b.ingredient ? 1 : a.ingredient < b.ingredient ? -1 : 0
       );
       setIngredients(sortedIngredients);
-    } else if (filter === 'Date') {
+    } else if (value === 'Date') {
       const sortedIngredientsByDate = [...ingredients].sort((a, b) => {
         const dateA = parse(a.incomingStock, 'dd-MM-yyyy', new Date());
         const dateB = parse(b.incomingStock, 'dd-MM-yyyy', new Date());

@@ -20,10 +20,11 @@ import { useEffect } from 'react';
 
 import { MdDeleteOutline } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
+import { wastageTable } from '../wastageComponents/WastageTable';
 
 type Props = {
   tableHead: string[];
-  ingredients: Partial<IngredientsTable>[];
+  ingredients: Partial<IngredientsTable>[]  ;
 };
 
 const Tablecomponent = ({ tableHead, ingredients }: Props) => {
@@ -38,7 +39,7 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
   }, [dispatch]);
 
   return (
-    <div className="flex justify-center">
+    <div className=" justify-center">
       <TableContainer>
         <Table size="sm">
           <Thead>
