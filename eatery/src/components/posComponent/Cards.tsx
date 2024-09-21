@@ -20,7 +20,6 @@ import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getmenuItems, MealTime, MenuItem } from "@/redux/Pos/MenuItemSlice";
 
-
 type Props = {};
 
 const Cards = (props: Props) => {
@@ -72,7 +71,7 @@ const Cards = (props: Props) => {
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
       <Text
-        py={{ base: "4", md: "6" }}
+        py={{ base: "4", md: "2" }}
         fontSize={{ base: "xl", md: "2xl" }}
         fontWeight={"semibold"}
       >
@@ -84,7 +83,7 @@ const Cards = (props: Props) => {
           borderRadius="md"
           bg={"#f4f4f6"}
           w={{ base: "100vw", md: "75vw" }}
-          h={{ base: "auto", md: "90vh" }}
+          h={{ base: "auto", md: "94vh" }}
           overflow={"auto"}
         >
           <Flex justifyContent={"center"}>

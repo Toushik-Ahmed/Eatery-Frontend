@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItemFromOrder } from "@/redux/Pos/OrderSlice";
+import { removeItemFromOrder, resetOrderInfo } from "@/redux/Pos/OrderSlice";
 import { useRouter } from "next/navigation";
 import { OrderDetails } from "@/redux/Pos/PlaceOrderSlice";
 import Size from "./Size";
@@ -128,7 +128,7 @@ const OrderSummery = (props: Props) => {
       tableNo: 7,
       tableStatus: "Occupied",
       menuItems: listOfItems.orderedItems.map((item) => ({
-        itemName: item.name,
+        itemName: item.name || "",
         quantity: quantities[item.uniqueKey] || 1,
         selectedSize: selectedSizes[item.uniqueKey],
         unitPrice: unitPrice,
@@ -159,7 +159,9 @@ const OrderSummery = (props: Props) => {
       ),
     };
     dispatch(placeOrder(orderDetails));
+
     router.push(`/invoice`);
+    dispatch(resetOrderInfo());
   };
   return (
     <Box
@@ -175,6 +177,13 @@ const OrderSummery = (props: Props) => {
         flexDirection={"column"}
         alignItems={"center"}
         overflowY={"auto"}
+        sx={{
+          "::-webkit-scrollbar": {
+            display: "none",
+          },
+          "-ms-overflow-style": "none",  // for Internet Explorer and Edge
+          "scrollbar-width": "none",     // for Firefox
+        }}
       >
         <Text py={"4"} fontWeight={"bold"}>
           Order Summary

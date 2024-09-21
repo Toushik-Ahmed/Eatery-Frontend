@@ -84,6 +84,9 @@ export const OrderSlice = createSlice({
         (item) => item.uniqueKey !== uniqueKey
       );
     },
+    resetOrderInfo: (state) => {
+      state.orderedItems = initialState.orderedItems;
+    },
   },
 });
 
@@ -93,4 +96,5 @@ export const {
   updateSelectedSize,
   updateSelectedAddons,
   removeItemFromOrder,
+  resetOrderInfo,
 } = OrderSlice.actions;
