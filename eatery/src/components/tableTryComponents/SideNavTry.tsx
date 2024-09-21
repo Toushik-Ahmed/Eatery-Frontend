@@ -25,6 +25,9 @@ import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WidgetsIcon from "@mui/icons-material/Widgets";
+import postTable from "@/services/tableServices/postTable";
+import getTable from "@/services/tableServices/getTable";
+import deleteTable from "@/services/tableServices/deleteTable";
 import {
   Table1,
   Table2,
@@ -100,20 +103,33 @@ export default function PersistentDrawerLeft() {
   const [tables, setTables] = React.useState<TableData[]>([]);
 
   React.useEffect(() => {
-    const storedTables = localStorage.getItem("tables");
-    console.log("stored", storedTables);
-    if (storedTables) {
-      setTables(JSON.parse(storedTables));
-    }
+    fetchTables();
   }, []);
 
-  React.useEffect(() => {
-    if (tables.length > 0) {
-      console.log("before: ", tables);
-      const setting = localStorage.setItem("tables", JSON.stringify(tables));
-      console.log("after: ", setting);
+  const fetchTables = async () => {
+    try {
+      const response = await getTable();
+      setTables(response);
+    } catch (error) {
+      console.error("Error fetching tables:", error);
     }
-  }, [tables]);
+  };
+
+  // React.useEffect(() => {
+  //   const storedTables = localStorage.getItem("tables");
+  //   console.log("stored", storedTables);
+  //   if (storedTables) {
+  //     setTables(JSON.parse(storedTables));
+  //   }
+  // }, []);
+
+  // React.useEffect(() => {
+  //   if (tables.length > 0) {
+  //     console.log("before: ", tables);
+  //     const setting = localStorage.setItem("tables", JSON.stringify(tables));
+  //     console.log("after: ", setting);
+  //   }
+  // }, [tables]);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -131,28 +147,58 @@ export default function PersistentDrawerLeft() {
     setRightDrawerOpen(true);
   };
 
-  const handleAddTable = () => {
+  const handleAddTable = async () => {
     if (tableNumber && seatingCapacity) {
       const newTable: TableData = {
         number: parseInt(tableNumber),
         capacity: parseInt(seatingCapacity),
       };
-      const updatedTables = [...tables, newTable];
-      setTables(updatedTables);
-      localStorage.setItem("tables", JSON.stringify(updatedTables));
-      setTableNumber("");
-      setSeatingCapacity("");
-      handleRightDrawerClose();
+      console.log("new table: ", newTable);
+      try {
+        const response = await postTable(newTable);
+        console.log("response: ", response);
+        setTables(response);
+        console.log("Tables: ", tables);
+        setTableNumber("");
+        setSeatingCapacity("");
+        handleRightDrawerClose();
+      } catch (error) {
+        console.error("Error adding table:", error);
+      }
     }
   };
 
-  const handleDeleteTable = (tableNumber: number) => {
-    const updatedTables = tables.filter(
-      (table) => table.number !== tableNumber
-    );
-    setTables(updatedTables);
-    localStorage.setItem("tables", JSON.stringify(updatedTables));
+  // React.useEffect(() => {}, [getTable]);
+
+  // const handleDeleteTable = async (tableNumber: number) => {
+  //   try {
+  //     await deleteTable(tableNumber);
+  //     fetchTables();
+  //   } catch (error) {
+  //     console.error("Error deleting table:", error);
+  //   }
+  // };
+
+  const handleDeleteTable = async (tableNumber: number) => {
+    try {
+      const response = await deleteTable(tableNumber);
+      if (response.success) {
+        setTables(response.remainingTables);
+      } else {
+        console.error("Error deleting table:", response.message);
+      }
+    } catch (error) {
+      console.error("Error deleting table:", error);
+    }
   };
+
+  // const handleDeleteTable = (tableNumber: number) => {
+  //   const updatedTables = tables.filter(
+  //     (table) => table.number !== tableNumber
+  //   );
+  //   setTables(updatedTables);
+  //   localStorage.setItem("tables", JSON.stringify(updatedTables));
+  // };
 
   const renderTable = (table: TableData) => {
     const TableComponent =
