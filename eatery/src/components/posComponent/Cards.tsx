@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   Box,
@@ -17,11 +18,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import { getmenuItems, MenuItem } from "@/redux/Pos/MenuItemSlice";
+import { getmenuItems, MealTime, MenuItem } from "@/redux/Pos/MenuItemSlice";
 
-interface MealTime {
-  mealtime: string;
-}
 
 type Props = {};
 
@@ -43,17 +41,15 @@ const Cards = (props: Props) => {
     if (meal === "All Items") {
       setAvailableItems(allItems);
     } else {
-      const filteredItems = allItems.filter((item: any) =>
+      const filteredItems = allItems.filter((item: MenuItem) =>
         item.mealTime.some((m: MealTime) => m.mealtime === meal)
       );
       setAvailableItems(filteredItems);
     }
   }, [meal, allItems]);
 
-  let uniqueKeyCounter = 0;
-
   const handleSubmit = (item: MenuItem) => {
-    const uniqueKey = uniqueKeyCounter++;
+    const uniqueKey = uuidv4();
 
     const newItem = {
       ...item,
@@ -63,7 +59,7 @@ const Cards = (props: Props) => {
   };
 
   const categories = Array.from(
-    new Set(allItems.map((item: any) => item.category))
+    new Set(allItems.map((item: MenuItem) => item.category))
   );
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
@@ -100,46 +96,46 @@ const Cards = (props: Props) => {
             >
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
-                  bg={meal === "All Items" ? "#ff5841" : "white"}
+                  bg={meal === "All Items" ? "#f53e62" : "white"}
                   textColor={meal === "All Items" ? "white" : "black"}
                   onClick={() => setMealTime("All Items")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#f53e62", textColor: "white" }}
                 >
                   All Items
                 </Button>
 
                 <Button
-                  bg={meal === "All Day" ? "#ff5841" : "white"}
+                  bg={meal === "All Day" ? "#f53e62" : "white"}
                   textColor={meal === "All Day" ? "white" : "black"}
                   onClick={() => setMealTime("All Day")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#f53e62", textColor: "white" }}
                 >
                   All Day
                 </Button>
 
                 <Button
-                  bg={meal === "Breakfast" ? "#ff5841" : "white"}
+                  bg={meal === "Breakfast" ? "#f53e62" : "white"}
                   textColor={meal === "Breakfast" ? "white" : "black"}
                   onClick={() => setMealTime("Breakfast")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#f53e62", textColor: "white" }}
                 >
                   Breakfast
                 </Button>
 
                 <Button
-                  bg={meal === "Lunch" ? "#ff5841" : "white"}
+                  bg={meal === "Lunch" ? "#f53e62" : "white"}
                   textColor={meal === "Lunch" ? "white" : "black"}
                   onClick={() => setMealTime("Lunch")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#f53e62", textColor: "white" }}
                 >
                   Lunch
                 </Button>
 
                 <Button
-                  bg={meal === "Dinner" ? "#ff5841" : "white"}
+                  bg={meal === "Dinner" ? "#f53e62" : "white"}
                   textColor={meal === "Dinner" ? "white" : "black"}
                   onClick={() => setMealTime("Dinner")}
-                  _hover={{ background: "#ff5841", textColor: "white" }}
+                  _hover={{ background: "#f53e62", textColor: "white" }}
                 >
                   Dinner
                 </Button>
@@ -155,12 +151,13 @@ const Cards = (props: Props) => {
               <Stack spacing={{ base: 3, md: 16 }}>
                 {categories.map((category, index) => (
                   <Button
-                    bg={category === selectedCategory ? "#ff5841" : "white"}
+                    bg={category === selectedCategory ? "#f53e62" : "white"}
                     textColor={
                       category === selectedCategory ? "white" : "black"
                     }
-                    _hover={{ background: "#ff5841", textColor: "white" }}
-                    borderRadius={"full"}
+                    _hover={{ background: "#f53e62", textColor: "white" }}
+                    borderBottomLeftRadius={"full"}
+                    borderTopRightRadius={"full"}
                     w={"fit"}
                     onClick={() => setSelectedCategory(category)}
                     key={index}
@@ -175,15 +172,6 @@ const Cards = (props: Props) => {
               {categories.map((category, index) => (
                 <Box mx={{ base: "4", md: "4" }} key={index}>
                   <Stack spacing={{ base: "4", md: "6" }}>
-                    {/* <Text
-                    fontSize={{ base: "xl", md: "2xl" }}
-                    fontWeight={"semiBold"}
-                    w={"fit"}
-                    textColor={"#ff5841"}
-                    onClick={() => setSelectedCategory(category)}
-                  >
-                    {category}
-                  </Text> */}
                     {selectedCategory === category && (
                       <Grid
                         templateColumns={{
