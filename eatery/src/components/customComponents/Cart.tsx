@@ -152,7 +152,7 @@ export function DrawerExample({
           <DrawerHeader>Your Cart</DrawerHeader>
 
           <DrawerBody>
-            <Box display={'flex'} justifyContent={'space-between'} >
+            <Box  >
             {cartData.length === 0 ? (
               <p>No items in the cart</p>
             ) : (
