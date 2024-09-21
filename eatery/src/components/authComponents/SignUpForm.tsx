@@ -17,6 +17,7 @@ import {
   Select,
   Text,
 } from "@chakra-ui/react";
+import { setToken } from '@/services/tokenServices';
 
 type Props = {};
 
@@ -39,7 +40,7 @@ function SignUpForm({}: Props) {
     setSignupSuccess(false);
 
     try {
-      await signUp({
+     const accessTokenResponse= await signUp({
         firstName,
         lastName,
         organizationName,
@@ -48,10 +49,10 @@ function SignUpForm({}: Props) {
         phone,
         password,
       });
+      setToken(accessTokenResponse.accessToken);
       setSignupSuccess(true);
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
+
+     router.push("/login");
     } catch (error) {
       console.error("Error signing up:", error);
       setError("Failed to sign up. Please try again.");

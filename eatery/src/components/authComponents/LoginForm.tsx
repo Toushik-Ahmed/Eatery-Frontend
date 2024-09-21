@@ -1,7 +1,6 @@
-"use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { logIn } from "@/services/apiservice";
+'use client';
+import { logIn } from '@/services/apiservice';
+import { setToken } from '@/services/tokenServices';
 import {
   Box,
   Button,
@@ -16,39 +15,42 @@ import {
   Link,
   Select,
   Text,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 type Props = {};
 
 const LoginForm = ({}: Props) => {
-  const [organizationName, setOrganization] = useState("");
-  const [userType, setUserType] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [organizationName, setOrganization] = useState('');
+  const [userType, setUserType] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loginSuccess, setLoginSuccess] = useState(false);
 
   const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setError("");
+    setError('');
     setLoginSuccess(false);
 
     try {
-      await logIn({
+      const response = await logIn({
         organizationName,
         userType,
         email,
         password,
       });
+      setToken(response.accessToken);
       setLoginSuccess(true);
       setTimeout(() => {
-        router.push("/Inventory");
+        router.push('/Inventory');
       }, 2000);
     } catch (error) {
-      console.error("Error logging in:", error);
-      setError("Failed to log in. Please try again.");
+      console.error('Error logging in:', error);
+      setError('Failed to log in. Please try again.');
     }
   };
 
@@ -159,8 +161,8 @@ const LoginForm = ({}: Props) => {
                   color="white"
                   size="sm"
                   w="full"
-                  _hover={{ bg: "#2c974b" }}
-                  _active={{ bg: "#298e46" }}
+                  _hover={{ bg: '#2c974b' }}
+                  _active={{ bg: '#298e46' }}
                 >
                   Sign in
                 </Button>
