@@ -43,7 +43,7 @@ const LoginForm = ({}: Props) => {
         email,
         password,
       });
-      setToken(response.accessToken);
+      setToken(response.token);
       setLoginSuccess(true);
       setTimeout(() => {
         router.push('/Inventory');
