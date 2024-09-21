@@ -3,6 +3,7 @@ import { placeOrder } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
 import { RiDeleteBin6Fill } from "react-icons/ri";
+
 import {
   Button,
   Box,
@@ -19,6 +20,9 @@ import { removeItemFromOrder, resetOrderInfo } from "@/redux/Pos/OrderSlice";
 import { useRouter } from "next/navigation";
 import { OrderDetails } from "@/redux/Pos/PlaceOrderSlice";
 import Size from "./Size";
+
+import { FiMinus, FiPlus } from "react-icons/fi";
+import { FaChevronRight } from "react-icons/fa6";
 
 type Props = {};
 
@@ -217,7 +221,7 @@ const OrderSummery = (props: Props) => {
                     size={"sm"}
                     bg={"none"}
                     textColor={"#ff5841"}
-                    _hover={{ background: "red", textColor: "white" }}
+                    _hover={{ background: "red.500", textColor: "white" }}
                     borderWidth={"1px"}
                     borderRadius={"6px"}
                     borderColor={"#ff5841"}
@@ -225,7 +229,7 @@ const OrderSummery = (props: Props) => {
                       handleQuantityChange(item.uniqueKey, "decrement")
                     }
                   >
-                    -
+                    <FiMinus/>
                   </Button>
                   <Center w={"8"}>
                     <Text>{quantities[`${item.uniqueKey}`] || 1}</Text>
@@ -235,7 +239,7 @@ const OrderSummery = (props: Props) => {
                     size={"sm"}
                     bg={"none"}
                     textColor={"#ff5841"}
-                    _hover={{ background: "green", textColor: "white" }}
+                    _hover={{ background: "green.500", textColor: "white" }}
                     borderWidth={"1px"}
                     borderRadius={"6px"}
                     borderColor={"#ff5841"}
@@ -243,7 +247,7 @@ const OrderSummery = (props: Props) => {
                       handleQuantityChange(item.uniqueKey, "increment")
                     }
                   >
-                    +
+                    <FiPlus />
                   </Button>
                 </Flex>
               </Box>
@@ -263,7 +267,7 @@ const OrderSummery = (props: Props) => {
           </Box>
         ))}
       </Box>
-      <Box p={["2", "4", "4", "4"]} borderTop={"1px"}>
+      <Box py={["2", "4", "4", "8"]} px={"4"} borderTop={"1px"}>
         <HStack spacing="1">
           <Box>
             <Box>

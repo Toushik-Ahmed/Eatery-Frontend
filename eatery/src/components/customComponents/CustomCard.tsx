@@ -41,33 +41,33 @@ type Props = {
 const CustomCard = ({ name, size, image, onClick }: Props) => {
   return (
     <Card
-      w={["fit", "fit", "15vw", "10vw"]}
+      w={["40vw", "30vw", "20vw", "10vw"]}
       bg="white"
       borderRadius="lg"
-      boxShadow="md"
+      
       onClick={onClick}
-      h={"26vh"}
+      h={"25vh"}
     >
       <CardBody p={"2"}>
-        <Image src={image} alt={name} w={["85vw", "90vw", "15vw", "10vw"]} h={"12vh"} borderRadius="lg" objectFit={"cover"} />
-        <Stack mt="2" spacing="1">
-          <Heading size="md" fontWeight={"bold"} objectFit={"cover"}>
+        <Image src={image} alt={name} w={["10vw", "20vw", "30vw", "10vw"]} h={"12vh"} borderRadius="lg" objectFit={"cover"} />
+        <Stack mt="1" spacing="1">
+          <Text fontSize="lg" fontWeight={"bold"} objectFit={"cover"}>
             {name}
-          </Heading>
+          </Text>
           {size.map((s) => (
             <Flex key={s.sizeName} justify="space-between" align="center">
               <Text
                 color="#d91656"
-                fontSize={["md", "md", "md", "md"]}
-                fontWeight={"semibold"}
+                fontSize={["md", "md", "md", "sm"]}
+                fontWeight={"bold"}
                 objectFit={"cover"}
               >
                 {s.sizeName}
               </Text>
               <Text
                 color="#ff5841"
-                fontSize={["md", "md", "md", "md"]}
-                fontWeight={"semibold"}
+                fontSize={["md", "md", "md", "sm"]}
+                fontWeight={"bold"}
                 objectFit={"cover"}
               >
                 ${s.sellingPrice}

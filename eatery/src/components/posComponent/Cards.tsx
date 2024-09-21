@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
 import { v4 as uuidv4 } from "uuid";
-
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import {
   Box,
   Button,
@@ -68,12 +68,32 @@ const Cards = (props: Props) => {
     }
   }, [categories, selectedCategory]);
 
+  /* const scrollBoxRef = useRef<HTMLDivElement>(null);
+
+  const scrollLeft = () => {
+    if (scrollBoxRef.current) {
+      scrollBoxRef.current.scrollBy({
+        left: -500,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollBoxRef.current) {
+      scrollBoxRef.current.scrollBy({
+        left: 800,
+        behavior: "smooth",
+      });
+    }
+  }; */
+
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
       <Text
-        py={{ base: "4", md: "2" }}
-        fontSize={{ base: "xl", md: "2xl" }}
-        fontWeight={"semibold"}
+        py={{ base: "4", md: "4" }}
+        fontSize={{ base: "xl", md: "xl" }}
+        fontWeight={"bold"}
       >
         Order Management
       </Text>
@@ -83,22 +103,19 @@ const Cards = (props: Props) => {
           borderRadius="md"
           bg={"#f4f4f6"}
           w={{ base: "100vw", md: "75vw" }}
-          h={{ base: "auto", md: "94vh" }}
+          h={{ base: "auto", md: "92vh" }}
           overflowY={"auto"}
         >
           <Flex justifyContent={"center"}>
-            <Box
-              mt={"6"}
-              fontSize={{ base: "lg", md: "xl" }}
-              fontWeight={"semibold"}
-              mb={{ base: "4", md: "5" }}
-            >
+            <Box mt={"4"} mb={{ base: "4", md: "5" }}>
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
                   bg={meal === "All Items" ? "#f53e62" : "white"}
                   textColor={meal === "All Items" ? "white" : "black"}
                   onClick={() => setMealTime("All Items")}
                   _hover={{ background: "#f53e62", textColor: "white" }}
+                  fontSize={{ base: "sm", md: "md" }}
+                  fontWeight={"bold"}
                 >
                   All Items
                 </Button>
@@ -108,6 +125,8 @@ const Cards = (props: Props) => {
                   textColor={meal === "All Day" ? "white" : "black"}
                   onClick={() => setMealTime("All Day")}
                   _hover={{ background: "#f53e62", textColor: "white" }}
+                  fontSize={{ base: "sm", md: "md" }}
+                  fontWeight={"bold"}
                 >
                   All Day
                 </Button>
@@ -117,6 +136,8 @@ const Cards = (props: Props) => {
                   textColor={meal === "Breakfast" ? "white" : "black"}
                   onClick={() => setMealTime("Breakfast")}
                   _hover={{ background: "#f53e62", textColor: "white" }}
+                  fontSize={{ base: "sm", md: "md" }}
+                  fontWeight={"bold"}
                 >
                   Breakfast
                 </Button>
@@ -126,6 +147,8 @@ const Cards = (props: Props) => {
                   textColor={meal === "Lunch" ? "white" : "black"}
                   onClick={() => setMealTime("Lunch")}
                   _hover={{ background: "#f53e62", textColor: "white" }}
+                  fontSize={{ base: "sm", md: "md" }}
+                  fontWeight={"bold"}
                 >
                   Lunch
                 </Button>
@@ -135,6 +158,8 @@ const Cards = (props: Props) => {
                   textColor={meal === "Dinner" ? "white" : "black"}
                   onClick={() => setMealTime("Dinner")}
                   _hover={{ background: "#f53e62", textColor: "white" }}
+                  fontSize={{ base: "sm", md: "md" }}
+                  fontWeight={"bold"}
                 >
                   Dinner
                 </Button>
@@ -170,16 +195,12 @@ const Cards = (props: Props) => {
           <Box>
             <Stack spacing={{ base: "4", md: "4" }}>
               {categories.map((category, index) => (
-                <Box  mx={{ base: "4", md: "4" }} key={index}>
+                <Box mx={{ base: "4", md: "4" }} key={index}>
                   {/* <HStack spacing={{ base: "4", md: "6" }}> */}
                   {/* {selectedCategory === category && ( */}
 
                   <Flex gap="2">
-                    <Box
-                      p={"2"}
-                      fontSize={{ base: "lg", md: "xl" }}
-                      fontWeight={"semiBold"}
-                    >
+                    <Box p={"2"}>
                       <Button
                         bg={"#f53e62"}
                         textColor={"white"}
@@ -189,30 +210,35 @@ const Cards = (props: Props) => {
                         w={"6vw"}
                         onClick={() => setSelectedCategory(category)}
                         key={index}
+                        fontSize={{ base: "sm", md: "md" }}
+                        fontWeight={"bold"}
                       >
                         {category}
                       </Button>
                     </Box>
 
-                    <Box
-                      
-                      p={"1"}
-                      maxW={"100%"}
-                      overflowX={"auto"}
-                     
-                    >
-                      <Flex gap={"20"} wrap="nowrap">
+                    <Box p={"1"} maxW={"100%"} overflowX={"auto"}>
+                      {/* <Flex alignItems="center">
+                        <Button onClick={scrollLeft}>
+                          <FaChevronLeft />
+                        </Button>
+                        <Spacer />
+                        <Button onClick={scrollRight}>
+                          <FaChevronRight />
+                        </Button>
+                      </Flex> */}
+                      <Flex gap={"20"} wrap="nowrap" /* ref={scrollBoxRef} */>
                         {availableItems
                           .filter((item) => item.category === category)
                           .map((item) => (
-                            <Box >
-                            <CustomCard
-                              key={item.id}
-                              name={item.name}
-                              size={item.size}
-                              image={item.image}
-                              onClick={() => handleSubmit(item)}
-                            />
+                            <Box h={"fit-content"} borderRadius="lg">
+                              <CustomCard
+                                key={item.id}
+                                name={item.name}
+                                size={item.size}
+                                image={item.image}
+                                onClick={() => handleSubmit(item)}
+                              />
                             </Box>
                           ))}
                       </Flex>
