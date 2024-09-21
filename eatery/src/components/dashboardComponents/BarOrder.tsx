@@ -14,14 +14,13 @@ export default function BasicBarsOrder() {
         const response = await sevenDaysOrder();
         console.log("response from barOrderComponent: ", response);
 
-        // Extract orders and dates for BarChart
         const orderValues = response.map(
           (item: { orders: number }) => item.orders
         );
         const dateLabels = response.map((item: { date: string }) => item.date);
 
-        setBarData(orderValues); // Set the order counts for the series
-        setLabels(dateLabels); // Set the dates for the X-axis
+        setBarData(orderValues);
+        setLabels(dateLabels);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
@@ -31,11 +30,26 @@ export default function BasicBarsOrder() {
   }, []);
 
   return (
-    <div>
-      <h1>Order Chart</h1>
+    <div
+      style={{
+        backgroundColor: "#ffffff",
+        textAlign: "center",
+        marginTop: "10px",
+      }}
+    >
+      <h2
+        style={{
+          fontFamily: "Arial, sans-serif",
+          color: "#333",
+          justifyContent: "center",
+          fontSize: "24px",
+        }}
+      >
+        Total Order (7 Days)
+      </h2>
       <BarChart
-        xAxis={[{ scaleType: "band", data: labels }]} // Set the dates on the X-axis
-        series={[{ data: barData }]} // Set the order counts on the series
+        xAxis={[{ scaleType: "band", data: labels }]}
+        series={[{ data: barData }]}
         width={500}
         height={300}
       />

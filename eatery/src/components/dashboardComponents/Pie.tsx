@@ -29,14 +29,31 @@ export default function BasicPie() {
   }, []);
 
   return (
-    <PieChart
-      series={[
-        {
-          data: chartData,
-        },
-      ]}
-      width={400}
-      height={200}
-    />
+    <div
+      style={{
+        backgroundColor: "#ffffff",
+        textAlign: "center",
+      }}
+    >
+      <h2
+        style={{
+          fontFamily: "Arial, sans-serif",
+          color: "#333",
+          justifyContent: "center",
+          fontSize: "24px",
+        }}
+      >
+        Top Selling Product (Today)
+      </h2>
+      <PieChart
+        series={[
+          {
+            data: chartData,
+          },
+        ]}
+        width={600}
+        height={200}
+      />
+    </div>
   );
 }
