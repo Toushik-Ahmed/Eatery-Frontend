@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signUp } from "@/services/apiservice";
 import {
@@ -16,6 +16,9 @@ import {
   Link,
   Select,
   Text,
+  VStack,
+  Stack,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { setToken } from "@/services/tokenServices";
 
@@ -31,8 +34,14 @@ function SignUpForm({}: Props) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false); // Track hydration status
 
   const router = useRouter();
+
+  // Ensure component is hydrated
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -59,26 +68,56 @@ function SignUpForm({}: Props) {
     }
   };
 
+  // Dynamic card width based on screen size
+  const cardWidth = useBreakpointValue({
+    base: "90vw",
+    md: "50vw",
+    lg: "30vw",
+  });
+
+  // Prevent rendering until hydration is complete
+  if (!isHydrated) {
+    return null;
+  }
+
   return (
-    <Box bg="gray.200" width="100vw" height="100vh">
+    <Box
+      bg="gray.200"
+      width="100vw"
+      height="100vh"
+      py={{ base: 6, md: 10 }}
+      px={{ base: 4, md: 8 }}
+    >
       <Center>
-        <Box mt="8">
-          <Box mb="8" textAlign="center">
+        <Box mt={{ base: 6, md: 10 }}>
+          <Box mb={{ base: 6, md: 8 }} textAlign="center">
             <Heading
               as="h1"
-              fontWeight="300"
-              fontSize="24px"
+              fontWeight="500"
+              fontSize={{ base: "24px", md: "28px", lg: "32px" }}
               letterSpacing="-0.5px"
             >
               Sign up for Eatery
             </Heading>
           </Box>
 
-          <Card bg="#f6f8fa" variant="outline" borderColor="#d8dee4" w="30vw">
+          {/* Sign Up Form */}
+          <Card
+            bg="#f6f8fa"
+            variant="outline"
+            borderColor="#d8dee4"
+            w={cardWidth}
+            p={{ base: 4, md: 6 }}
+            borderRadius="xl"
+          >
             <CardBody>
               <form onSubmit={handleSubmit}>
-                {/* First Name and Last Name */}
-                <HStack mb="4" spacing="4">
+                <Stack
+                  spacing={{ base: 4, md: 6 }}
+                  direction={{ base: "column", md: "row" }}
+                  mb="4"
+                >
+                  {/* First Name */}
                   <FormControl isRequired>
                     <FormLabel size="sm">First Name:</FormLabel>
                     <Input
@@ -87,11 +126,12 @@ function SignUpForm({}: Props) {
                       onChange={(e) => setFirstName(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
 
+                  {/* Last Name */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Last Name:</FormLabel>
                     <Input
@@ -100,14 +140,18 @@ function SignUpForm({}: Props) {
                       onChange={(e) => setLastName(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </HStack>
+                </Stack>
 
-                {/* Organization Name and User Type */}
-                <HStack mb="4" spacing="4">
+                <Stack
+                  spacing={{ base: 4, md: 6 }}
+                  direction={{ base: "column", md: "row" }}
+                  mb="4"
+                >
+                  {/* Organization Name */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Organization Name:</FormLabel>
                     <Input
@@ -116,11 +160,12 @@ function SignUpForm({}: Props) {
                       onChange={(e) => setOrganization(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
 
+                  {/* User Type */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Category</FormLabel>
                     <Select
@@ -129,7 +174,7 @@ function SignUpForm({}: Props) {
                       placeholder="Select category"
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     >
                       <option value="Admin">Admin</option>
@@ -140,10 +185,14 @@ function SignUpForm({}: Props) {
                       </option>
                     </Select>
                   </FormControl>
-                </HStack>
+                </Stack>
 
-                {/* Email and Phone Number */}
-                <HStack mb="4" spacing="4">
+                <Stack
+                  spacing={{ base: 4, md: 6 }}
+                  direction={{ base: "column", md: "row" }}
+                  mb="4"
+                >
+                  {/* Email Address */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Email address:</FormLabel>
                     <Input
@@ -152,11 +201,12 @@ function SignUpForm({}: Props) {
                       onChange={(e) => setEmail(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
 
+                  {/* Phone Number */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Phone no:</FormLabel>
                     <Input
@@ -165,11 +215,11 @@ function SignUpForm({}: Props) {
                       onChange={(e) => setPhone(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </HStack>
+                </Stack>
 
                 {/* Password */}
                 <Box mb="4">
@@ -181,31 +231,25 @@ function SignUpForm({}: Props) {
                       onChange={(e) => setPassword(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
                 </Box>
 
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   bg="#2da44e"
                   color="white"
-                  size="sm"
+                  size="md"
                   w="full"
                   _hover={{ bg: "#2c974b" }}
                   _active={{ bg: "#298e46" }}
                 >
                   Sign up
                 </Button>
-              </form>
-            </CardBody>
-          </Card>
-
-          <Box mt="6">
-            <Card variant="outline" borderColor="#d0d7de">
-              <CardBody>
-                <Center>
+                <Center mt="2">
                   <HStack fontSize="sm" spacing="1">
                     <Text>Already have an account?</Text>
                     <Link isExternal color="#0969da" href="/login">
@@ -213,27 +257,15 @@ function SignUpForm({}: Props) {
                     </Link>
                   </HStack>
                 </Center>
-              </CardBody>
-            </Card>
-          </Box>
+                {error && (
+                  <Text color="red.500" fontSize="sm" mt={2}>
+                    {error}
+                  </Text>
+                )}
+              </form>
+            </CardBody>
+          </Card>
         </Box>
-      </Center>
-
-      <Center as="footer" mt="16">
-        <HStack spacing="4" pt="2">
-          <Link isExternal color="#0969da" href="#" fontSize="xs">
-            Terms
-          </Link>
-          <Link isExternal color="#0969da" href="#" fontSize="xs">
-            Privacy
-          </Link>
-          <Link isExternal color="#0969da" href="#" fontSize="xs">
-            Security
-          </Link>
-          <Link isExternal href="#" fontSize="xs">
-            Contact Us
-          </Link>
-        </HStack>
       </Center>
     </Box>
   );

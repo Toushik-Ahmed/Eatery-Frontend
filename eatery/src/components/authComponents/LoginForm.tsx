@@ -1,6 +1,8 @@
-'use client';
-import { logIn } from '@/services/apiservice';
-import { setToken } from '@/services/tokenServices';
+"use client";
+import { logIn } from "@/services/apiservice";
+import { setToken } from "@/services/tokenServices";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,25 +17,31 @@ import {
   Link,
   Select,
   Text,
-} from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+  Stack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 
 type Props = {};
 
 const LoginForm = ({}: Props) => {
-  const [organizationName, setOrganization] = useState('');
-  const [userType, setUserType] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [organizationName, setOrganization] = useState("");
+  const [userType, setUserType] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loginSuccess, setLoginSuccess] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
 
   const router = useRouter();
 
+  useEffect(() => {
+    // This ensures that the component is fully hydrated before rendering
+    setIsHydrated(true);
+  }, []);
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    setError('');
+    setError("");
     setLoginSuccess(false);
 
     try {
@@ -46,35 +54,60 @@ const LoginForm = ({}: Props) => {
       setToken(response.token);
       setLoginSuccess(true);
       setTimeout(() => {
-        router.push('/Inventory');
+        router.push("/Inventory");
       }, 2000);
     } catch (error) {
-      console.error('Error logging in:', error);
-      setError('Failed to log in. Please try again.');
+      console.error("Error logging in:", error);
+      setError("Failed to log in. Please try again.");
     }
   };
 
+  // Adjust card width based on screen size
+  const cardWidth = useBreakpointValue({
+    base: "90vw",
+    md: "50vw",
+    lg: "30vw",
+  });
+
+  if (!isHydrated) {
+    return null; // Prevent rendering until the component is hydrated
+  }
+
   return (
-    <Box bg="gray.200" width="100vw">
+    <Box
+      bg="gray.200"
+      width="100vw"
+      height="100vh"
+      py={{ base: 8, md: 10 }}
+      px={{ base: 4, md: 8 }}
+    >
       <Center>
-        <Box mt="50">
+      <Box mt={{ base: 8, md: 10 }} mb={{ base: 8, md: 10 }}>
           {/* Header Section */}
-          <Box mb="50" textAlign="center">
+          <Box mb={{ base: 6, md: 8 }} textAlign="center">
             <Heading
               as="h1"
-              fontWeight="300"
-              fontSize="30px"
+              fontWeight="500"
+              fontSize={{ base: "24px", md: "28px", lg: "32px" }}
               letterSpacing="-0.5px"
             >
-              Sign in to Eatery
+              Login to Eatery
             </Heading>
           </Box>
 
           {/* Login Form Section */}
-          <Card bg="#f6f8fa" variant="outline" borderColor="#d8dee4" w="308px">
+          <Card
+            bg="#f6f8fa"
+            variant="outline"
+            borderColor="#d8dee4"
+            w={cardWidth}
+            p={{ base: 4, md: 6 }}
+            borderRadius="xl"
+          >
             <CardBody>
               <form onSubmit={handleSubmit}>
-                <Box mb="4">
+                <Stack spacing={{ base: 4, md: 6 }} mb="4">
+                  {/* Organization Name */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Organization Name:</FormLabel>
                     <Input
@@ -83,14 +116,12 @@ const LoginForm = ({}: Props) => {
                       onChange={(e) => setOrganization(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </Box>
 
-                {/* Category Dropdown Field */}
-                <Box mb="4">
+                  {/* User Type */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Category</FormLabel>
                     <Select
@@ -99,7 +130,7 @@ const LoginForm = ({}: Props) => {
                       placeholder="Select category"
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     >
                       <option value="Admin">Admin</option>
@@ -110,9 +141,8 @@ const LoginForm = ({}: Props) => {
                       </option>
                     </Select>
                   </FormControl>
-                </Box>
 
-                <Box mb="4">
+                  {/* Email Address */}
                   <FormControl isRequired>
                     <FormLabel size="sm">Email address:</FormLabel>
                     <Input
@@ -121,13 +151,12 @@ const LoginForm = ({}: Props) => {
                       onChange={(e) => setEmail(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </Box>
 
-                <Box mb="4">
+                  {/* Password */}
                   <FormControl isRequired>
                     <HStack justify="space-between">
                       <FormLabel size="sm">Password</FormLabel>
@@ -149,61 +178,44 @@ const LoginForm = ({}: Props) => {
                       onChange={(e) => setPassword(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
-                      size="sm"
+                      size="md"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </Box>
+                </Stack>
 
+                {/* Submit Button */}
                 <Button
                   type="submit"
                   bg="#2da44e"
                   color="white"
-                  size="sm"
+                  size="md"
                   w="full"
-                  _hover={{ bg: '#2c974b' }}
-                  _active={{ bg: '#298e46' }}
+                  _hover={{ bg: "#2c974b" }}
+                  _active={{ bg: "#298e46" }}
                 >
-                  Sign in
+                  Login
                 </Button>
-              </form>
-            </CardBody>
-          </Card>
 
-          {/* Signup Link Section */}
-          <Box mt="6">
-            <Card variant="outline" borderColor="#d0d7de">
-              <CardBody>
-                <Center>
+                {error && (
+                  <Text color="red.500" fontSize="sm" mt={2}>
+                    {error}
+                  </Text>
+                )}
+
+                {/* Create Account Section */}
+                <Center mt="4">
                   <HStack fontSize="sm" spacing="1">
                     <Text>New to Eatery?</Text>
-                    <Link isExternal color="#0969da" href="#">
+                    <Link isExternal color="#0969da" href="/signup">
                       Create an account.
                     </Link>
                   </HStack>
                 </Center>
-              </CardBody>
-            </Card>
-          </Box>
+              </form>
+            </CardBody>
+          </Card>
         </Box>
-      </Center>
-
-      {/* Footer Links Section */}
-      <Center as="footer" mt="16">
-        <HStack spacing="4" pt="2">
-          <Link isExternal color="#0969da" href="#" fontSize="xs">
-            Terms
-          </Link>
-          <Link isExternal color="#0969da" href="#" fontSize="xs">
-            Privacy
-          </Link>
-          <Link isExternal color="#0969da" href="#" fontSize="xs">
-            Security
-          </Link>
-          <Link isExternal href="#" fontSize="xs">
-            Contact Us
-          </Link>
-        </HStack>
       </Center>
     </Box>
   );
