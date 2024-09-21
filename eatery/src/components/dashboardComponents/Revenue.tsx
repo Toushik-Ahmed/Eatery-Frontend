@@ -61,7 +61,7 @@ const Revenue = () => {
   }, []);
 
   return (
-    <Card sx={{ maxWidth: 200, width: "100%" }}>
+    <Card sx={{ maxWidth: 220, width: "100%" }}>
       <CardHeader title="Total Revenue (Today)" />
       <CardContent>
         {loading ? (
