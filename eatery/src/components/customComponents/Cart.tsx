@@ -17,6 +17,7 @@ import {
 import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
+import { MdDeleteForever, MdOutlineDeleteOutline } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 
 type DrawerProps = {
@@ -94,7 +95,6 @@ export function DrawerExample({
       quantity: item.quantity,
       deliveryDate: item.deliveryDate,
       price: item.price,
-
     }));
     console.log('Checkout data:', cartData);
     const totalCost = calculateTotalCost();
@@ -152,7 +152,7 @@ export function DrawerExample({
               <p>No items in the cart</p>
             ) : (
               cartData.map((item, index) => (
-                <div key={index} className="mb-4 border-b pb-2">
+                <div key={index} className="mb-4 border-b pb-2 ">
                   <p>
                     <strong>Name:</strong> {item.ingredient}
                   </p>
@@ -160,8 +160,8 @@ export function DrawerExample({
                     <strong>Cost (p/u):</strong> {item.price} Taka
                   </p>
 
-                  <div className="my-2">
-                    <label>Unit: </label>
+                  <div className="my-2 flex flex-col gap-2 ">
+                    <label className="font-bold">Unit: </label>
                     <Select
                       placeholder="Select unit"
                       size="sm"
@@ -176,7 +176,7 @@ export function DrawerExample({
                   </div>
 
                   <div className="my-2">
-                    <label>Quantity: </label>
+                    <label className="font-bold">Quantity: </label>
                     <Input
                       type="number"
                       size="sm"
@@ -188,7 +188,7 @@ export function DrawerExample({
                   </div>
 
                   <div className="my-2">
-                    <label>Delivery Date: </label>
+                    <label className="font-bold">Delivery Date: </label>
                     <Input
                       type="date"
                       size="sm"
@@ -200,11 +200,14 @@ export function DrawerExample({
                     />
                   </div>
                   <Button
+                    w={'fitContent'}
+                    border={'none'}
+                    variant="outline"
                     size="sm"
                     colorScheme="red"
                     onClick={() => handleRemoveItem(index)}
                   >
-                    Remove
+                    <MdDeleteForever />
                   </Button>
                 </div>
               ))
@@ -216,11 +219,17 @@ export function DrawerExample({
             )}
           </DrawerBody>
 
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={handleCancel}>
+          <DrawerFooter justifyContent={'space-between'}>
+            <Button
+              variant="outline"
+              colorScheme="#852e22"
+              color={'#852e22'}
+              mr={3}
+              onClick={handleCancel}
+            >
               Cancel
             </Button>
-            <Button colorScheme="blue" onClick={handleCheckout}>
+            <Button colorScheme="green" onClick={handleCheckout}>
               Checkout
             </Button>
           </DrawerFooter>

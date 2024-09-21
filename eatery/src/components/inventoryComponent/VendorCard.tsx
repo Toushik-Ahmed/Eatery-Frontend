@@ -24,10 +24,10 @@ const VendorCard = ({ src, alt, Phone, Email, heading,handleClick }: Props) => {
       bg="#fffafa"
       borderRadius="lg"
       boxShadow="2xl"
-      textAlign={'center'}
+      // textAlign={'center'}
       display="flex"
       flexDirection="column"
-      alignItems="center"
+      // alignItems="center"
     >
       <CardBody
         p="15px"
@@ -38,13 +38,13 @@ const VendorCard = ({ src, alt, Phone, Email, heading,handleClick }: Props) => {
         <Image
           src={src}
           alt={alt}
-          boxSize="132px"
+          boxSize="200px"
           borderRadius="lg"
           objectFit="cover"
         />
-        <Stack mt="2" spacing="1">
+        <Stack mt="2" spacing="2">
           <Heading size="md"></Heading>
-          <Text color="#ff5841" fontSize="1rem">
+          <Text color="#ff5841" fontSize="1rem" textAlign="center">
             {heading}
           </Text>
           <Text color="black" fontSize="1rem">
