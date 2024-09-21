@@ -1,6 +1,7 @@
 import { postOrder } from '@/redux/inventory/AddIngredientsSlice';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -133,7 +134,10 @@ export function DrawerExample({
 
   return (
     <>
-      <Button ref={btnRef} onClick={onOpen} _hover={{ bg: '#ff5841' }}>
+    <Box>
+
+
+      <Button ref={btnRef} onClick={onOpen} _hover={{ bg: '#f53e62' }}>
         <FiShoppingCart />
       </Button>
       <Drawer
@@ -148,6 +152,7 @@ export function DrawerExample({
           <DrawerHeader>Your Cart</DrawerHeader>
 
           <DrawerBody>
+            <Box display={'flex'} justifyContent={'space-between'} >
             {cartData.length === 0 ? (
               <p>No items in the cart</p>
             ) : (
@@ -212,6 +217,7 @@ export function DrawerExample({
                 </div>
               ))
             )}
+            </Box>
             {cartData.length > 0 && (
               <div className="mt-4 font-bold text-lg">
                 <p>Total Cost: {calculateTotalCost()} Taka</p>
@@ -235,6 +241,7 @@ export function DrawerExample({
           </DrawerFooter>
         </DrawerContent>
       </Drawer>
+      </Box>
     </>
   );
 }
