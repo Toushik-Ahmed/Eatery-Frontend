@@ -101,6 +101,7 @@ export default function PersistentDrawerLeft() {
 
   React.useEffect(() => {
     const storedTables = localStorage.getItem("tables");
+    console.log("stored", storedTables);
     if (storedTables) {
       setTables(JSON.parse(storedTables));
     }
@@ -108,7 +109,9 @@ export default function PersistentDrawerLeft() {
 
   React.useEffect(() => {
     if (tables.length > 0) {
-      localStorage.setItem("tables", JSON.stringify(tables));
+      console.log("before: ", tables);
+      const setting = localStorage.setItem("tables", JSON.stringify(tables));
+      console.log("after: ", setting);
     }
   }, [tables]);
 
