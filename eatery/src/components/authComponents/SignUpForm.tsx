@@ -1,4 +1,7 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { signUp } from "@/services/apiservice";
 import {
   Box,
   Button,
@@ -17,12 +20,48 @@ import {
 
 type Props = {};
 
-const SignUpForm = (props: Props) => {
+function SignUpForm({}: Props) {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [organizationName, setOrganization] = useState("");
+  const [userType, setUserType] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [signupSuccess, setSignupSuccess] = useState(false);
+
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError("");
+    setSignupSuccess(false);
+
+    try {
+      await signUp({
+        firstName,
+        lastName,
+        organizationName,
+        userType,
+        email,
+        phone,
+        password,
+      });
+      setSignupSuccess(true);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+    } catch (error) {
+      console.error("Error signing up:", error);
+      setError("Failed to sign up. Please try again.");
+    }
+  };
+
   return (
     <Box bg="gray.200" width="100vw" height="100vh">
       <Center>
         <Box mt="8">
-          {/* Header Section */}
           <Box mb="8" textAlign="center">
             <Heading
               as="h1"
@@ -34,56 +73,111 @@ const SignUpForm = (props: Props) => {
             </Heading>
           </Box>
 
-          {/* Signup Form Section */}
-          <Card bg="#f6f8fa" variant="outline" borderColor="#d8dee4" w="308px">
+          <Card bg="#f6f8fa" variant="outline" borderColor="#d8dee4" w="30vw">
             <CardBody>
-              <form>
-                <Box mb="4">
-                  <FormControl>
-                    <FormLabel size="sm">Username</FormLabel>
+              <form onSubmit={handleSubmit}>
+                {/* First Name and Last Name */}
+                <HStack mb="4" spacing="4">
+                  <FormControl isRequired>
+                    <FormLabel size="sm">First Name:</FormLabel>
                     <Input
                       type="text"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
                       size="sm"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </Box>
-                <Box mb="4">
-                  <FormControl>
-                    <FormLabel size="sm">Email address</FormLabel>
+
+                  <FormControl isRequired>
+                    <FormLabel size="sm">Last Name:</FormLabel>
                     <Input
-                      type="email"
+                      type="text"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
                       size="sm"
                       borderRadius="6px"
                     />
                   </FormControl>
-                </Box>
-                {/* Category Dropdown Field */}
-                <Box mb="4">
-                  <FormControl>
+                </HStack>
+
+                {/* Organization Name and User Type */}
+                <HStack mb="4" spacing="4">
+                  <FormControl isRequired>
+                    <FormLabel size="sm">Organization Name:</FormLabel>
+                    <Input
+                      type="text"
+                      value={organizationName}
+                      onChange={(e) => setOrganization(e.target.value)}
+                      bg="white"
+                      borderColor="#d8dee4"
+                      size="sm"
+                      borderRadius="6px"
+                    />
+                  </FormControl>
+
+                  <FormControl isRequired>
                     <FormLabel size="sm">Category</FormLabel>
                     <Select
+                      value={userType}
+                      onChange={(e) => setUserType(e.target.value)}
                       placeholder="Select category"
                       bg="white"
                       borderColor="#d8dee4"
                       size="sm"
                       borderRadius="6px"
                     >
-                      <option value="owner">Owner</option>
-                      <option value="chef">Chef</option>
-                      <option value="manager">Manager</option>
+                      <option value="Admin">Admin</option>
+                      <option value="POSManager">POS Manager</option>
+                      <option value="MenuManager">Menu Manager</option>
+                      <option value="InventoryManager">
+                        Inventory Manager
+                      </option>
                     </Select>
                   </FormControl>
-                </Box>
+                </HStack>
+
+                {/* Email and Phone Number */}
+                <HStack mb="4" spacing="4">
+                  <FormControl isRequired>
+                    <FormLabel size="sm">Email address:</FormLabel>
+                    <Input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      bg="white"
+                      borderColor="#d8dee4"
+                      size="sm"
+                      borderRadius="6px"
+                    />
+                  </FormControl>
+
+                  <FormControl isRequired>
+                    <FormLabel size="sm">Phone no:</FormLabel>
+                    <Input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      bg="white"
+                      borderColor="#d8dee4"
+                      size="sm"
+                      borderRadius="6px"
+                    />
+                  </FormControl>
+                </HStack>
+
+                {/* Password */}
                 <Box mb="4">
-                  <FormControl>
+                  <FormControl isRequired>
                     <FormLabel size="sm">Password</FormLabel>
                     <Input
                       type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       bg="white"
                       borderColor="#d8dee4"
                       size="sm"
@@ -91,7 +185,9 @@ const SignUpForm = (props: Props) => {
                     />
                   </FormControl>
                 </Box>
+
                 <Button
+                  type="submit"
                   bg="#2da44e"
                   color="white"
                   size="sm"
@@ -105,14 +201,13 @@ const SignUpForm = (props: Props) => {
             </CardBody>
           </Card>
 
-          {/* Login Link Section */}
           <Box mt="6">
             <Card variant="outline" borderColor="#d0d7de">
               <CardBody>
                 <Center>
                   <HStack fontSize="sm" spacing="1">
                     <Text>Already have an account?</Text>
-                    <Link isExternal color="#0969da" href="#">
+                    <Link isExternal color="#0969da" href="/login">
                       Sign in.
                     </Link>
                   </HStack>
@@ -123,7 +218,6 @@ const SignUpForm = (props: Props) => {
         </Box>
       </Center>
 
-      {/* Footer Links Section */}
       <Center as="footer" mt="16">
         <HStack spacing="4" pt="2">
           <Link isExternal color="#0969da" href="#" fontSize="xs">
@@ -142,6 +236,6 @@ const SignUpForm = (props: Props) => {
       </Center>
     </Box>
   );
-};
+}
 
 export default SignUpForm;
