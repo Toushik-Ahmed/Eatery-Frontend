@@ -84,14 +84,14 @@ const Cards = (props: Props) => {
           bg={"#f4f4f6"}
           w={{ base: "100vw", md: "75vw" }}
           h={{ base: "auto", md: "94vh" }}
-          overflow={"auto"}
+          overflowY={"auto"}
         >
           <Flex justifyContent={"center"}>
             <Box
               mt={"6"}
               fontSize={{ base: "lg", md: "xl" }}
               fontWeight={"semibold"}
-              mb={{ base: "4", md: "10" }}
+              mb={{ base: "4", md: "5" }}
             >
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
@@ -141,8 +141,8 @@ const Cards = (props: Props) => {
               </HStack>
             </Box>
           </Flex>
-          <Flex>
-            <Box
+
+          {/* <Box
               p={"4"}
               fontSize={{ base: "lg", md: "xl" }}
               fontWeight={"semiBold"}
@@ -165,24 +165,47 @@ const Cards = (props: Props) => {
                   </Button>
                 ))}
               </Stack>
-            </Box>
+            </Box> */}
 
-            <Box>
+          <Box>
+            <Stack spacing={{ base: "4", md: "4" }}>
               {categories.map((category, index) => (
-                <Box mx={{ base: "4", md: "4" }} key={index}>
-                  <Stack spacing={{ base: "4", md: "6" }}>
-                    {selectedCategory === category && (
-                      <Grid
-                        templateColumns={{
-                          base: "repeat(1, 1fr)",
-                          md: "repeat(3, 1fr)",
-                          lg: "repeat(6, 1fr)",
-                        }}
-                        gap={5}
+                <Box  mx={{ base: "4", md: "4" }} key={index}>
+                  {/* <HStack spacing={{ base: "4", md: "6" }}> */}
+                  {/* {selectedCategory === category && ( */}
+
+                  <Flex gap="2">
+                    <Box
+                      p={"2"}
+                      fontSize={{ base: "lg", md: "xl" }}
+                      fontWeight={"semiBold"}
+                    >
+                      <Button
+                        bg={"#f53e62"}
+                        textColor={"white"}
+                        _hover={{ background: "#f53e62", textColor: "white" }}
+                        borderBottomLeftRadius={"full"}
+                        borderTopRightRadius={"full"}
+                        w={"6vw"}
+                        onClick={() => setSelectedCategory(category)}
+                        key={index}
                       >
+                        {category}
+                      </Button>
+                    </Box>
+
+                    <Box
+                      
+                      p={"1"}
+                      maxW={"100%"}
+                      overflowX={"auto"}
+                     
+                    >
+                      <Flex gap={"20"} wrap="nowrap">
                         {availableItems
                           .filter((item) => item.category === category)
                           .map((item) => (
+                            <Box >
                             <CustomCard
                               key={item.id}
                               name={item.name}
@@ -190,14 +213,15 @@ const Cards = (props: Props) => {
                               image={item.image}
                               onClick={() => handleSubmit(item)}
                             />
+                            </Box>
                           ))}
-                      </Grid>
-                    )}
-                  </Stack>
+                      </Flex>
+                    </Box>
+                  </Flex>
                 </Box>
               ))}
-            </Box>
-          </Flex>
+            </Stack>
+          </Box>
         </Box>
         <Spacer />
         <OrderSummery />
