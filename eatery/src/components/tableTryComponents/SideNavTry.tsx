@@ -115,22 +115,6 @@ export default function PersistentDrawerLeft() {
     }
   };
 
-  // React.useEffect(() => {
-  //   const storedTables = localStorage.getItem("tables");
-  //   console.log("stored", storedTables);
-  //   if (storedTables) {
-  //     setTables(JSON.parse(storedTables));
-  //   }
-  // }, []);
-
-  // React.useEffect(() => {
-  //   if (tables.length > 0) {
-  //     console.log("before: ", tables);
-  //     const setting = localStorage.setItem("tables", JSON.stringify(tables));
-  //     console.log("after: ", setting);
-  //   }
-  // }, [tables]);
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -168,17 +152,6 @@ export default function PersistentDrawerLeft() {
     }
   };
 
-  // React.useEffect(() => {}, [getTable]);
-
-  // const handleDeleteTable = async (tableNumber: number) => {
-  //   try {
-  //     await deleteTable(tableNumber);
-  //     fetchTables();
-  //   } catch (error) {
-  //     console.error("Error deleting table:", error);
-  //   }
-  // };
-
   const handleDeleteTable = async (tableNumber: number) => {
     try {
       const response = await deleteTable(tableNumber);
@@ -191,14 +164,6 @@ export default function PersistentDrawerLeft() {
       console.error("Error deleting table:", error);
     }
   };
-
-  // const handleDeleteTable = (tableNumber: number) => {
-  //   const updatedTables = tables.filter(
-  //     (table) => table.number !== tableNumber
-  //   );
-  //   setTables(updatedTables);
-  //   localStorage.setItem("tables", JSON.stringify(updatedTables));
-  // };
 
   const renderTable = (table: TableData) => {
     const TableComponent =
