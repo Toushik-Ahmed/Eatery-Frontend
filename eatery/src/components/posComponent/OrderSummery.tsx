@@ -22,8 +22,6 @@ import { OrderDetails } from "@/redux/Pos/PlaceOrderSlice";
 import Size from "./Size";
 
 import { FiMinus, FiPlus } from "react-icons/fi";
-import { FaChevronRight } from "react-icons/fa6";
-
 type Props = {};
 
 const OrderSummery = (props: Props) => {

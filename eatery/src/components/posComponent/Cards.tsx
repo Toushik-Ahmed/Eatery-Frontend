@@ -229,13 +229,14 @@ const Cards = (props: Props) => {
                           top="50%"
                           transform="translateY(-50%)"
                           zIndex={2}
+                          color={"#22abf0"}
                         >
                           <FaChevronLeft />
                         </Button>
                       )}
 
                       <Flex
-                      gap={"5"}
+                        gap={"5"}
                         transform={`translateX(-${
                           (currentIndices[category] || 0) * 100
                         }%)`}
@@ -281,6 +282,7 @@ const Cards = (props: Props) => {
                           top="50%"
                           transform="translateY(-50%)"
                           zIndex={2}
+                          color={"#22abf0"}
                         >
                           <FaChevronRight />
                         </Button>
