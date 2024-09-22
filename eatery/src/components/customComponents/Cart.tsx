@@ -137,7 +137,8 @@ export function DrawerExample({
     <Box>
 
 
-      <Button ref={btnRef} onClick={onOpen} _hover={{ bg: '#f53e62' }}>
+      <Button ref={btnRef} onClick={onOpen} _hover={{ bg: '#f53e62', color: 'white' }} >
+        <div className='mx-2'>View Cart</div>
         <FiShoppingCart />
       </Button>
       <Drawer

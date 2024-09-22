@@ -41,23 +41,29 @@ function IngredientsTablecomponent({}: Props) {
 
   // Fetch all ingredients on mount
   useEffect(() => {
-    dispatch(getAllIngredients());
+    dispatch(getAllIngredients({ pageSize, pageNumber }));
   }, [dispatch]);
   const [ingredients, setIngredients] = useState<IngredientsTable[]>([]);
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalData, setTotalData] = useState(0);
   const allIngredients = useSelector(
     (state: RootState) => state.addIngredients.ingredients
   );
-  console.log(ingredients);
+  const totalDataSelector = useSelector(
+    (state: RootState) => state.addIngredients.totalData
+  );
 
   useEffect(() => {
     setIngredients(allIngredients as IngredientsTable[]);
-  }, [allIngredients]);
+    setTotalData(totalDataSelector || 0);
+  }, [allIngredients, totalDataSelector]);
 
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
   const [selectLabel, setSelectLabel] = useState('Sort-By');
 
-  console.log(allIngredients);
+  // console.log(allIngredients);
 
   const handleFilter = (value: string) => {
     console.log(filter);
@@ -115,13 +121,22 @@ function IngredientsTablecomponent({}: Props) {
           />
         </div>
       </div>
-      <Tablecomponent tableHead={th} ingredients={ingredients} />
+      <Tablecomponent
+        tableHead={th}
+        ingredients={ingredients}
+        pageNumber={pageNumber}
+        pageSize={pageSize}
+      />
       <div className="flex justify-center mt-4">
         <Pagination
-        // totalData={100}
-        // onPageChange={(ev) => {
-        //   console.log(ev);
-        // }}
+          totalData={totalData}
+          pageNumber={pageNumber}
+          pageSize={pageSize}
+          onPageChange={({ pageNumber, pageSize }) => {
+            setPageNumber(pageNumber);
+            setPageSize(pageSize);
+            dispatch(getAllIngredients({ pageSize, pageNumber }));
+          }}
         ></Pagination>
       </div>
     </div>

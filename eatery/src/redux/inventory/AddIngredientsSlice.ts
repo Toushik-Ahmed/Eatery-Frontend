@@ -27,11 +27,21 @@ export interface AddIngredient {
 // Define the state interface
 export interface IngredientsState {
   ingredients: Partial<IngredientsTable>[];
+  pageSize?: number;
+  pageNumber?: number;
+  totalData?: number;
 }
 
 // Initial state
 const initialState: IngredientsState = {
   ingredients: [],
+  pageSize: 10,
+  pageNumber: 0,
+  totalData: 0,
+};
+type paginatedData = {
+  ingredient: IngredientsTable[];
+  totalData: number;
 };
 
 // Create the slice
@@ -39,6 +49,10 @@ export const AddIngredientsSlice = createSlice({
   name: 'addIngredients',
   initialState,
   reducers: {
+    //totalData
+    totalData: (state, action: PayloadAction<number>) => {
+      state.totalData = action.payload;
+    },
     // Action to add a single ingredient
     addIng: (state, action: PayloadAction<Partial<IngredientsTable>>) => {
       state.ingredients.push(action.payload);
@@ -62,6 +76,7 @@ export const AddIngredientsSlice = createSlice({
       }
     },
   },
+
   extraReducers: (builder) => {
     builder.addCase(
       postOrder.fulfilled,
@@ -77,8 +92,9 @@ export const AddIngredientsSlice = createSlice({
     );
     builder.addCase(
       getAllIngredients.fulfilled,
-      (state, action: PayloadAction<IngredientsTable[]>) => {
-        state.ingredients = action.payload;
+      (state, action: PayloadAction<paginatedData>) => {
+        state.ingredients = action.payload.ingredient;
+        state.totalData = action.payload.totalData;
       }
     );
     builder.addCase(
@@ -113,9 +129,15 @@ export const postAddIngredient = createAsyncThunk(
 
 export const getAllIngredients = createAsyncThunk(
   'inventory/allIngredients',
-  async () => {
+  async ({
+    pageSize,
+    pageNumber,
+  }: {
+    pageSize: number;
+    pageNumber: number;
+  }): Promise<paginatedData> => {
     const response = await axios.get(
-      'http://localhost:5000/ingredient/allingredient'
+      `http://localhost:5000/ingredient/allingredient?pageSize=${pageSize}&pageNumber=${pageNumber}`
     );
     return response.data;
   }

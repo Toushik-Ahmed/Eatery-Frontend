@@ -20,23 +20,29 @@ import { useEffect } from 'react';
 
 import { MdDeleteOutline } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
-import { wastageTable } from '../wastageComponents/WastageTable';
 
 type Props = {
   tableHead: string[];
-  ingredients: Partial<IngredientsTable>[]  ;
+  ingredients: Partial<IngredientsTable>[];
+  pageSize: number;
+  pageNumber: number;
 };
 
-const Tablecomponent = ({ tableHead, ingredients }: Props) => {
+const Tablecomponent = ({
+  tableHead,
+  ingredients,
+  pageSize,
+  pageNumber,
+}: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleDelete = (id?: string) => {
     if (id) dispatch(deleteIngredient(id));
   };
 
-  useEffect(() => {
-    dispatch(getAllIngredients());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(getAllIngredients({ pageSize, pageNumber }));
+  // }, [dispatch]);
 
   return (
     <div className=" justify-center">
