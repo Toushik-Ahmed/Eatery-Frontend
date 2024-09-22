@@ -96,20 +96,26 @@ function IngredientsTablecomponent({}: Props) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between mb-10">
+      <div className=" mb-10">
         <p className="font-bold text-3xl">Ingredient-Lists</p>
-        <div className="flex gap-4 mr-10">
-          <InputGroup w={'8vw'} borderRadius="28px">
+        <div className="flex justify-end gap-4 mr-10">
+          <InputGroup w={'10vw'} borderRadius="28px" boxShadow="md">
             <Input
-              placeholder="Search"
+              placeholder="Search items"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              borderRadius="full"
+              _placeholder={{ color: 'gray.400' }}
             />
             <InputRightElement>
               <IconButton
                 aria-label="Search database"
                 icon={<IoIosSearch />}
                 size="sm"
+                bg="#f53e62"
+                color="white"
+                borderRadius="full"
+                _hover={{ bg: '#f53e62' }}
                 onClick={handleSearch}
               />
             </InputRightElement>

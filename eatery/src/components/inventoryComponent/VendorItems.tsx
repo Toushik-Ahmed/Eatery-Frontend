@@ -84,15 +84,17 @@ const VendorItems = ({ handleClick }: Props) => {
     handleClick(); //
   };
 
+  const getVendorItems = async () => {
+    const response = await getAllVendorItems({ pageNumber, pageSize });
+    setVendorItems(response);
+    setTotalData(response.totalData);
+    setIngredients(response.ingredient);
+  };
+
   useEffect(() => {
-    const getVendorBudgets = async () => {
-      const response = await getAllVendorItems({ pageNumber, pageSize });
-      setVendorItems(response);
-      setTotalData(response.totalData);
-      setIngredients(response.ingredient);
-    };
-    getVendorBudgets();
-  }, []);
+    getVendorItems();
+  }, [pageNumber, pageSize]);
+
   console.log(vendorItems.ingredient);
   useEffect(() => {
     console.log('Selected items updated:', selectedItems);
@@ -100,7 +102,6 @@ const VendorItems = ({ handleClick }: Props) => {
 
   const th = ['Name', 'Cost($)', 'Add to Cart'];
 
-  const handleSetCartData = () => {};
   const handleSearch = () => {
     const searchedIngredients = vendorItems.ingredient.filter((item) =>
       item.itemName?.toLowerCase().includes(search.toLowerCase())
@@ -114,12 +115,14 @@ const VendorItems = ({ handleClick }: Props) => {
         <div>
           <Button
             p={0}
+            size={'lg'}
+            color={'white'}
             w="auto"
             h="auto"
             minW="auto"
             minH="auto"
-            bg="white"
-            _hover={{ bg: '#ff5841' }}
+            bg="#f53e62"
+            _hover={{ color: 'black', bg: '#f53e62' }}
             onClick={handleCheckoutOrClose}
           >
             <FaLongArrowAltLeft />
@@ -127,7 +130,7 @@ const VendorItems = ({ handleClick }: Props) => {
         </div>
         Back
       </div>
-      <div className="flex justify-between">
+      <div className="flex justify-between mt-4">
         <div className="text-3xl font-bold mb-10">List of Items</div>
         <div className="mr-10">
           <DrawerExample
@@ -163,8 +166,8 @@ const VendorItems = ({ handleClick }: Props) => {
                     h="auto"
                     minW="auto"
                     minH="auto"
-                    bg={clickedItems.includes(id) ? '#6EC207' : 'white'} // Change bg based on clicked state
-                    _hover={{ bg: '#ff5841' }}
+                    bg={clickedItems.includes(id) ? '#f53e62' : 'white'} // Change bg based on clicked state
+                    _hover={{ bg: '#f53e62' }}
                     onClick={() => handleSelectItems(el, id)}
                   >
                     <IoBagAddOutline />
@@ -181,7 +184,6 @@ const VendorItems = ({ handleClick }: Props) => {
           onPageChange={({ pageNumber, pageSize }) => {
             setPageNumber(pageNumber);
             setPageSize(pageSize);
-            getAllVendorItems({ pageNumber, pageSize });
           }}
         ></Pagination>
       </div>

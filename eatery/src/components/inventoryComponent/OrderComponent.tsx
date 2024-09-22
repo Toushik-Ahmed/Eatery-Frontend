@@ -33,7 +33,7 @@ const OrderComponent = ({ handleClick }: Props) => {
 
   return (
     <div className="m-4">
-      <div className="font-semibold text-3xl mb-10">Vendor-Lists</div>
+      <div className="font-bold text-3xl mb-10">Vendor-Lists</div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x- gap-y-4" >
         <VendorCard

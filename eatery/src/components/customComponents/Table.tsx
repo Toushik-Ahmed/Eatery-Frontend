@@ -85,6 +85,8 @@ const Tablecomponent = ({
                 </Td>
                 <Td>
                   <Button
+                  border={'none'}
+                  variant="ghost"
                     colorScheme="red"
                     onClick={() => {
                       handleDelete(ingredient._id);
