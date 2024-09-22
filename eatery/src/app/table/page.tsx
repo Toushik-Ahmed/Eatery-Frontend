@@ -1,20 +1,19 @@
-<<<<<<< HEAD
-import React from "react";
-import SidebarWithHeader from "@/components/tableComponents/SideNavBar";
+// <<<<<<< HEAD
+// import React from "react";
+// import SidebarWithHeader from "@/components/tableComponents/SideNavBar";
 
+// type Props = {};
 
-type Props = {};
+// const page = (props: Props) => {
+//   return (
+//     <div>
+//       <SidebarWithHeader />
+//     </div>
+//   );
+// };
 
-const page = (props: Props) => {
-  return (
-    <div>
-      <SidebarWithHeader />
-    </div>
-  );
-};
+// export default page;
 
-export default page;
-=======
 "use client";
 
 import PersistentDrawerLeft from "@/components/tableComponents/SideNavBar";
@@ -31,4 +30,3 @@ function Page({}: Props) {
 }
 
 export default Page;
->>>>>>> table
