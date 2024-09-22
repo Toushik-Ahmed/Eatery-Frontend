@@ -11,6 +11,7 @@ import {
   Flex,
   Grid,
   HStack,
+  Slide,
   Spacer,
   Stack,
   Text,
@@ -19,12 +20,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getmenuItems, MealTime, MenuItem } from "@/redux/Pos/MenuItemSlice";
+import { motion } from "framer-motion";
 
 type Props = {};
 
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [meal, setMealTime] = useState<string>("All Items");
 
   useEffect(() => {
@@ -35,6 +37,11 @@ const Cards = (props: Props) => {
   const allItems = list.allItems;
 
   const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
+  const [currentIndices, setCurrentIndices] = useState<{
+    [key: string]: number;
+  }>({});
+  const [xOffset, setXOffset] = useState<{ [key: string]: number }>({});
+  const [slideDirection, setSlideDirection] = useState<string>("");
 
   useEffect(() => {
     if (meal === "All Items") {
@@ -68,26 +75,34 @@ const Cards = (props: Props) => {
     }
   }, [categories, selectedCategory]);
 
-  /* const scrollBoxRef = useRef<HTMLDivElement>(null);
+  const itemsPerView = 3;
 
-  const scrollLeft = () => {
-    if (scrollBoxRef.current) {
-      scrollBoxRef.current.scrollBy({
-        left: -500,
-        behavior: "smooth",
-      });
-    }
+  const handleNext = (category: string) => {
+    const filteredItems = availableItems.filter(
+      (item) => item.category === category
+    );
+    const maxIndex = Math.ceil(filteredItems.length / itemsPerView) - 1;
+
+    setCurrentIndices((prev) => {
+      const newIndex = Math.min((prev[category] || 0) + 1, maxIndex);
+      setXOffset((prevOffset) => ({
+        ...prevOffset,
+        [category]: -newIndex,
+      }));
+      return { ...prev, [category]: newIndex };
+    });
   };
 
-  const scrollRight = () => {
-    if (scrollBoxRef.current) {
-      scrollBoxRef.current.scrollBy({
-        left: 800,
-        behavior: "smooth",
-      });
-    }
-  }; */
-
+  const handlePrev = (category: string) => {
+    setCurrentIndices((prev) => {
+      const newIndex = Math.max((prev[category] || 0) - 1, 0);
+      setXOffset((prevOffset) => ({
+        ...prevOffset,
+        [category]: -newIndex,
+      }));
+      return { ...prev, [category]: newIndex };
+    });
+  };
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
       <Text
@@ -196,9 +211,6 @@ const Cards = (props: Props) => {
             <Stack spacing={{ base: "4", md: "4" }}>
               {categories.map((category, index) => (
                 <Box mx={{ base: "4", md: "4" }} key={index}>
-                  {/* <HStack spacing={{ base: "4", md: "6" }}> */}
-                  {/* {selectedCategory === category && ( */}
-
                   <Flex gap="2">
                     <Box p={"2"}>
                       <Button
@@ -209,7 +221,6 @@ const Cards = (props: Props) => {
                         borderTopRightRadius={"full"}
                         w={"6vw"}
                         onClick={() => setSelectedCategory(category)}
-                        key={index}
                         fontSize={{ base: "sm", md: "md" }}
                         fontWeight={"bold"}
                       >
@@ -217,21 +228,45 @@ const Cards = (props: Props) => {
                       </Button>
                     </Box>
 
-                    <Box p={"1"} maxW={"100%"} overflowX={"auto"}>
-                      {/* <Flex alignItems="center">
-                        <Button onClick={scrollLeft}>
+                    <Box position="relative" w="100%" overflow={"hidden"}>
+                      {(currentIndices[category] || 0) > 0 && (
+                        <Button
+                          onClick={() => handlePrev(category)}
+                          position="absolute"
+                          left="10px"
+                          top="50%"
+                          transform="translateY(-50%)"
+                          zIndex={2}
+                        >
                           <FaChevronLeft />
                         </Button>
-                        <Spacer />
-                        <Button onClick={scrollRight}>
-                          <FaChevronRight />
-                        </Button>
-                      </Flex> */}
-                      <Flex gap={"20"} wrap="nowrap" /* ref={scrollBoxRef} */>
+                      )}
+
+                      <Flex
+                        gap={"8"}
+                        as={motion.div}
+                        animate={{
+                          x: `-${currentIndices[category] || 0}%`,
+                        }}
+                        transition={{
+                          x: "6.5 easeInOut",
+                        }}
+                      >
                         {availableItems
                           .filter((item) => item.category === category)
+                          .slice(
+                            (currentIndices[category] || 0) * itemsPerView,
+                            ((currentIndices[category] || 0) + 1) * itemsPerView
+                          )
                           .map((item) => (
-                            <Box h={"fit-content"} borderRadius="lg">
+                            <Box
+                              borderRadius="lg"
+                              key={item.id}
+                              flexShrink={0}
+                              as={motion.div}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
                               <CustomCard
                                 key={item.id}
                                 name={item.name}
@@ -242,6 +277,25 @@ const Cards = (props: Props) => {
                             </Box>
                           ))}
                       </Flex>
+
+                      {(currentIndices[category] || 0) <
+                        Math.ceil(
+                          availableItems.filter(
+                            (item) => item.category === category
+                          ).length / itemsPerView
+                        ) -
+                          1 && (
+                        <Button
+                          onClick={() => handleNext(category)}
+                          position="absolute"
+                          right="10px"
+                          top="50%"
+                          transform="translateY(-50%)"
+                          zIndex={2}
+                        >
+                          <FaChevronRight />
+                        </Button>
+                      )}
                     </Box>
                   </Flex>
                 </Box>

@@ -181,13 +181,7 @@ const OrderSummery = (props: Props) => {
         flexDirection={"column"}
         alignItems={"center"}
         overflowY={"auto"}
-        sx={{
-          "::-webkit-scrollbar": {
-            display: "none",
-          },
-          "-ms-overflow-style": "none",  // for Internet Explorer and Edge
-          "scrollbar-width": "none",     // for Firefox
-        }}
+        
       >
         <Text py={"4"} fontWeight={"bold"}>
           Order Summary

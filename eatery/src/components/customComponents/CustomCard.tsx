@@ -58,7 +58,7 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
             <Flex key={s.sizeName} justify="space-between" align="center">
               <Text
                 color="#d91656"
-                fontSize={["md", "md", "md", "sm"]}
+                fontSize={["sm", "sm", "sm", "sm"]}
                 fontWeight={"bold"}
                 objectFit={"cover"}
               >
@@ -66,7 +66,7 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
               </Text>
               <Text
                 color="#ff5841"
-                fontSize={["md", "md", "md", "sm"]}
+                fontSize={["sm", "sm", "sm", "sm"]}
                 fontWeight={"bold"}
                 objectFit={"cover"}
               >
