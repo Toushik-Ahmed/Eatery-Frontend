@@ -13,13 +13,18 @@ import {
   Image,
 } from "@chakra-ui/react";
 
-type Props = {
-  
-};
+type Props = {};
 
 const CustomCard = (props: Props) => {
   return (
-    <Card maxW="sm" h="200px" w="250px" bg="#fffafa" borderRadius="lg" boxShadow='2xl'>
+    <Card
+      maxW="sm"
+      h="200px"
+      w="250px"
+      bg="#fffafa"
+      borderRadius="lg"
+      boxShadow="2xl"
+    >
       <CardBody p="15px">
         <Image
           src="https://www.sargento.com/assets/Uploads/Recipe/Image/burger_0.jpg"
@@ -30,7 +35,7 @@ const CustomCard = (props: Props) => {
         />
         <Stack mt="2" spacing="1">
           <Heading size="md">Beef Cheese Burger</Heading>
-          <Text color="orange.600" fontSize="1rem" >
+          <Text color="orange.600" fontSize="1rem">
             $10
           </Text>
         </Stack>

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import {
   Button,
   Table,
@@ -8,9 +8,9 @@ import {
   Th,
   Thead,
   Tr,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-import { MdDeleteOutline } from 'react-icons/md';
+import { MdDeleteOutline } from "react-icons/md";
 
 type Ingredient = {
   Name: string;
