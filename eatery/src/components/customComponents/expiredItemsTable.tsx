@@ -20,7 +20,7 @@ type Props = {
 
 const ExpiredTablecomponent = ({ tableHead, ingredients }: Props) => {
   useEffect(() => {}, []);
-
+ console.log(ingredients)
   return (
     <div className=" justify-center">
       <TableContainer>

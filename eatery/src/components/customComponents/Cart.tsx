@@ -10,21 +10,30 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Flex,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Select,
+  Spacer,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
-import { MdDeleteForever, MdOutlineDeleteOutline } from 'react-icons/md';
+import { IoIosSearch } from 'react-icons/io';
+import { MdDeleteForever } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 
 type DrawerProps = {
   removeItem: (index: number) => void;
   cartData: CartData[];
   setCartData: React.Dispatch<React.SetStateAction<CartData[]>>;
+  handleSearch: () => void;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export interface CartData {
@@ -43,6 +52,9 @@ export function DrawerExample({
   removeItem,
   cartData,
   setCartData,
+  handleSearch,
+  search,
+  setSearch,
 }: DrawerProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -134,114 +146,140 @@ export function DrawerExample({
 
   return (
     <>
-    <Box>
+      <Box>
+        <Flex gap={2}>
+          <InputGroup w={'8vw'} borderRadius="28px">
+            <Input
+              placeholder="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <InputRightElement>
+              <IconButton
+                aria-label="Search database"
+                icon={<IoIosSearch />}
+                size="sm"
+                onClick={handleSearch}
+              />
+            </InputRightElement>
+          </InputGroup>
+          <Spacer />
 
+          <Button
+            ref={btnRef}
+            onClick={onOpen}
+            _hover={{ bg: '#f53e62', color: 'white' }}
+          >
+            <div className="mx-2">View Cart</div>
+            <FiShoppingCart />
+          </Button>
+        </Flex>
+        <Drawer
+          isOpen={isOpen}
+          placement="right"
+          onClose={onClose}
+          finalFocusRef={btnRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>Your Cart</DrawerHeader>
 
-      <Button ref={btnRef} onClick={onOpen} _hover={{ bg: '#f53e62', color: 'white' }} >
-        <div className='mx-2'>View Cart</div>
-        <FiShoppingCart />
-      </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Your Cart</DrawerHeader>
+            <DrawerBody>
+              <Box>
+                {cartData.length === 0 ? (
+                  <p>No items in the cart</p>
+                ) : (
+                  cartData.map((item, index) => (
+                    <div key={index} className="mb-4 border-b pb-2 ">
+                      <p>
+                        <strong>Name:</strong> {item.ingredient}
+                      </p>
+                      <p>
+                        <strong>Cost (p/u):</strong> {item.price} Taka
+                      </p>
 
-          <DrawerBody>
-            <Box  >
-            {cartData.length === 0 ? (
-              <p>No items in the cart</p>
-            ) : (
-              cartData.map((item, index) => (
-                <div key={index} className="mb-4 border-b pb-2 ">
-                  <p>
-                    <strong>Name:</strong> {item.ingredient}
-                  </p>
-                  <p>
-                    <strong>Cost (p/u):</strong> {item.price} Taka
-                  </p>
+                      <div className="my-2 flex flex-col gap-2 ">
+                        <label className="font-bold">Unit: </label>
+                        <Select
+                          placeholder="Select unit"
+                          size="sm"
+                          value={item.unit || ''}
+                          onChange={(e) =>
+                            handleUnitChange(index, e.target.value)
+                          }
+                        >
+                          <option value="K.G">K.G</option>
+                          <option value="Liter">Liter</option>
+                          <option value="Gram">Gram</option>
+                          <option value="Piece">Pieces</option>
+                        </Select>
+                      </div>
 
-                  <div className="my-2 flex flex-col gap-2 ">
-                    <label className="font-bold">Unit: </label>
-                    <Select
-                      placeholder="Select unit"
-                      size="sm"
-                      value={item.unit || ''}
-                      onChange={(e) => handleUnitChange(index, e.target.value)}
-                    >
-                      <option value="K.G">K.G</option>
-                      <option value="Liter">Liter</option>
-                      <option value="Gram">Gram</option>
-                      <option value="Piece">Pieces</option>
-                    </Select>
-                  </div>
+                      <div className="my-2">
+                        <label className="font-bold">Quantity: </label>
+                        <Input
+                          type="number"
+                          size="sm"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              index,
+                              parseInt(e.target.value)
+                            )
+                          }
+                        />
+                      </div>
 
-                  <div className="my-2">
-                    <label className="font-bold">Quantity: </label>
-                    <Input
-                      type="number"
-                      size="sm"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        handleQuantityChange(index, parseInt(e.target.value))
-                      }
-                    />
-                  </div>
-
-                  <div className="my-2">
-                    <label className="font-bold">Delivery Date: </label>
-                    <Input
-                      type="date"
-                      size="sm"
-                      min={format(new Date(), 'yyyy-MM-dd')}
-                      value={item.deliveryDate || ''}
-                      onChange={(e) =>
-                        handleDeliveryDateChange(index, e.target.value)
-                      }
-                    />
-                  </div>
-                  <Button
-                    w={'fitContent'}
-                    border={'none'}
-                    variant="outline"
-                    size="sm"
-                    colorScheme="red"
-                    onClick={() => handleRemoveItem(index)}
-                  >
-                    <MdDeleteForever />
-                  </Button>
+                      <div className="my-2">
+                        <label className="font-bold">Delivery Date: </label>
+                        <Input
+                          type="date"
+                          size="sm"
+                          min={format(new Date(), 'yyyy-MM-dd')}
+                          value={item.deliveryDate || ''}
+                          onChange={(e) =>
+                            handleDeliveryDateChange(index, e.target.value)
+                          }
+                        />
+                      </div>
+                      <Button
+                        w={'fitContent'}
+                        border={'none'}
+                        variant="outline"
+                        size="sm"
+                        colorScheme="red"
+                        onClick={() => handleRemoveItem(index)}
+                      >
+                        <MdDeleteForever />
+                      </Button>
+                    </div>
+                  ))
+                )}
+              </Box>
+              {cartData.length > 0 && (
+                <div className="mt-4 font-bold text-lg">
+                  <p>Total Cost: {calculateTotalCost()} Taka</p>
                 </div>
-              ))
-            )}
-            </Box>
-            {cartData.length > 0 && (
-              <div className="mt-4 font-bold text-lg">
-                <p>Total Cost: {calculateTotalCost()} Taka</p>
-              </div>
-            )}
-          </DrawerBody>
+              )}
+            </DrawerBody>
 
-          <DrawerFooter justifyContent={'space-between'}>
-            <Button
-              variant="outline"
-              colorScheme="#852e22"
-              color={'#852e22'}
-              mr={3}
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
-            <Button colorScheme="green" onClick={handleCheckout}>
-              Checkout
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+            <DrawerFooter justifyContent={'space-between'}>
+              <Button
+                variant="outline"
+                colorScheme="#852e22"
+                color={'#852e22'}
+                mr={3}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+              <Button colorScheme="green" onClick={handleCheckout}>
+                Checkout
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
       </Box>
     </>
   );

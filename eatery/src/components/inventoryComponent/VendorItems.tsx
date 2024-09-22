@@ -20,6 +20,10 @@ export interface Items {
   itemName: string;
   price: number;
 }
+type vendorItems = {
+  ingredient: Items[];
+  totalData: number;
+};
 
 type Props = {
   handleClick: () => void;
@@ -28,8 +32,16 @@ type Props = {
 const VendorItems = ({ handleClick }: Props) => {
   const [selectedItems, setSelectedItems] = useState<Items[]>([]);
   const [clickedItems, setClickedItems] = useState<number[]>([]);
-  const [vendorItems, setVendorItems] = useState<Items[]>([]);
+  const [vendorItems, setVendorItems] = useState<vendorItems>({
+    ingredient: [],
+    totalData: 0,
+  });
   const [cartData, setCartData] = useState<CartData[]>([]);
+  const [search, setSearch] = useState<string>('');
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(0);
+  const [totalData, setTotalData] = useState(0);
+  const [ingredients, setIngredients] = useState<Items[]>([]);
 
   const handleSelectItems = (newItem: Items, index: number) => {
     if (clickedItems.includes(index)) {
@@ -74,12 +86,14 @@ const VendorItems = ({ handleClick }: Props) => {
 
   useEffect(() => {
     const getVendorBudgets = async () => {
-      const response = await getAllVendorItems();
+      const response = await getAllVendorItems({ pageNumber, pageSize });
       setVendorItems(response);
+      setTotalData(response.totalData);
+      setIngredients(response.ingredient);
     };
     getVendorBudgets();
   }, []);
-  console.log(vendorItems);
+  console.log(vendorItems.ingredient);
   useEffect(() => {
     console.log('Selected items updated:', selectedItems);
   }, [selectedItems]);
@@ -87,6 +101,12 @@ const VendorItems = ({ handleClick }: Props) => {
   const th = ['Name', 'Cost($)', 'Add to Cart'];
 
   const handleSetCartData = () => {};
+  const handleSearch = () => {
+    const searchedIngredients = vendorItems.ingredient.filter((item) =>
+      item.itemName?.toLowerCase().includes(search.toLowerCase())
+    );
+    setIngredients(searchedIngredients);
+  };
 
   return (
     <div className="mt-4">
@@ -114,6 +134,9 @@ const VendorItems = ({ handleClick }: Props) => {
             removeItem={removeItem}
             cartData={cartData}
             setCartData={(data) => setCartData(data)}
+            handleSearch={handleSearch}
+            search={search}
+            setSearch={setSearch}
           />
         </div>
       </div>
@@ -128,7 +151,7 @@ const VendorItems = ({ handleClick }: Props) => {
             </Tr>
           </Thead>
           <Tbody>
-            {vendorItems.map((el, id) => (
+            {ingredients.map((el, id) => (
               <Tr key={id}>
                 <Td>{el.itemName}</Td>
                 <Td>{el.price}</Td>
@@ -154,9 +177,11 @@ const VendorItems = ({ handleClick }: Props) => {
       </TableContainer>
       <div className="flex justify-center mt-4">
         <Pagination
-          totalData={100}
-          onPageChange={(ev) => {
-            console.log(ev);
+          totalData={totalData}
+          onPageChange={({ pageNumber, pageSize }) => {
+            setPageNumber(pageNumber);
+            setPageSize(pageSize);
+            getAllVendorItems({ pageNumber, pageSize });
           }}
         ></Pagination>
       </div>
