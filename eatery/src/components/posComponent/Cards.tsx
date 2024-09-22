@@ -75,7 +75,7 @@ const Cards = (props: Props) => {
     }
   }, [categories, selectedCategory]);
 
-  const itemsPerView = 3;
+  const itemsPerView = 6;
 
   const handleNext = (category: string) => {
     const filteredItems = availableItems.filter(
@@ -85,10 +85,6 @@ const Cards = (props: Props) => {
 
     setCurrentIndices((prev) => {
       const newIndex = Math.min((prev[category] || 0) + 1, maxIndex);
-      setXOffset((prevOffset) => ({
-        ...prevOffset,
-        [category]: -newIndex,
-      }));
       return { ...prev, [category]: newIndex };
     });
   };
@@ -96,10 +92,6 @@ const Cards = (props: Props) => {
   const handlePrev = (category: string) => {
     setCurrentIndices((prev) => {
       const newIndex = Math.max((prev[category] || 0) - 1, 0);
-      setXOffset((prevOffset) => ({
-        ...prevOffset,
-        [category]: -newIndex,
-      }));
       return { ...prev, [category]: newIndex };
     });
   };
@@ -243,28 +235,25 @@ const Cards = (props: Props) => {
                       )}
 
                       <Flex
-                        gap={"8"}
-                        as={motion.div}
-                        animate={{
-                          x: `-${currentIndices[category] || 0}%`,
-                        }}
-                        transition={{
-                          x: "6.5 easeInOut",
-                        }}
+                      gap={"5"}
+                        transform={`translateX(-${
+                          (currentIndices[category] || 0) * 100
+                        }%)`}
+                        transition="transform 0.5s ease-in-out"
+                        width="100%"
                       >
                         {availableItems
                           .filter((item) => item.category === category)
-                          .slice(
-                            (currentIndices[category] || 0) * itemsPerView,
-                            ((currentIndices[category] || 0) + 1) * itemsPerView
-                          )
+
                           .map((item) => (
                             <Box
-                              borderRadius="lg"
+                              border={"none"}
+                              borderRadius={"xl"}
                               key={item.id}
                               flexShrink={0}
+                              w={"fit-content"}
                               as={motion.div}
-                              whileHover={{ scale: 1.05 }}
+                              whileHover={{ scale: 1.02 }}
                               whileTap={{ scale: 0.9 }}
                             >
                               <CustomCard

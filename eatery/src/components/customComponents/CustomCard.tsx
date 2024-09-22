@@ -44,7 +44,7 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
       w={["40vw", "30vw", "20vw", "10vw"]}
       bg="white"
       borderRadius="lg"
-      
+      boxShadow={"none"}
       onClick={onClick}
       h={"25vh"}
     >
