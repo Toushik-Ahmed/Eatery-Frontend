@@ -222,8 +222,8 @@ export function DrawerExample({
                         _hover={{ transform: 'scale(1.05)', boxShadow: 'lg' }}
                       >
                         <Text fontWeight="bold">{item.ingredient}</Text>
-                        <Text color="gray.600">
-                          Cost (p/u): {item.price} Taka
+                        <Text fontWeight='bold' color="gray.600">
+                          Cost (p/u): {item.price} $
                         </Text>
                         <Box mt={2}>
                           <label className="font-bold">Unit: </label>
