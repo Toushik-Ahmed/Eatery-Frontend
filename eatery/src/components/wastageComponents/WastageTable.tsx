@@ -12,39 +12,55 @@ import { useEffect, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import DropDown from '../customComponents/DropDown';
 import ExpiredTablecomponent from '../customComponents/expiredItemsTable';
+import Pagination from '@/shared/components/Pagination/pagination';
 
 export interface wastageTable {
+  expiredItems: ExpiredItems[];
+  totalData: number;
+}
+
+export interface ExpiredItems {
   ingredient: string;
   unit: string;
   quantity: number;
   wastageDate: string;
 }
+
 interface Props {}
 
 function WastageTable({}: Props) {
   const th = ['INGREDIENT', 'UNIT', 'QUANTITY', 'DATE'];
   const filterITems = ['Date', 'Name'];
-  const [ingredients, setIngredients] = useState<wastageTable[]>([]);
+  const [wasteddata, setWastageData] = useState<wastageTable>({
+    expiredItems: [],
+    totalData: 0,
+  });
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('');
   const [selectLabel, setSelectLabel] = useState('Sort-By');
+  const [pageNumber, setPageNumber] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalData, setTotalData] = useState(0);
+  const [ingredients, setIngredients] = useState<ExpiredItems[]>([]);
 
   // Fetch the wastage items on mount
   useEffect(() => {
     const expiredItems = async () => {
-      const response = await getAllWastageItems();
-      setIngredients(response);
+      const response = await getAllWastageItems({ pageNumber, pageSize });
+      setWastageData(response);
+      setIngredients(response.expiredItems);
+      setTotalData(response.totalData);
     };
     expiredItems();
-  }, []); // Make sure to pass an empty dependency array to run only on mount
+  }, []);
 
   // Handle search functionality
   const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault(); // Prevent page refresh
+    e.preventDefault();
     const searchedIngredients = ingredients.filter((item) =>
       item.ingredient?.toLowerCase().includes(search.toLowerCase())
     );
-    setIngredients(searchedIngredients as wastageTable[]);
+    setIngredients(searchedIngredients as ExpiredItems[]);
   };
 
   // Handle filter functionality
@@ -75,7 +91,6 @@ function WastageTable({}: Props) {
 
       <div className=" w-full flex justify-end ">
         <div className="flex gap-4 mr-10">
-          {/* Search bar */}
           <form onSubmit={handleSearch}>
             <InputGroup w={'10vw'} borderRadius="28px" boxShadow="md">
               <Input
@@ -99,7 +114,7 @@ function WastageTable({}: Props) {
               </InputRightElement>
             </InputGroup>
           </form>
-          {/* Filter dropdown */}
+
           <DropDown
             selectLabel={selectLabel}
             items={filterITems}
@@ -107,8 +122,17 @@ function WastageTable({}: Props) {
           />
         </div>
       </div>
-      {/* Table of expired ingredients */}
+
       <ExpiredTablecomponent tableHead={th} ingredients={ingredients} />
+      <div className="flex justify-center mt-4">
+        <Pagination
+          totalData={totalData}
+          onPageChange={({ pageNumber, pageSize }) => {
+            setPageNumber(pageNumber);
+            setPageSize(pageSize);
+          }}
+        ></Pagination>
+      </div>
     </div>
   );
 }

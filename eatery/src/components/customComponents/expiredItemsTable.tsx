@@ -11,11 +11,11 @@ import {
 import { useEffect } from 'react';
 
 import { format, parseISO } from 'date-fns';
-import { wastageTable } from '../wastageComponents/WastageTable';
+import { ExpiredItems, wastageTable } from '../wastageComponents/WastageTable';
 
 type Props = {
   tableHead: string[];
-  ingredients: wastageTable[];
+  ingredients: ExpiredItems[];
 };
 
 const ExpiredTablecomponent = ({ tableHead, ingredients }: Props) => {
