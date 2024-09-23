@@ -38,6 +38,9 @@ import {
   Table7,
   Table8,
 } from "./tableTry";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { tableStatus } from "@/redux/Pos/PlaceOrderSlice";
 
 const drawerWidth = 240;
 
@@ -59,6 +62,10 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     marginLeft: 0,
   }),
 }));
+export interface TableStatus {
+  tableNumber: number;
+  tableStatus: string;
+}
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -98,9 +105,14 @@ export default function PersistentDrawerLeft() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [rightDrawerOpen, setRightDrawerOpen] = React.useState(false);
-  const [tableNumber, setTableNumber] = React.useState("");
+  const [tableStatusOpen, setTableStatusOpen] = React.useState(false);
+  const [tableNumber, setTableNumber] = React.useState(0);
+  const [tableNo, setTableNo] = React.useState(0);
+
   const [seatingCapacity, setSeatingCapacity] = React.useState("");
   const [tables, setTables] = React.useState<TableData[]>([]);
+  const [status, setStatus] = React.useState("");
+  const dispatch = useDispatch<AppDispatch>();
 
   React.useEffect(() => {
     fetchTables();
@@ -131,25 +143,41 @@ export default function PersistentDrawerLeft() {
     setRightDrawerOpen(true);
   };
 
+  const tableStatusDrawerClose = () => {
+    setTableStatusOpen(false);
+  };
+
+  const tableStatusDrawerOpen = () => {
+    setTableStatusOpen(true);
+  };
+
   const handleAddTable = async () => {
     if (tableNumber && seatingCapacity) {
       const newTable: TableData = {
-        number: parseInt(tableNumber),
+        number: tableNumber,
         capacity: parseInt(seatingCapacity),
       };
+
       console.log("new table: ", newTable);
       try {
         const response = await postTable(newTable);
         console.log("response: ", response);
         setTables(response);
         console.log("Tables: ", tables);
-        setTableNumber("");
+        setTableNumber(0);
         setSeatingCapacity("");
         handleRightDrawerClose();
       } catch (error) {
         console.error("Error adding table:", error);
       }
     }
+  };
+  const handleTableStatus = async () => {
+    const newTable: TableStatus = {
+      tableNumber: tableNo,
+      tableStatus: status,
+    };
+    dispatch(tableStatus(newTable));
   };
 
   const handleDeleteTable = async (tableNumber: number) => {
@@ -262,9 +290,20 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="outlined" onClick={handleRightDrawerOpen}>
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
+          <Button
+            variant="outlined"
+            onClick={handleRightDrawerOpen}
+            sx={{ mb: 1 }}
+          >
             Add Table
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={tableStatusDrawerOpen}
+            sx={{ mb: 1 }}
+          >
+            Table Status
           </Button>
         </Box>
         <Box
@@ -301,7 +340,7 @@ export default function PersistentDrawerLeft() {
           <TextField
             label="Table Number"
             value={tableNumber}
-            onChange={(e) => setTableNumber(e.target.value)}
+            onChange={(e) => setTableNumber(Number(e.target.value))}
             fullWidth
             margin="normal"
             type="number"
@@ -323,6 +362,51 @@ export default function PersistentDrawerLeft() {
               disabled={!tableNumber || !seatingCapacity}
             >
               Add Table
+            </Button>
+          </Box>
+        </Box>
+      </Drawer>
+      <Drawer
+        anchor="right"
+        open={tableStatusOpen}
+        onClose={tableStatusDrawerClose}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: 300,
+            padding: 2,
+          },
+        }}
+      >
+        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <IconButton onClick={tableStatusDrawerClose}>
+            <ChevronRightIcon />
+          </IconButton>
+        </Box>
+        <Box sx={{ padding: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Table Status
+          </Typography>
+          <TextField
+            label="Table Number"
+            value={tableNo}
+            onChange={(e) => setTableNo(Number(e.target.value))}
+            fullWidth
+            margin="normal"
+            type="number"
+          />
+          <TextField
+            label="Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            fullWidth
+            margin="normal"
+            type="number"
+          />
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}
+          >
+            <Button variant="contained" onClick={handleTableStatus}>
+              Update Table Status
             </Button>
           </Box>
         </Box>

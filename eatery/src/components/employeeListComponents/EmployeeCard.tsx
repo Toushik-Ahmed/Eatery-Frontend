@@ -4,9 +4,7 @@ import getAllEmployee from "@/services/employeeServices/getAllEmployee";
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
 interface Employee {
@@ -57,11 +55,11 @@ export default function EmployeeCard() {
   }, []);
 
   const getToken = async () => {
-    //need to edit code for token
+    // need to edit code for token
     const hard: { message: string; token: string } = {
       message: "Login successful",
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmVmZTM2ZWFjZWUyMTc1ZTZjMmFiNzgiLCJlbWFpbCI6InJpendhbmZhaGltMjRAZ21haWwuY29tIiwib3JnYW5pemF0aW9uTmFtZSI6IlByb2plY3QgQ29kZSIsInVzZXJUeXBlIjoiQWRtaW4iLCJpYXQiOjE3MjcwMzY2NjgsImV4cCI6MTcyNzA0MDI2OH0.NKV13B61aMBilzMJhosbYPDpO3LNQW-1AZNGguZ1qYo",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmVmZTM2ZWFjZWUyMTc1ZTZjMmFiNzgiLCJlbWFpbCI6InJpendhbmZhaGltMjRAZ21haWwuY29tIiwib3JnYW5pemF0aW9uTmFtZSI6IlByb2plY3QgQ29kZSIsInVzZXJUeXBlIjoiQWRtaW4iLCJpYXQiOjE3MjcwNjkxNTUsImV4cCI6MTcyNzA3Mjc1NX0.j5U3nmfW_HEzFDnr34oMiBgt0jVbGY9xPMxNvn31cgA",
     };
 
     localStorage.setItem("token", hard.token);

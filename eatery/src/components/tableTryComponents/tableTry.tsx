@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 interface TableProps {
   tableNumber: number;
-  onDelete: () => void;
+  onDelete: (e: React.MouseEvent) => void;
 }
 
 const tableStyle = {
@@ -32,7 +32,7 @@ const TableBase: React.FC<TableProps & { children: React.ReactNode }> = ({
   onDelete,
   children,
 }) => (
-  <Box sx={tableStyle}>
+  <Box sx={tableStyle} bgcolor={"green"}>
     <Typography
       variant="subtitle1"
       sx={{
