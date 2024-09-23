@@ -33,10 +33,19 @@ export interface MealTime {
 }
 export interface MenuItemState {
   allItems: MenuItem[];
+  topSellingItems: TopSell[];
 }
+
+export interface TopSell {
+  itemName: string;
+  count : number;
+}
+
+
 
 const initialState: MenuItemState = {
   allItems: [],
+  topSellingItems: []
 };
 
 export const MenuItemSlice = createSlice({
@@ -50,11 +59,21 @@ export const MenuItemSlice = createSlice({
         state.allItems = action.payload;
       }
     );
+    builder.addCase(
+      getTopSellingItems.fulfilled,
+      (state, action: PayloadAction<TopSell[]>) => {
+        state.topSellingItems = action.payload;
+      }
+    );
   },
 });
 
-export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
+export const getmenuItems = createAsyncThunk("menu/getmenuItems", async () => {
   const response = await axios.get("http://localhost:5000/menu/allmenu");
+  return response.data;
+});
+export const getTopSellingItems = createAsyncThunk("menu/getTopSellingItemss", async () => {
+  const response = await axios.get("http://localhost:5000/pos/bestsell");
   return response.data;
 });
 

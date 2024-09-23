@@ -39,7 +39,8 @@ const OrderSummery = (props: Props) => {
   const [preparationTime, setPreparationTime] = useState<number>(0);
   const [unitPrice, setUnitPrice] = useState<{ [key: string]: number }>({});
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
-
+  const table = useSelector((state: RootState) => state.placeOrder);
+ 
   const calculateUnitPrice = () => {
     const newUnitPrices: { [key: string]: number } = {};
 
@@ -132,8 +133,8 @@ const OrderSummery = (props: Props) => {
   }, [selectedSizes, selectedAddons, quantities, listOfItems.orderedItems]);
   const handleSendOrder = () => {
     const orderDetails: OrderDetails = {
-      tableNo: 7,
-      tableStatus: "Occupied",
+      tableNo: 7, //table.orderDetails.tableNo,
+      tableStatus: "Occupied", //table.orderDetails.tableStatus,
       menuItems: listOfItems.orderedItems.map((item) => ({
         itemName: item.name || "",
         quantity: quantities[item.uniqueKey] || 1,

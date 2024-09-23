@@ -35,7 +35,7 @@ interface PlaceOrderState {
 }
 const initialState: PlaceOrderState = {
   orderDetails: {
-    tableNo: 0,
+    tableNo: 2,
     tableStatus: "",
     menuItems: [],
     preparationTime: 0,

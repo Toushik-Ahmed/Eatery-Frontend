@@ -19,29 +19,38 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
-import { getmenuItems, MealTime, MenuItem } from "@/redux/Pos/MenuItemSlice";
+import {
+  getmenuItems,
+  getTopSellingItems,
+  MealTime,
+  MenuItem,
+} from "@/redux/Pos/MenuItemSlice";
 import { motion } from "framer-motion";
 
 type Props = {};
 
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [meal, setMealTime] = useState<string>("All Items");
 
   useEffect(() => {
     dispatch(getmenuItems());
+    dispatch(getTopSellingItems());
   }, [dispatch]);
 
   const list = useSelector((state: RootState) => state.allItem);
   const allItems = list.allItems;
+  const top = useSelector((state: RootState) => state.allItem);
+  const topSelling = top.topSellingItems;
+  console.log(top.topSellingItems);
 
   const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
   const [currentIndices, setCurrentIndices] = useState<{
     [key: string]: number;
   }>({});
-  const [xOffset, setXOffset] = useState<{ [key: string]: number }>({});
-  const [slideDirection, setSlideDirection] = useState<string>("");
+
+  const [bestItems, setbestItems] = useState<MenuItem[]>([]);
+  const [averageItems, setAverageItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
     if (meal === "All Items") {
@@ -95,6 +104,31 @@ const Cards = (props: Props) => {
       return { ...prev, [category]: newIndex };
     });
   };
+  /* const topSellingArray = topSelling.map((item) => item.itemName);
+  console.log("arrrrr", topSellingArray); */
+
+  useEffect(() => {
+    if (availableItems.length && topSelling.length) {
+      const topSellingArray = topSelling.map((item) => item.itemName);
+
+      const bestItem = topSellingArray
+        .map((itemName) => {
+          const matches = availableItems.filter(
+            (availableItem) => availableItem.name === itemName
+          );
+          return matches[0] || null;
+        })
+        .filter((item) => item !== null);
+
+      const averageItem = availableItems.filter(
+        (availableItem) => !topSellingArray.includes(availableItem.name)
+      );
+      console.log("Items", bestItem);
+      setbestItems(bestItem);
+      setAverageItems(averageItem);
+    }
+  }, [availableItems, topSelling]);
+
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
       <Text
@@ -243,7 +277,30 @@ const Cards = (props: Props) => {
                         transition="transform 0.5s ease-in-out"
                         width="100%"
                       >
-                        {availableItems
+                        {bestItems
+                          .filter((item) => item.category === category)
+
+                          .map((item) => (
+                            <Box
+                              border={"none"}
+                              borderRadius={"xl"}
+                              key={item.id}
+                              flexShrink={0}
+                              w={"fit-content"}
+                              as={motion.div}
+                              whileHover={{ scale: 1.02 }}
+                              whileTap={{ scale: 0.9 }}
+                            >
+                              <CustomCard
+                                key={item.id}
+                                name={item.name}
+                                size={item.size}
+                                image={item.image}
+                                onClick={() => handleSubmit(item)}
+                              />
+                            </Box>
+                          ))}
+                        {averageItems
                           .filter((item) => item.category === category)
 
                           .map((item) => (
