@@ -77,4 +77,9 @@ export const placeOrder = createAsyncThunk(
   }
 );
 
+export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
+  const response = await axios.get("http://localhost:5000/menu/allmenu");
+  return response.data;
+});
+
 export default PlaceOrderSlice.reducer;
