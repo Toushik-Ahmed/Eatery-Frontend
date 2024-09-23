@@ -37,18 +37,23 @@ const OrderSummery = (props: Props) => {
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
   const [totalPrices, setTotalPrices] = useState<{ [key: string]: number }>({});
   const [preparationTime, setPreparationTime] = useState<number>(0);
-  const [unitPrice, setUnitPrice] = useState<number>(0);
+  const [unitPrice, setUnitPrice] = useState<{ [key: string]: number }>({});
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
 
   const calculateUnitPrice = () => {
+    const newUnitPrices: { [key: string]: number } = {};
+
     listOfItems.orderedItems.forEach((item) => {
       const itemId = item.uniqueKey;
       const selectedSize = item.size.find(
         (s) => s.sizeName === selectedSizes[itemId]
       );
       const sizePrice = selectedSize ? selectedSize.sellingPrice : 0;
-      setUnitPrice(sizePrice);
+
+      newUnitPrices[itemId] = sizePrice;
     });
+
+    setUnitPrice(newUnitPrices);
   };
 
   const calculateTotalPrice = () => {
@@ -133,7 +138,7 @@ const OrderSummery = (props: Props) => {
         itemName: item.name || "",
         quantity: quantities[item.uniqueKey] || 1,
         selectedSize: selectedSizes[item.uniqueKey],
-        unitPrice: unitPrice,
+        unitPrice: unitPrice[item.uniqueKey],
         sellingPrice: totalPrices[item.uniqueKey] || 0,
         ingredients:
           item.size.find((s) => s.sizeName === selectedSizes[item.uniqueKey])
@@ -179,7 +184,6 @@ const OrderSummery = (props: Props) => {
         flexDirection={"column"}
         alignItems={"center"}
         overflowY={"auto"}
-        
       >
         <Text py={"4"} fontWeight={"bold"}>
           Order Summary
@@ -221,7 +225,7 @@ const OrderSummery = (props: Props) => {
                       handleQuantityChange(item.uniqueKey, "decrement")
                     }
                   >
-                    <FiMinus/>
+                    <FiMinus />
                   </Button>
                   <Center w={"8"}>
                     <Text>{quantities[`${item.uniqueKey}`] || 1}</Text>
