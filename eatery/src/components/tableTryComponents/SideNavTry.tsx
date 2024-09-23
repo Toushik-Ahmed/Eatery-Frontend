@@ -25,7 +25,9 @@ import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WidgetsIcon from "@mui/icons-material/Widgets";
+import { Select, MenuItem } from "@mui/material";
 import postTable from "@/services/tableServices/postTable";
+import updateTable from "@/services/tableServices/updateTable";
 import getTable from "@/services/tableServices/getTable";
 import deleteTable from "@/services/tableServices/deleteTable";
 import {
@@ -40,7 +42,10 @@ import {
 } from "./tableTry";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { tableStatus } from "@/redux/Pos/PlaceOrderSlice";
+import { useEffect } from "react";
+import { placeOrder, tableStatus } from "@/redux/Pos/PlaceOrderSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 const drawerWidth = 240;
 
@@ -65,6 +70,11 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 export interface TableStatus {
   tableNumber: number;
   tableStatus: string;
+}
+
+export interface TableStatusdb {
+  tableNumber: number;
+  status: string;
 }
 
 interface AppBarProps extends MuiAppBarProps {
@@ -99,6 +109,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 interface TableData {
   number: number;
   capacity: number;
+  status: string;
 }
 
 export default function PersistentDrawerLeft() {
@@ -108,7 +119,6 @@ export default function PersistentDrawerLeft() {
   const [tableStatusOpen, setTableStatusOpen] = React.useState(false);
   const [tableNumber, setTableNumber] = React.useState(0);
   const [tableNo, setTableNo] = React.useState(0);
-
   const [seatingCapacity, setSeatingCapacity] = React.useState("");
   const [tables, setTables] = React.useState<TableData[]>([]);
   const [status, setStatus] = React.useState("");
@@ -121,6 +131,7 @@ export default function PersistentDrawerLeft() {
   const fetchTables = async () => {
     try {
       const response = await getTable();
+      console.log("response: ", response);
       setTables(response);
     } catch (error) {
       console.error("Error fetching tables:", error);
@@ -134,6 +145,12 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const list = useSelector((state: RootState) => state.placeOrder);
+
+  useEffect(() => {
+    console.log("Data:", list.orderDetails.tableNo);
+  }, [list]);
 
   const handleRightDrawerClose = () => {
     setRightDrawerOpen(false);
@@ -156,6 +173,7 @@ export default function PersistentDrawerLeft() {
       const newTable: TableData = {
         number: tableNumber,
         capacity: parseInt(seatingCapacity),
+        status: "free",
       };
 
       console.log("new table: ", newTable);
@@ -178,6 +196,26 @@ export default function PersistentDrawerLeft() {
       tableStatus: status,
     };
     dispatch(tableStatus(newTable));
+  };
+
+  const handleTableStatusdb = async () => {
+    const tableStatus: TableStatusdb = {
+      tableNumber: tableNo,
+      status: status,
+    };
+    console.log("tableStatusdb: ", tableStatus);
+    try {
+      const response = await updateTable(tableStatus);
+      console.log("response: ", response);
+      fetchTables();
+      // setTables(response);
+      // console.log("Tables: ", tables);
+      // setTableNumber(0);
+      // setSeatingCapacity("");
+      // handleRightDrawerClose();
+    } catch (error) {
+      console.error("Error adding table:", error);
+    }
   };
 
   const handleDeleteTable = async (tableNumber: number) => {
@@ -211,6 +249,7 @@ export default function PersistentDrawerLeft() {
         <Link href={`/order?table=${table.number}`} passHref>
           <TableComponent
             tableNumber={table.number}
+            status={table.status}
             onDelete={(e: React.MouseEvent) => {
               e.preventDefault();
               e.stopPropagation();
@@ -394,18 +433,41 @@ export default function PersistentDrawerLeft() {
             margin="normal"
             type="number"
           />
-          <TextField
+          <Select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            fullWidth
+            displayEmpty
+            sx={{
+              marginTop: 2,
+              marginBottom: 2,
+            }}
+          >
+            <MenuItem value="" disabled>
+              Select Status
+            </MenuItem>
+            <MenuItem value="Occupied">Occupied</MenuItem>
+            <MenuItem value="Free">Free</MenuItem>
+          </Select>
+          {/* <TextField
             label="Status"
             value={status}
             onChange={(e) => setStatus(e.target.value)}
             fullWidth
             margin="normal"
-            type="number"
-          />
+            type="text"
+          /> */}
           <Box
             sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}
           >
-            <Button variant="contained" onClick={handleTableStatus}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                handleTableStatus();
+                handleTableStatusdb();
+              }}
+              disabled={!tableNo || !status}
+            >
               Update Table Status
             </Button>
           </Box>
