@@ -1,7 +1,6 @@
 'use client';
 import {
   deleteIngredient,
-  getAllIngredients,
   IngredientsTable,
 } from '@/redux/inventory/AddIngredientsSlice';
 import { AppDispatch } from '@/redux/store';
@@ -16,7 +15,6 @@ import {
   Tr,
 } from '@chakra-ui/react';
 import { format, parseISO } from 'date-fns';
-import { useEffect } from 'react';
 
 import { MdDeleteOutline } from 'react-icons/md';
 import { useDispatch } from 'react-redux';
@@ -62,7 +60,7 @@ const Tablecomponent = ({
                 <Td>{ingredient.unit}</Td>
                 <Td>{ingredient.capacity}</Td>
                 <Td>{ingredient.currentStock}</Td>
-                <Td>{ingredient.cost}</Td>
+
                 <Td>{ingredient.poo}</Td>
                 <Td>{ingredient.prevStock}</Td>
 
@@ -85,8 +83,8 @@ const Tablecomponent = ({
                 </Td>
                 <Td>
                   <Button
-                  border={'none'}
-                  variant="ghost"
+                    border={'none'}
+                    variant="ghost"
                     colorScheme="red"
                     onClick={() => {
                       handleDelete(ingredient._id);

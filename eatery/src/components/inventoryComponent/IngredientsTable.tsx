@@ -27,7 +27,7 @@ function IngredientsTablecomponent({}: Props) {
     'UOM',
     'capacity',
     'Current-Stcok',
-    'Unit-Cost',
+    
     'Order-Point',
     'Prev-Stock',
     'Expiary-Date',
