@@ -27,19 +27,18 @@ const Invoice = (props: Props) => {
   const downloadPDF = async () => {
     if (invoiceRef.current) {
       const canvas = await html2canvas(invoiceRef.current, {
-        scale: 2, // Scale for better quality
-        useCORS: true, // Enable cross-origin images if any
+        scale: 2,
+        useCORS: true,
         scrollX: 0,
-        scrollY: -window.scrollY, // Ensure it captures everything even with scroll
-        windowWidth: document.documentElement.scrollWidth, // Capture full width
-        windowHeight: invoiceRef.current.scrollHeight, // Capture full height based on content
+        scrollY: -window.scrollY,
+        windowWidth: document.documentElement.scrollWidth,
+        windowHeight: invoiceRef.current.scrollHeight,
       });
 
       const imgData = canvas.toDataURL("image/png");
       const imgWidth = 210; // A4 width in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      // Create the PDF with custom height to fit the entire component
       const pdf = new jsPDF("p", "mm", [imgWidth, imgHeight]);
 
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);

@@ -218,7 +218,13 @@ const Cards = (props: Props) => {
                           top="50%"
                           transform="translateY(-50%)"
                           zIndex={2}
-                          color={"#22abf0"}
+                          bg={"gray.200"}
+                          color={"#008dda"}
+                          _hover={{
+                            background: "gray.200",
+                            textColor: "#008dda",
+                          }}
+                          fontSize={"lg"}
                         >
                           <FaChevronLeft />
                         </Button>
@@ -241,7 +247,7 @@ const Cards = (props: Props) => {
                               flexShrink={0}
                               w={"fit-content"}
                               as={motion.div}
-                              whileHover={{ scale: 1.02 }}
+                              whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.9 }}
                             >
                               <CustomCard
@@ -267,7 +273,13 @@ const Cards = (props: Props) => {
                           top="50%"
                           transform="translateY(-50%)"
                           zIndex={2}
-                          color={"#22abf0"}
+                          bg={"gray.200"}
+                          color={"#008dda"}
+                          _hover={{
+                            background: "gray.200",
+                            textColor: "#008dda",
+                          }}
+                          fontSize={"lg"}
                         >
                           <FaChevronRight />
                         </Button>

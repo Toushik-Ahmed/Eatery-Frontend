@@ -2,7 +2,7 @@
 import { placeOrder } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { RiDeleteBin2Fill } from "react-icons/ri";
 
 import {
   Button,
@@ -39,7 +39,6 @@ const OrderSummery = (props: Props) => {
   const [preparationTime, setPreparationTime] = useState<number>(0);
   const [unitPrice, setUnitPrice] = useState<{ [key: string]: number }>({});
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
-  
 
   const table = useSelector((state: RootState) => state.placeOrder);
 
@@ -134,7 +133,6 @@ const OrderSummery = (props: Props) => {
     calculatePreparationTime();
   }, [selectedSizes, selectedAddons, quantities, listOfItems.orderedItems]);
 
-
   const handleSendOrder = () => {
     const orderDetails: OrderDetails = {
       tableNo: table.orderDetails.tableNo,
@@ -187,26 +185,33 @@ const OrderSummery = (props: Props) => {
         h={["60vh", "70vh", "75vh", "80vh"]}
         display={"flex"}
         flexDirection={"column"}
-        alignItems={"center"}
         overflowY={"auto"}
       >
-        <Text py={"4"} fontWeight={"bold"}>
-          Order Summary
-        </Text>
+        <Flex mx={"3"}>
+          <Text fontSize={"lg"} py={"4"} fontWeight={"semibold"}>
+            Current Order
+          </Text>
+          <Spacer />
+          <Text fontSize={"md"} py={"4"} fontWeight={"semibold"}>
+            Table {table.orderDetails.tableNo}
+          </Text>
+        </Flex>
         {listOfItems.orderedItems.map((item) => (
           <Box
             key={`${item.uniqueKey}`}
-            w={["85vw", "65vw", "45vw", "19vw"]}
-            p={["2", "3", "4"]}
+            p={["2", "3", "2"]}
             borderWidth="1px"
             borderRadius="md"
             borderColor={"gray-200"}
             rounded={"md"}
+            mx={"2"}
             mb={"1vh"}
           >
             <Flex>
               <Box>
-                <Text fontWeight={"bold"}>{item.name}</Text>
+                <Text fontSize={"md"} fontWeight={"semibold"}>
+                  {item.name}
+                </Text>
               </Box>
               <Spacer />
               <Text fontWeight={"bold"}>
@@ -261,8 +266,9 @@ const OrderSummery = (props: Props) => {
                 color="#ff5841"
                 mt={"2"}
                 onClick={() => handleDeleteItem(item.uniqueKey)}
+                fontSize={"xl"}
               >
-                <Icon as={RiDeleteBin6Fill} />
+                <Icon as={RiDeleteBin2Fill} />
               </Box>
             </Flex>
           </Box>

@@ -46,12 +46,12 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
       borderRadius="lg"
       boxShadow={"none"}
       onClick={onClick}
-      h={"25vh"}
+      h={"26vh"}
     >
       <CardBody p={"2"}>
-        <Image src={image} alt={name} w={["10vw", "20vw", "30vw", "10vw"]} h={"12vh"} borderRadius="lg" objectFit={"cover"} />
+        <Image src={image} alt={name} w={["40vw", "30vw", "50vw", "10vw"]} h={"12vh"} borderRadius="lg" objectFit={"cover"} />
         <Stack mt="1" spacing="1">
-          <Text fontSize="lg" fontWeight={"bold"} objectFit={"cover"}>
+          <Text fontSize="md" fontWeight={"bold"} objectFit={"cover"}>
             {name}
           </Text>
           {size.map((s) => (
