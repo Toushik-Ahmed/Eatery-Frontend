@@ -21,7 +21,11 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { deleteMenuItem, getmenuItems } from "@/redux/MenuBuilder/MenuItemSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+
 
 interface Ingredient {
   name: string;
@@ -47,6 +51,7 @@ interface Size {
 }
 
 interface SelectedItem {
+  _id: string;
   name: string;
   image: string;
   description: string;
@@ -72,20 +77,41 @@ const ItemDrawer: React.FC<Props> = ({
   setSelectedSize,
   onDelete,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
+  useEffect(()=>{
+    dispatch(getmenuItems())
+  },[dispatch])
 
-  const handleDelete = () => {
-    onDelete();
-
-    toast({
-      title: "Item deleted.",
-      description: "The selected item has been deleted.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    onClose();
+  
+  const handleDelete = async () => {
+    if (selectedItem) {
+      console.log("Attempting to delete item with ID:", selectedItem._id); 
+  
+      try {
+        await dispatch(deleteMenuItem(selectedItem._id.toString()) as any);
+        toast({
+          title: 'Item deleted.',
+          description: 'The selected item has been deleted.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        onDelete(); 
+      } catch (error) {
+        console.error("Error deleting item:", error); // Log the error
+        toast({
+          title: 'Deletion failed.',
+          description: 'There was an error deleting the item.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
   };
+  
+  
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -142,27 +168,11 @@ const ItemDrawer: React.FC<Props> = ({
                 </Text>
                 <Text>{selectedItem.description}</Text>
 
-                {/* Conditionally Render Tasty Tag */}
-                {/* {selectedItem.tastyTag && (
-                  <>
-                    <Text fontWeight="bold" fontSize="lg">
-                      Tasty Tag:
-                    </Text>
-                    <Tag colorScheme="teal">{selectedItem.tastyTag}</Tag>
-                  </>
-                )} */}
-
-                <Text fontWeight="bold" fontSize="lg">
+                {/* <Text fontWeight="bold" fontSize="lg">
                   Available at:
-                </Text>
-                {/* <HStack spacing={2}>
-                  {Array.isArray(selectedItem.mealTime) &&
-                    selectedItem.mealTime.map((time, idx) => (
-                      <Tag key={idx} colorScheme="blue">
-                        {time}
-                      </Tag>
-                    ))}
-                </HStack> */}
+                </Text> */}
+                
+
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
 

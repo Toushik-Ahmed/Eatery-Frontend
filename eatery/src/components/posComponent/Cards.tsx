@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import CustomCard from "../customComponents/CustomCard";
-import OrderSummery from "./OrderSummery";
+import CustomCard from "../customComponents/CustomCardMenu";
+// import OrderSummery from "./OrderSummery";
 
 import {
   Box,
@@ -15,10 +15,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
-// import { addOrderInfo } from "@/redux/Pos/OrderSlice";
+import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { getmenuItems, MenuItem } from "@/redux/Pos/MenuItemSlice";
-import { addOrderInfo } from "@/redux/Pos/OrderSlice";
 
 interface MealTime {
   mealtime: string;
@@ -186,7 +185,6 @@ const Cards = (props: Props) => {
           </Box>
         </Box>
         <Spacer />
-        <OrderSummery />
       </Flex>
     </Box>
   );

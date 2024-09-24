@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 // import {OrderSlice} from './Pos/OrderSlice';
 // import {PlaceOrderSlice} from './Pos/PlaceOrderSlice';
-import {MenuItemSlice} from './Pos/MenuItemSlice';
+import {MenuItemSlice} from './MenuBuilder/MenuItemSlice'
 
 export const store = configureStore({
   reducer: {

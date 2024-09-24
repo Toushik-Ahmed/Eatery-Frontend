@@ -1,9 +1,7 @@
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
-import CustomCard from "../customComponents/CustomCard";
+import CustomCard from "../customComponents/CustomCardMenu";
 import ItemDrawer from "../customComponents/ItemDrawer"; // Import the drawer
 
 import {
@@ -18,7 +16,11 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { getmenuItems, MenuItem } from "@/redux/Pos/MenuItemSlice";
+import { getmenuItems, MenuItem } from "@/redux/MenuBuilder/MenuItemSlice";
+
+interface MealTime {
+  mealtime: string;
+}
 
 type Props = {};
 
@@ -26,9 +28,9 @@ const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [mealTime, setMealTime] = useState<string>("All Items");
-  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false); // Drawer state
-  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null); // Selected item for drawer
-  const [selectedSize, setSelectedSize] = useState<number>(0); // Selected size
+  const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [selectedSize, setSelectedSize] = useState<number>(0);
 
   useEffect(() => {
     dispatch(getmenuItems());
@@ -36,31 +38,35 @@ const Cards = (props: Props) => {
 
   const list = useSelector((state: RootState) => state.allItem);
   const allItems = list.allItems;
-  
-  const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
 
+  const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
+  console.log("B=====", availableItems);
   useEffect(() => {
     if (mealTime === "All Items") {
-      setAvailableItems(allItems); 
+      setAvailableItems(allItems);
     } else {
-      const filteredItems = allItems.filter((item:any) => item.mealTime.includes(mealTime));
+      const filteredItems = allItems.filter((item: any) =>
+        item.mealTime.some((m: MealTime) => m.mealtime === mealTime)
+      );
       setAvailableItems(filteredItems);
     }
   }, [mealTime, allItems]);
+  console.log("B=====", availableItems);
 
   const handleOpenDrawer = (item: MenuItem) => {
     setSelectedItem(item);
-    setSelectedSize(0); // Default to the first size
-    setIsDrawerOpen(true); // Open the drawer
+    setSelectedSize(0);
+    setIsDrawerOpen(true);
   };
 
   const handleDelete = () => {
-    // Handle delete logic here if needed
     console.log("Item deleted");
-    setIsDrawerOpen(false); // Close the drawer after deletion
+    setIsDrawerOpen(false);
   };
 
-  const categories = Array.from(new Set(allItems.map((item:any) => item.category)));
+  const categories = Array.from(
+    new Set(allItems.map((item: any) => item.category))
+  );
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
@@ -87,7 +93,6 @@ const Cards = (props: Props) => {
               fontWeight={"semibold"}
             >
               <HStack spacing={{ base: 3, md: 6 }}>
-                {/* Meal Time Buttons */}
                 {["All Items", "All Day", "Breakfast", "Lunch", "Dinner"].map(
                   (time) => (
                     <Button
@@ -120,27 +125,24 @@ const Cards = (props: Props) => {
                   >
                     {category}
                   </Text>
-
-                  <Grid
-                    templateColumns={{
-                      base: "repeat(1, 1fr)",
-                      md: "repeat(3, 1fr)",
-                      lg: "repeat(6, 1fr)",
-                    }}
-                    gap={8}
-                  >
+                  <Flex gap={15} overflowX="auto" py={2}  >
+                    
                     {availableItems
                       .filter((item) => item.category === category)
                       .map((item) => (
+                        <Box height="auto">
                         <CustomCard
-                          key={item.id}
+                          key={item._id}
                           name={item.name}
                           size={item.size}
                           image={item.image}
                           onClick={() => handleOpenDrawer(item)} // Open the drawer on card click
                         />
+                        </Box>
                       ))}
-                  </Grid>
+                      
+                  </Flex>
+                  {/* </Grid> */}
                 </Stack>
               </Box>
             ))}
@@ -154,14 +156,16 @@ const Cards = (props: Props) => {
         <ItemDrawer
           isOpen={isDrawerOpen}
           onClose={() => setIsDrawerOpen(false)}
-          selectedItem={selectedItem}
+          selectedItem={{
+            ...selectedItem,
+            mealTime: selectedItem.mealTime.map((m) => m.mealtime),
+          }}
           selectedSize={selectedSize}
           setSelectedSize={setSelectedSize}
-          onDelete={handleDelete} // Handle item deletion
+          onDelete={handleDelete}
         />
       )}
     </Box>
   );
 };
-
 export default Cards;
