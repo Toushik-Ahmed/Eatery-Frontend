@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useRef, useState } from "react";
 import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
@@ -9,9 +8,7 @@ import {
   Box,
   Button,
   Flex,
-  Grid,
   HStack,
-  Slide,
   Spacer,
   Stack,
   Text,
@@ -42,15 +39,12 @@ const Cards = (props: Props) => {
   const allItems = list.allItems;
   const top = useSelector((state: RootState) => state.allItem);
   const topSelling = top.topSellingItems;
-  console.log(top.topSellingItems);
 
   const [availableItems, setAvailableItems] = useState<MenuItem[]>([]);
   const [currentIndices, setCurrentIndices] = useState<{
     [key: string]: number;
   }>({});
-
-  const [bestItems, setbestItems] = useState<MenuItem[]>([]);
-  const [averageItems, setAverageItems] = useState<MenuItem[]>([]);
+  const [newItems, setNewItems] = useState<MenuItem[]>([]);
 
   useEffect(() => {
     if (meal === "All Items") {
@@ -62,17 +56,14 @@ const Cards = (props: Props) => {
       setAvailableItems(filteredItems);
     }
   }, [meal, allItems]);
-
   const handleSubmit = (item: MenuItem) => {
     const uniqueKey = uuidv4();
-
     const newItem = {
       ...item,
       uniqueKey,
     };
     dispatch(addOrderInfo([newItem]));
   };
-
   const categories = Array.from(
     new Set(allItems.map((item: MenuItem) => item.category))
   );
@@ -85,7 +76,6 @@ const Cards = (props: Props) => {
   }, [categories, selectedCategory]);
 
   const itemsPerView = 6;
-
   const handleNext = (category: string) => {
     const filteredItems = availableItems.filter(
       (item) => item.category === category
@@ -104,8 +94,6 @@ const Cards = (props: Props) => {
       return { ...prev, [category]: newIndex };
     });
   };
-  /* const topSellingArray = topSelling.map((item) => item.itemName);
-  console.log("arrrrr", topSellingArray); */
 
   useEffect(() => {
     if (availableItems.length && topSelling.length) {
@@ -123,9 +111,7 @@ const Cards = (props: Props) => {
       const averageItem = availableItems.filter(
         (availableItem) => !topSellingArray.includes(availableItem.name)
       );
-      console.log("Items", bestItem);
-      setbestItems(bestItem);
-      setAverageItems(averageItem);
+      setNewItems([...bestItem, ...averageItem]);
     }
   }, [availableItems, topSelling]);
 
@@ -160,7 +146,6 @@ const Cards = (props: Props) => {
                 >
                   All Items
                 </Button>
-
                 <Button
                   bg={meal === "All Day" ? "#f53e62" : "white"}
                   textColor={meal === "All Day" ? "white" : "black"}
@@ -171,7 +156,6 @@ const Cards = (props: Props) => {
                 >
                   All Day
                 </Button>
-
                 <Button
                   bg={meal === "Breakfast" ? "#f53e62" : "white"}
                   textColor={meal === "Breakfast" ? "white" : "black"}
@@ -182,7 +166,6 @@ const Cards = (props: Props) => {
                 >
                   Breakfast
                 </Button>
-
                 <Button
                   bg={meal === "Lunch" ? "#f53e62" : "white"}
                   textColor={meal === "Lunch" ? "white" : "black"}
@@ -193,7 +176,6 @@ const Cards = (props: Props) => {
                 >
                   Lunch
                 </Button>
-
                 <Button
                   bg={meal === "Dinner" ? "#f53e62" : "white"}
                   textColor={meal === "Dinner" ? "white" : "black"}
@@ -207,32 +189,6 @@ const Cards = (props: Props) => {
               </HStack>
             </Box>
           </Flex>
-
-          {/* <Box
-              p={"4"}
-              fontSize={{ base: "lg", md: "xl" }}
-              fontWeight={"semiBold"}
-            >
-              <Stack spacing={{ base: 3, md: 16 }}>
-                {categories.map((category, index) => (
-                  <Button
-                    bg={category === selectedCategory ? "#f53e62" : "white"}
-                    textColor={
-                      category === selectedCategory ? "white" : "black"
-                    }
-                    _hover={{ background: "#f53e62", textColor: "white" }}
-                    borderBottomLeftRadius={"full"}
-                    borderTopRightRadius={"full"}
-                    w={"fit"}
-                    onClick={() => setSelectedCategory(category)}
-                    key={index}
-                  >
-                    {category}
-                  </Button>
-                ))}
-              </Stack>
-            </Box> */}
-
           <Box>
             <Stack spacing={{ base: "4", md: "4" }}>
               {categories.map((category, index) => (
@@ -253,7 +209,6 @@ const Cards = (props: Props) => {
                         {category}
                       </Button>
                     </Box>
-
                     <Box position="relative" w="100%" overflow={"hidden"}>
                       {(currentIndices[category] || 0) > 0 && (
                         <Button
@@ -268,7 +223,6 @@ const Cards = (props: Props) => {
                           <FaChevronLeft />
                         </Button>
                       )}
-
                       <Flex
                         gap={"5"}
                         transform={`translateX(-${
@@ -277,32 +231,8 @@ const Cards = (props: Props) => {
                         transition="transform 0.5s ease-in-out"
                         width="100%"
                       >
-                        {bestItems
+                        {newItems
                           .filter((item) => item.category === category)
-
-                          .map((item) => (
-                            <Box
-                              border={"none"}
-                              borderRadius={"xl"}
-                              key={item.id}
-                              flexShrink={0}
-                              w={"fit-content"}
-                              as={motion.div}
-                              whileHover={{ scale: 1.02 }}
-                              whileTap={{ scale: 0.9 }}
-                            >
-                              <CustomCard
-                                key={item.id}
-                                name={item.name}
-                                size={item.size}
-                                image={item.image}
-                                onClick={() => handleSubmit(item)}
-                              />
-                            </Box>
-                          ))}
-                        {averageItems
-                          .filter((item) => item.category === category)
-
                           .map((item) => (
                             <Box
                               border={"none"}
@@ -324,12 +254,10 @@ const Cards = (props: Props) => {
                             </Box>
                           ))}
                       </Flex>
-
                       {(currentIndices[category] || 0) <
                         Math.ceil(
-                          availableItems.filter(
-                            (item) => item.category === category
-                          ).length / itemsPerView
+                          newItems.filter((item) => item.category === category)
+                            .length / itemsPerView
                         ) -
                           1 && (
                         <Button

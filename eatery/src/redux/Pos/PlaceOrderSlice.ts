@@ -2,8 +2,8 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 export interface OrderDetails {
   _id?: string;
-  tableNo: number;
-  tableStatus: string;
+  tableNo?: number;
+  tableStatus?: string;
   menuItems: {
     itemName: string;
     quantity: number;
@@ -36,7 +36,7 @@ interface PlaceOrderState {
 const initialState: PlaceOrderState = {
   orderDetails: {
     tableNo: 2,
-    tableStatus: "",
+    tableStatus: "occupied",
     menuItems: [],
     preparationTime: 0,
     totalPrice: 0,
