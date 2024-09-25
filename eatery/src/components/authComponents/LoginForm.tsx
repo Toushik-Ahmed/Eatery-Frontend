@@ -52,6 +52,7 @@ const LoginForm = ({}: Props) => {
         password,
       });
       setToken(response.token);
+      
       setLoginSuccess(true);
       setTimeout(() => {
         router.push("/Inventory");

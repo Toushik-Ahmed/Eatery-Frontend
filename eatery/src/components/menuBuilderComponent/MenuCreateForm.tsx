@@ -1,155 +1,239 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Box,
   Button,
-  Flex,
   Input,
-  Select,
-  Textarea,
-  Image,
   FormControl,
   FormLabel,
-  Grid,
-  Accordion,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Text,
-  Stack,
-  Skeleton,
+  Textarea,
+  VStack,
+  HStack,
+  Divider,
+  Image,
+  Select,
+  IconButton,
 } from "@chakra-ui/react";
+import { AddIcon, MinusIcon } from "@chakra-ui/icons";
+import { useDispatch } from "react-redux";
+import {
+  createMenuItem,
+  resetMenuItem,
+  uploadImage,
+} from "../../redux/MenuBuilder/MenuCardSlice";
+import { AppDispatch } from "../../redux/store";
+import { select } from "framer-motion/client";
 
-const Form: React.FC = () => {
-  const [ingredients, setIngredients] = useState<
-    { ingredient: string; quantity: string; unit: string }[]
-  >([]);
-  const [addOns, setAddOns] = useState<
-    { addOn: string; quantity: string; unit: string }[]
-  >([]);
-  const [ingredientData, setIngredientData] = useState({
-    ingredient: "",
-    quantity: "",
-    unit: "",
-  });
-  const [addOnData, setAddOnData] = useState({
-    addOn: "",
-    quantity: "",
-    unit: "",
-  });
+const CreateMenuForm: React.FC = () => {
+  // const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [mealTimes, setMealTimes] = useState([{ mealtime: "" }]);
+  const [description, setDescription] = useState("");
 
-  const [sizes, setSizes] = useState<
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  const [sizes, setSizes] = useState([
     {
-      size: string;
-      preparationTime: string;
-      price: string;
-      ingredients: { ingredient: string; quantity: string; unit: string }[];
-      addOns: { addOn: string; quantity: string; unit: string }[];
-    }[]
-  >([]); // Store size with prep time, price, ingredients, and add-ons
+      sizeName: "",
+      ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+      preparationTime: 0,
+      sellingPrice: 0,
+      addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+    },
+  ]);
 
-  const [selectedSize, setSelectedSize] = useState<string>("");
-  const [preparationTime, setPreparationTime] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
+  // Cloudinary Configuration .............
+  // const uploadImageToCloudinary = async (imageFile: File) => {
+  //   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dglgia8j6/image/upload`;
+  //   const formData = new FormData();
 
-  const [itemName, setItemName] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [tastyTags, setTastyTags] = useState<string>("");
-  const [mealTime, setMealTime] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  //   // Add required Cloudinary fields...............
+  //   formData.append("file", imageFile);
+  //   formData.append("upload_preset", "Barshon");
 
-  const handleIngredientChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setIngredientData((prev) => ({ ...prev, [name]: value }));
-  };
+  //   // Upload image.....................
+  //   try {
+  //     const response = await axios.post(cloudinaryUrl, formData, {
+  //       headers: { "Content-Type": "multipart/form-data" },
+  //     });
+  //     return response.data.secure_url;
+  //   } catch (error) {
+  //     console.error("Image upload error:", error);
+  //     throw new Error("Failed to upload image");
+  //   }
+  // };
 
-  const handleAddIngredient = () => {
-    if (
-      !ingredientData.ingredient ||
-      !ingredientData.quantity ||
-      !ingredientData.unit
-    ) {
-      alert("Please fill all fields for ingredients.");
-      return;
+  // const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     setImageFile(file);
+  //     try {
+  //       const uploadedImageUrl = await uploadImageToCloudinary(file);
+  //       setImageUrl(uploadedImageUrl);
+  //       alert("Image uploaded successfully!");
+  //     } catch (error) {
+  //       alert("Image upload failed. Please try again.");
+  //     }
+  //   }
+  // };
+  const handleImageUpload = async (): Promise<string> => {
+    if (imageFile) {
+      try {
+        const resultAction = await dispatch(uploadImage(imageFile));
+        if (uploadImage.fulfilled.match(resultAction)) {
+          const uploadedImageUrl = resultAction.payload as string; // Ensure payload is of type string
+          alert("Image uploaded successfully!");
+          return uploadedImageUrl;
+        } else {
+          throw new Error("Image upload failed");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("Image upload failed. Please try again.");
+      }
     }
-    setIngredients([...ingredients, ingredientData]);
-    setIngredientData({ ingredient: "", quantity: "", unit: "" });
+    return "";
   };
 
-  const handleAddOnChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setAddOnData((prev) => ({ ...prev, [name]: value }));
+  const handleMealTimeChange = (index: number, value: string) => {
+    const updatedMealTimes = [...mealTimes];
+    updatedMealTimes[index].mealtime = value;
+    setMealTimes(updatedMealTimes);
   };
 
-  const handleAddAddOn = () => {
-    if (!addOnData.addOn || !addOnData.quantity || !addOnData.unit) {
-      alert("Please fill all fields for add-ons.");
-      return;
-    }
-    setAddOns([...addOns, addOnData]);
-    setAddOnData({ addOn: "", quantity: "", unit: "" });
+  const addMealTime = () => {
+    setMealTimes([...mealTimes, { mealtime: "" }]);
   };
 
-  // Handle size selection, preparation time, price, ingredients, and add-ons addition
-  const handleAddSize = () => {
-    if (!selectedSize || !preparationTime || !price) {
-      alert("Please fill all fields for size, preparation time, and price."); // Show an alert if any field is empty
-      return;
-    }
-
-    if (ingredients.length === 0 && addOns.length === 0) {
-      alert("Please add at least one ingredient or add-on."); // Ensure there is at least one ingredient or add-on
-      return;
-    }
-
-    // If all fields are filled, proceed to add the size
-    setSizes((prevSizes) => [
-      ...prevSizes,
-      {
-        size: selectedSize,
-        preparationTime,
-        price,
-        ingredients: [...ingredients],
-        addOns: [...addOns],
-      },
-    ]);
-
-    // Reset the fields after adding the size
-    setSelectedSize("");
-    setPreparationTime("");
-    setPrice("");
-    setIngredients([]);
-    setAddOns([]);
+  const removeMealTime = (index: number) => {
+    setMealTimes(mealTimes.filter((_, i) => i !== index));
   };
 
-  // Handle form submission only for the "Add Item" button
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!name || !category || !description || !imageUrl) {
+  //     alert("Please fill in all required fields.");
+  //     return;
+  //   }
+
+  //   const mealTimeValues = mealTimes
+  //     .map((mt) => ({ mealtime: mt.mealtime }))
+  //     .filter((mt) => mt.mealtime);
+  //   if (mealTimeValues.length === 0) {
+  //     alert("Please fill in all meal times.");
+  //     return;
+  //   }
+
+  //   const newMenuItem = {
+  //     name,
+  //     category,
+  //     mealTime: mealTimeValues,
+  //     description,
+  //     image: imageUrl,
+  //     size: sizes,
+  //   };
+
+  //   try {
+  //     await dispatch(createMenuItem(newMenuItem) as any);
+
+  //     setName("");
+  //     setCategory("");
+  //     setMealTimes([{ mealtime: "" }]);
+  //     setDescription("");
+  //     setImageUrl("");
+  //     setSizes([
+  //       {
+  //         sizeName: "",
+  //         ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+  //         preparationTime: 0,
+  //         sellingPrice: 0,
+  //         addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+  //       },
+  //     ]);
+
+  //     dispatch(resetMenuItem());
+
+  //     alert("Form Submitted Successfully!");
+  //   } catch (error) {
+  //     alert("Failed to submit form. Please try again.");
+  //     console.error(error);
+  //   }
+  // };
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = {
-      itemName,
+    if (!name || !category || !description || !imageUrl) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const mealTimeValues = mealTimes
+      .map((mt) => ({ mealtime: mt.mealtime }))
+      .filter((mt) => mt.mealtime);
+    if (mealTimeValues.length === 0) {
+      alert("Please fill in all meal times.");
+      return;
+    }
+
+    const uploadedName = await handleImageUpload();
+
+    const newMenuItem = {
+      name,
       category,
-      tastyTags,
-      mealTime,
+      mealTime: mealTimeValues,
       description,
-      sizes,
+      image: uploadedName,
+      size: sizes,
     };
 
-    // Display the collected data (log it for now)
- 
+    try {
+      await dispatch(createMenuItem(newMenuItem) as any);
+      console.log("Menu Item Created:", newMenuItem);
 
-    // Clear the form fields after submitting
-    setItemName("");
-    setCategory("");
-    setTastyTags("");
-    setMealTime("");
-    setDescription("");
-    setSizes([]);
+      // Reset form state
+      setName("");
+      setCategory("");
+      setMealTimes([{ mealtime: "" }]);
+      setDescription("");
+      setImageUrl("");
+      setSizes([
+        {
+          sizeName: "",
+          ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+          preparationTime: 0,
+          sellingPrice: 0,
+          addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+        },
+      ]);
+
+      dispatch(resetMenuItem());
+      alert("Form Submitted Successfully!");
+    } catch (error) {
+      alert("Failed to submit form. Please try again.");
+      console.error(error);
+    }
+  };
+
+  const addSize = () => {
+    setSizes([
+      ...sizes,
+      {
+        sizeName: "",
+        ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+        preparationTime: 0,
+        sellingPrice: 0,
+        addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+      },
+    ]);
+  };
+
+  const removeSize = (index: number) => {
+    setSizes(sizes.filter((_, i) => i !== index));
   };
 
   return (
@@ -161,7 +245,7 @@ const Form: React.FC = () => {
       m="0 auto"
       boxShadow="lg"
       as="form"
-      onSubmit={handleSubmit} // Use onSubmit only for the form
+      onSubmit={handleSubmit}
     >
       {/* Header Section */}
       <Box fontSize="2xl" fontWeight="bold" textAlign="center">
@@ -175,362 +259,361 @@ const Form: React.FC = () => {
         borderRadius="full"
         width={{ base: "50%", md: "30%" }}
       />
-
-      {/* Form Section */}
-      <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
-        <FormControl>
-          <FormLabel>Item Name</FormLabel>
+      <VStack spacing={6} align="start">
+        <FormControl isRequired>
+          <FormLabel fontWeight="bold">Name</FormLabel>
           <Input
-            placeholder="Please Enter Item Name"
-            variant="outline"
-            borderColor="purple.300"
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter menu item name"
+            focusBorderColor="teal.500"
           />
         </FormControl>
 
-        <FormControl>
-          <FormLabel>Category</FormLabel>
+        <FormControl isRequired>
+          <FormLabel fontWeight="bold">Category</FormLabel>
           <Select
-            placeholder="Select Category"
-            variant="outline"
-            borderColor="purple.300"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
+            placeholder="Select category"
+            focusBorderColor="teal.500"
           >
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
+            <option value="Fast Food">Fast Food</option>
+            <option value="Meal">Meal</option>
+            <option value="Beverage">Beverage</option>
           </Select>
         </FormControl>
 
         <FormControl>
-          <FormLabel>Tasty Tags</FormLabel>
-          <Select
-            placeholder="Select Tags"
-            variant="outline"
-            borderColor="purple.300"
-            value={tastyTags}
-            onChange={(e) => setTastyTags(e.target.value)}
+          <FormLabel fontWeight="bold">Meal Times</FormLabel>
+          {mealTimes.map((mealTime, index) => (
+            <HStack key={index} spacing={4}>
+              <Select
+                value={mealTime.mealtime}
+                onChange={(e) => handleMealTimeChange(index, e.target.value)}
+                placeholder="Select meal time"
+                focusBorderColor="teal.500"
+              >
+                <option value="All Day">All Day</option>
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+              </Select>
+              <IconButton
+                icon={<MinusIcon />}
+                aria-label="Remove meal time"
+                colorScheme="red"
+                onClick={() => removeMealTime(index)}
+              />
+            </HStack>
+          ))}
+          <Button
+            onClick={addMealTime}
+            leftIcon={<AddIcon />}
+            colorScheme="orange"
+            mt={2}
           >
-            <option value="option1">Regular</option>
-            <option value="option2">Naga</option>
-            <option value="option3">Extra Naga</option>
-          </Select>
+            Add Meal Time
+          </Button>
         </FormControl>
 
         <FormControl>
-          <FormLabel>Meal Time</FormLabel>
-          <Select
-            placeholder="Select Meal Time"
-            variant="outline"
-            borderColor="purple.300"
-            value={mealTime}
-            onChange={(e) => setMealTime(e.target.value)}
-          >
-            <option value="allDay">All Day</option>
-            <option value="breakfast">Breakfast</option>
-            <option value="lunch">Lunch</option>
-            <option value="dinner">Dinner</option>
-          </Select>
-        </FormControl>
-
-        <FormControl gridColumn={{ base: "span 1", md: "span 2" }}>
-          <FormLabel>Description</FormLabel>
+          <FormLabel fontWeight="bold">Description</FormLabel>
           <Textarea
-            placeholder="Write something about this"
-            borderColor="purple.300"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            placeholder="Enter description"
+            focusBorderColor="teal.500"
           />
         </FormControl>
 
-        <FormControl>
-          <FormLabel>Size</FormLabel>
-          <Select
-            placeholder="Select Size"
-            variant="outline"
-            borderColor="purple.300"
-            value={selectedSize}
-            onChange={(e) => setSelectedSize(e.target.value)}
-          >
-            <option value="small">Small</option>
-            <option value="medium">Medium</option>
-            <option value="large">Large</option>
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <FormLabel>Preparation Time</FormLabel>
+        <FormControl isRequired>
+          <FormLabel fontWeight="bold">Upload Image</FormLabel>
           <Input
-            placeholder="Please Enter Preparation Time"
-            variant="outline"
-            borderColor="purple.300"
-            value={preparationTime}
-            onChange={(e) => setPreparationTime(e.target.value)}
+            type="file"
+            accept="image/*"
+            onChange={(selectedFile) => {
+              const file = selectedFile.target.files?.[0];
+              if (file) {
+                setImageFile(file);
+                const reader = new FileReader();
+                reader.onload = () => {
+                  setImageUrl(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+              }
+            }}
+            focusBorderColor="teal.500"
           />
+          {imageUrl && (
+            <Box>
+              <Image
+                src={imageUrl}
+                alt="Uploaded image"
+                boxSize="150px"
+                mt={2}
+              />
+            </Box>
+          )}
         </FormControl>
 
         <FormControl>
-          <FormLabel>Price</FormLabel>
-          <Input
-            placeholder="Please Enter Price"
-            variant="outline"
-            borderColor="purple.300"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
-        </FormControl>
-
-        <Button
-          colorScheme="orange"
-          color="white"
-          mt={4}
-          onClick={handleAddSize}
-        >
-          +
-        </Button>
-      </Grid>
-
-      {/* Display the saved sizes with preparation time, price, ingredients, and add-ons */}
-      <Box mt={6}>
-        {sizes.map((sizeInfo, index) => (
-          <Box key={index} p={4} borderWidth="1px" borderRadius="md" mb={4}>
-            <Text>
-              <strong>{sizeInfo.size}</strong> - Prep Time:{" "}
-              {sizeInfo.preparationTime}, Price: {sizeInfo.price}
-            </Text>
-            <Text>
-              <strong>Ingredients:</strong>
-            </Text>
-            <Box ml={4}>
-              {sizeInfo.ingredients.length === 0 ? (
-                <Text>No Ingredients</Text>
-              ) : (
-                sizeInfo.ingredients.map((ingredient, i) => (
-                  <Text key={i}>
-                    {ingredient.ingredient} - {ingredient.quantity}{" "}
-                    {ingredient.unit}
-                  </Text>
-                ))
-              )}
-            </Box>
-            <Text>
-              <strong>Add-Ons:</strong>
-            </Text>
-            <Box ml={4}>
-              {sizeInfo.addOns.length === 0 ? (
-                <Text>No Add-Ons</Text>
-              ) : (
-                sizeInfo.addOns.map((addOn, i) => (
-                  <Text key={i}>
-                    {addOn.addOn} - {addOn.quantity} {addOn.unit}
-                  </Text>
-                ))
-              )}
-            </Box>
-          </Box>
-        ))}
-      </Box>
-
-      <Skeleton
-        startColor="pink.500"
-        endColor="orange.500"
-        height="20px"
-        my={6}
-      />
-
-      <Accordion defaultIndex={[0]} allowMultiple>
-        {/* Ingredients Section */}
-        <AccordionItem>
-          <AccordionButton>
-            <Box as="span" flex="1" textAlign="left">
-              <FormLabel>Add Ingredients</FormLabel>
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel pb={4}>
-            <Grid
-              templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
-              gap={4}
+          <FormLabel fontWeight="bold">Sizes</FormLabel>
+          {sizes.map((size, index) => (
+            <Box
+              key={index}
+              p={4}
+              bg="FFFFF0"
+              borderWidth={1}
+              borderRadius="md"
+              w="full"
+              boxShadow="sm"
+              mt={2}
             >
-              <FormControl>
-                <FormLabel>Ingredient</FormLabel>
-                <Input
-                  name="ingredient"
-                  placeholder="Ingredient Name"
-                  variant="outline"
-                  borderColor="purple.300"
-                  value={ingredientData.ingredient}
-                  onChange={handleIngredientChange}
+              <HStack justify="space-between">
+                <FormControl isRequired>
+                  <FormLabel>Size Name</FormLabel>
+                  <Select
+                    value={size.sizeName}
+                    onChange={(e) => {
+                      const updatedSizes = [...sizes];
+                      updatedSizes[index].sizeName = e.target.value;
+                      setSizes(updatedSizes);
+                    }}
+                    placeholder="Select size"
+                    focusBorderColor="teal.500"
+                  >
+                    <option value="Small">Small</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Large">Large</option>
+
+                    <option value="Regular">Regular</option>
+                    <option value="Premium">Premium</option>
+
+                    <option value='6"'>6"</option>
+                    <option value='8"'>8"</option>
+                    <option value='12"'>12"</option>
+
+                    <option value="2 PCs">2 PCs</option>
+                    <option value="4 PCs">4 PCs</option>
+                    <option value="8 PCs">8 PCs</option>
+                  </Select>
+                </FormControl>
+
+                <IconButton
+                  icon={<MinusIcon />}
+                  aria-label="Remove size"
+                  colorScheme="red"
+                  onClick={() => removeSize(index)}
                 />
-              </FormControl>
+              </HStack>
+
+              <Divider my={4} />
 
               <FormControl>
-                <FormLabel>Quantity</FormLabel>
-                <Input
-                  name="quantity"
-                  placeholder="Quantity"
-                  variant="outline"
-                  borderColor="purple.300"
-                  value={ingredientData.quantity}
-                  onChange={handleIngredientChange}
-                />
-              </FormControl>
+                <FormLabel>Ingredients</FormLabel>
+                {size.ingredients.map((ingredient, ingIndex) => (
+                  <HStack key={ingIndex} spacing={4}>
+                    <Input
+                      placeholder="Ingredient Name"
+                      value={ingredient.name}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].ingredients[ingIndex].name =
+                          e.target.value;
+                        setSizes(updatedSizes);
+                      }}
+                      focusBorderColor="teal.500"
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Quantity"
+                      value={ingredient.properties.quantity}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].ingredients[
+                          ingIndex
+                        ].properties.quantity = Number(e.target.value);
+                        setSizes(updatedSizes);
+                      }}
+                      focusBorderColor="teal.500"
+                    />
 
-              <FormControl>
-                <FormLabel>Unit</FormLabel>
-                <Select
-                  name="unit"
-                  placeholder="Select Unit"
-                  variant="outline"
-                  borderColor="purple.300"
-                  value={ingredientData.unit}
-                  onChange={handleIngredientChange}
-                >
-                  <option value="g">Grams</option>
-                  <option value="kg">Kilograms</option>
-                  <option value="l">Liters</option>
-                </Select>
+                    <Select
+                      value={ingredient.properties.unit}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].ingredients[
+                          ingIndex
+                        ].properties.unit = e.target.value;
+                        setSizes(updatedSizes);
+                      }}
+                      placeholder="Select unit"
+                      focusBorderColor="teal.500"
+                    >
+                      <option value="Gram">Gram</option>
+                      <option value="Litre">Litre</option>
+                      <option value="K.G">K.G</option>
+                      <option value="PCS">PCS</option>
+                    </Select>
+                  </HStack>
+                ))}
               </FormControl>
 
               <Button
+                mt={2}
                 colorScheme="orange"
-                color="white"
-                mt={4}
-                onClick={handleAddIngredient}
+                leftIcon={<AddIcon />}
+                onClick={() => {
+                  const updatedSizes = [...sizes];
+                  updatedSizes[index].ingredients.push({
+                    name: "",
+                    properties: { quantity: 0, unit: "" },
+                  });
+                  setSizes(updatedSizes);
+                }}
               >
                 Add Ingredient
               </Button>
-            </Grid>
 
-            <Box mt={6}>
-              {ingredients.map((ingredient, index) => (
-                <Box
-                  key={index}
-                  p={4}
-                  borderWidth="1px"
-                  borderRadius="md"
-                  mb={4}
-                >
-                  <Text>
-                    <strong>Ingredient:</strong> {ingredient.ingredient}
-                  </Text>
-                  <Text>
-                    <strong>Quantity:</strong> {ingredient.quantity}
-                  </Text>
-                  <Text>
-                    <strong>Unit:</strong> {ingredient.unit}
-                  </Text>
-                </Box>
-              ))}
-            </Box>
-          </AccordionPanel>
-        </AccordionItem>
+              <Divider my={4} />
 
-        {/* Add-ons Section */}
-        <AccordionItem>
-          <AccordionButton>
-            <Box as="span" flex="1" textAlign="left">
-              <FormLabel>Add Add-ons</FormLabel>
-            </Box>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel pb={4}>
-            <Grid
-              templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }}
-              gap={4}
-            >
-              <FormControl>
-                <FormLabel>Add-On</FormLabel>
+              <FormControl isRequired>
+                <FormLabel>Preparation Time (minutes)</FormLabel>
                 <Input
-                  name="addOn"
-                  placeholder="Add-On Name"
-                  variant="outline"
-                  borderColor="purple.300"
-                  value={addOnData.addOn}
-                  onChange={handleAddOnChange}
+                  type="number"
+                  value={size.preparationTime}
+                  onChange={(e) => {
+                    const updatedSizes = [...sizes];
+                    updatedSizes[index].preparationTime = Number(
+                      e.target.value
+                    );
+                    setSizes(updatedSizes);
+                  }}
+                  focusBorderColor="teal.500"
                 />
               </FormControl>
 
-              <FormControl>
-                <FormLabel>Quantity</FormLabel>
+              <FormControl isRequired>
+                <FormLabel>Selling Price</FormLabel>
                 <Input
-                  name="quantity"
-                  placeholder="Quantity"
-                  variant="outline"
-                  borderColor="purple.300"
-                  value={addOnData.quantity}
-                  onChange={handleAddOnChange}
+                  type="number"
+                  value={size.sellingPrice}
+                  onChange={(e) => {
+                    const updatedSizes = [...sizes];
+                    updatedSizes[index].sellingPrice = Number(e.target.value);
+                    setSizes(updatedSizes);
+                  }}
+                  focusBorderColor="teal.500"
                 />
               </FormControl>
 
+              <Divider my={4} />
+
               <FormControl>
-                <FormLabel>Unit</FormLabel>
-                <Select
-                  name="unit"
-                  placeholder="Select Unit"
-                  variant="outline"
-                  borderColor="purple.300"
-                  value={addOnData.unit}
-                  onChange={handleAddOnChange}
-                >
-                  <option value="g">Grams</option>
-                  <option value="kg">Kilograms</option>
-                  <option value="l">Liters</option>
-                </Select>
+                <FormLabel>Add-Ons</FormLabel>
+                {size.addOns.map((addOn, addIndex) => (
+                  <HStack key={addIndex} spacing={4}>
+                    <Input
+                      placeholder="Add-On Name"
+                      value={addOn.name}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].addOns[addIndex].name =
+                          e.target.value;
+                        setSizes(updatedSizes);
+                      }}
+                      focusBorderColor="teal.500"
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Quantity"
+                      value={addOn.quantity}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].addOns[addIndex].quantity = Number(
+                          e.target.value
+                        );
+                        setSizes(updatedSizes);
+                      }}
+                      focusBorderColor="teal.500"
+                    />
+
+                    <Select
+                      value={addOn.unit}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].addOns[addIndex].unit =
+                          e.target.value;
+                        setSizes(updatedSizes);
+                      }}
+                      placeholder="Select unit"
+                      focusBorderColor="teal.500"
+                    >
+                      <option value="Gram">Gram</option>
+                      <option value="Litre">Litre</option>
+                      <option value="K.G">K.G</option>
+                      <option value="PCS">PCS</option>
+                    </Select>
+                    <Input
+                      type="number"
+                      placeholder="Add-On Price"
+                      value={addOn.addonPrice}
+                      onChange={(e) => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].addOns[addIndex].addonPrice =
+                          Number(e.target.value);
+                        setSizes(updatedSizes);
+                      }}
+                      focusBorderColor="teal.500"
+                    />
+                  </HStack>
+                ))}
               </FormControl>
 
               <Button
+                mt={2}
                 colorScheme="orange"
-                color="white"
-                mt={4}
-                onClick={handleAddAddOn}
+                leftIcon={<AddIcon />}
+                onClick={() => {
+                  const updatedSizes = [...sizes];
+                  updatedSizes[index].addOns.push({
+                    name: "",
+                    quantity: 0,
+                    unit: "",
+                    addonPrice: 0,
+                  });
+                  setSizes(updatedSizes);
+                }}
               >
-                Add Add-On
+                Add-On
               </Button>
-            </Grid>
-
-            <Box mt={6}>
-              {addOns.map((addOn, index) => (
-                <Box
-                  key={index}
-                  p={4}
-                  borderWidth="1px"
-                  borderRadius="md"
-                  mb={4}
-                >
-                  <Text>
-                    <strong>Add-On:</strong> {addOn.addOn}
-                  </Text>
-                  <Text>
-                    <strong>Quantity:</strong> {addOn.quantity}
-                  </Text>
-                  <Text>
-                    <strong>Unit:</strong> {addOn.unit}
-                  </Text>
-                </Box>
-              ))}
             </Box>
-          </AccordionPanel>
-        </AccordionItem>
-      </Accordion>
+          ))}
+          <Button
+            onClick={addSize}
+            colorScheme="orange"
+            leftIcon={<AddIcon />}
+            mt={2}
+          >
+            Add Size
+          </Button>
+        </FormControl>
 
-      {/* Buttons */}
-      {/* <Flex justify="flex-end" mt={8}>
-        <Button mr={4} colorScheme="orange" color="white"  type="submit">
-          Cancel
-        </Button>
-        <Button colorScheme="pink" color="white">
+        <Button
+          type="submit"
+          colorScheme="teal"
+          size="lg"
+          w="full"
+          onClick={() => {
+            handleSubmit;
+          }}
+        >
           Add Item
         </Button>
-      </Flex> */}
-
-<Button colorScheme="purple" mt={5} type="submit">
-        Add Item
-      </Button>
+      </VStack>
     </Box>
   );
 };
 
-
-export default Form;
+export default CreateMenuForm;
