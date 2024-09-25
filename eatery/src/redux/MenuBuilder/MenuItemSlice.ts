@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 export interface MenuItem {
   _id: string;
@@ -37,7 +37,7 @@ const initialState: MenuItemState = {
 };
 
 export const MenuItemSlice = createSlice({
-  name: "menu",
+  name: 'menu',
   initialState,
   reducers: {
     resetMenuItem: (state) => {
@@ -71,24 +71,24 @@ export const MenuItemSlice = createSlice({
       uploadImage.fulfilled,
       (state, action: PayloadAction<string>) => {
         // Handle the uploaded image URL as needed, e.g., you might want to store it in state
-        console.log("Image uploaded successfully:", action.payload);
+        console.log('Image uploaded successfully:', action.payload);
       }
     );
   },
 });
 
 export const uploadImage = createAsyncThunk(
-  "menu/uploadImage",
+  'menu/uploadImage',
   async (file: File) => {
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append('image', file);
 
     const response = await axios.post(
-      "http://localhost:5000/menu/addmenu/upload", // Use the correct port (5000 in this case)
+      'http://localhost:5000/imageUpload', // Use the correct port (5000 in this case)
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
+          'Content-Type': 'multipart/form-data',
         },
       }
     );
@@ -98,25 +98,25 @@ export const uploadImage = createAsyncThunk(
 );
 
 export const createMenuItem = createAsyncThunk(
-  "menu/createMenuItem",
-  async (newMenuItem: Omit<MenuItem, "_id">) => {
+  'menu/createMenuItem',
+  async (newMenuItem: Omit<MenuItem, '_id'>) => {
     const response = await axios.post(
-      "http://localhost:5000/menu/addmenu",
+      'http://localhost:5000/menu/addmenu',
       newMenuItem
     );
     return response.data;
   }
 );
 
-export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
-  const response = await axios.get("http://localhost:5000/menu/allmenu");
+export const getmenuItems = createAsyncThunk('menu/menuItems', async () => {
+  const response = await axios.get('http://localhost:5000/menu/allmenu');
   return response.data;
 });
 
 export const deleteMenuItem = createAsyncThunk(
-  "menu/deleteMenuItem",
+  'menu/deleteMenuItem',
   async (_id: string) => {
-    console.log("Sending DELETE request for item ID:", _id); // Log the ID being sent
+    console.log('Sending DELETE request for item ID:', _id); // Log the ID being sent
     await axios.delete(`http://localhost:5000/menu/items/${_id}`);
     return _id; // Return the deleted item I
   }

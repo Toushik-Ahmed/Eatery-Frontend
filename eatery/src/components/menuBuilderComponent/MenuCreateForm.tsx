@@ -1,6 +1,6 @@
-"use client";
-import React, { useState } from "react";
-import axios from "axios";
+'use client';
+import React, { useState } from 'react';
+import axios from 'axios';
 import {
   Box,
   Button,
@@ -14,35 +14,35 @@ import {
   Image,
   Select,
   IconButton,
-} from "@chakra-ui/react";
-import { AddIcon, MinusIcon } from "@chakra-ui/icons";
-import { useDispatch } from "react-redux";
+} from '@chakra-ui/react';
+import { AddIcon, MinusIcon } from '@chakra-ui/icons';
+import { useDispatch } from 'react-redux';
 import {
   createMenuItem,
   resetMenuItem,
   uploadImage,
-} from "../../redux/MenuBuilder/MenuItemSlice";
-import { AppDispatch } from "../../redux/store";
-import { select } from "framer-motion/client";
+} from '../../redux/MenuBuilder/MenuItemSlice';
+import { AppDispatch } from '../../redux/store';
+import { select } from 'framer-motion/client';
 
 const CreateMenuForm: React.FC = () => {
   // const dispatch = useDispatch();
   const dispatch = useDispatch<AppDispatch>();
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("");
-  const [mealTimes, setMealTimes] = useState([{ mealtime: "" }]);
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState('');
+  const [mealTimes, setMealTimes] = useState([{ mealtime: '' }]);
+  const [description, setDescription] = useState('');
 
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>('');
 
   const [sizes, setSizes] = useState([
     {
-      sizeName: "",
-      ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+      sizeName: '',
+      ingredients: [{ name: '', properties: { quantity: 0, unit: '' } }],
       preparationTime: 0,
       sellingPrice: 0,
-      addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+      addOns: [{ name: '', quantity: 0, unit: '', addonPrice: 0 }],
     },
   ]);
 
@@ -80,27 +80,23 @@ const CreateMenuForm: React.FC = () => {
   //     }
   //   }
   // };
-  const handleImageUpload = async (
-    e: React.ChangeEvent<HTMLInputElement>
-  ): Promise<void> => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file); // Store file locally if needed
+  const handleImageUpload = async (): Promise<string> => {
+    if (imageFile) {
       try {
-        const resultAction = await dispatch(uploadImage(file));
-
+        const resultAction = await dispatch(uploadImage(imageFile));
         if (uploadImage.fulfilled.match(resultAction)) {
           const uploadedImageUrl = resultAction.payload as string; // Ensure payload is of type string
-          setImageUrl(uploadedImageUrl); // Update local state with the image URL
-          alert("Image uploaded successfully!");
+          alert('Image uploaded successfully!');
+          return uploadedImageUrl;
         } else {
-          throw new Error("Image upload failed");
+          throw new Error('Image upload failed');
         }
       } catch (error) {
         console.error(error);
-        alert("Image upload failed. Please try again.");
+        alert('Image upload failed. Please try again.');
       }
     }
+    return '';
   };
 
   const handleMealTimeChange = (index: number, value: string) => {
@@ -110,7 +106,7 @@ const CreateMenuForm: React.FC = () => {
   };
 
   const addMealTime = () => {
-    setMealTimes([...mealTimes, { mealtime: "" }]);
+    setMealTimes([...mealTimes, { mealtime: '' }]);
   };
 
   const removeMealTime = (index: number) => {
@@ -171,13 +167,8 @@ const CreateMenuForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Wait for the image to upload before submitting the form
-    await handleImageUpload(
-      e as React.ChangeEvent<HTMLInputElement>
-    );
-
     if (!name || !category || !description || !imageUrl) {
-      alert("Please fill in all required fields.");
+      alert('Please fill in all required fields.');
       return;
     }
 
@@ -185,43 +176,45 @@ const CreateMenuForm: React.FC = () => {
       .map((mt) => ({ mealtime: mt.mealtime }))
       .filter((mt) => mt.mealtime);
     if (mealTimeValues.length === 0) {
-      alert("Please fill in all meal times.");
+      alert('Please fill in all meal times.');
       return;
     }
+
+    const uploadedName = await handleImageUpload();
 
     const newMenuItem = {
       name,
       category,
       mealTime: mealTimeValues,
       description,
-      image: imageUrl,
+      image: uploadedName,
       size: sizes,
     };
 
     try {
       await dispatch(createMenuItem(newMenuItem) as any);
-      console.log("Menu Item Created:", newMenuItem);
+      console.log('Menu Item Created:', newMenuItem);
 
       // Reset form state
-      setName("");
-      setCategory("");
-      setMealTimes([{ mealtime: "" }]);
-      setDescription("");
-      setImageUrl("");
+      setName('');
+      setCategory('');
+      setMealTimes([{ mealtime: '' }]);
+      setDescription('');
+      setImageUrl('');
       setSizes([
         {
-          sizeName: "",
-          ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+          sizeName: '',
+          ingredients: [{ name: '', properties: { quantity: 0, unit: '' } }],
           preparationTime: 0,
           sellingPrice: 0,
-          addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+          addOns: [{ name: '', quantity: 0, unit: '', addonPrice: 0 }],
         },
       ]);
 
       dispatch(resetMenuItem());
-      alert("Form Submitted Successfully!");
+      alert('Form Submitted Successfully!');
     } catch (error) {
-      alert("Failed to submit form. Please try again.");
+      alert('Failed to submit form. Please try again.');
       console.error(error);
     }
   };
@@ -230,11 +223,11 @@ const CreateMenuForm: React.FC = () => {
     setSizes([
       ...sizes,
       {
-        sizeName: "",
-        ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
+        sizeName: '',
+        ingredients: [{ name: '', properties: { quantity: 0, unit: '' } }],
         preparationTime: 0,
         sellingPrice: 0,
-        addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
+        addOns: [{ name: '', quantity: 0, unit: '', addonPrice: 0 }],
       },
     ]);
   };
@@ -248,12 +241,11 @@ const CreateMenuForm: React.FC = () => {
       p={{ base: 2, md: 5 }}
       bg="#FFFFF0"
       borderRadius="lg"
-      maxW={{ base: "100%", md: "700px" }}
+      maxW={{ base: '100%', md: '700px' }}
       m="0 auto"
       boxShadow="lg"
       as="form"
-      onSubmit={handleSubmit}
-    >
+      onSubmit={handleSubmit}>
       {/* Header Section */}
       <Box fontSize="2xl" fontWeight="bold" textAlign="center">
         Create Menu Item
@@ -264,7 +256,7 @@ const CreateMenuForm: React.FC = () => {
         mx="auto"
         my="5"
         borderRadius="full"
-        width={{ base: "50%", md: "30%" }}
+        width={{ base: '50%', md: '30%' }}
       />
       <VStack spacing={6} align="start">
         <FormControl isRequired>
@@ -283,8 +275,7 @@ const CreateMenuForm: React.FC = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             placeholder="Select category"
-            focusBorderColor="teal.500"
-          >
+            focusBorderColor="teal.500">
             <option value="Fast Food">Fast Food</option>
             <option value="Meal">Meal</option>
             <option value="Beverage">Beverage</option>
@@ -299,8 +290,7 @@ const CreateMenuForm: React.FC = () => {
                 value={mealTime.mealtime}
                 onChange={(e) => handleMealTimeChange(index, e.target.value)}
                 placeholder="Select meal time"
-                focusBorderColor="teal.500"
-              >
+                focusBorderColor="teal.500">
                 <option value="All Day">All Day</option>
                 <option value="Breakfast">Breakfast</option>
                 <option value="Lunch">Lunch</option>
@@ -318,8 +308,7 @@ const CreateMenuForm: React.FC = () => {
             onClick={addMealTime}
             leftIcon={<AddIcon />}
             colorScheme="orange"
-            mt={2}
-          >
+            mt={2}>
             Add Meal Time
           </Button>
         </FormControl>
@@ -342,6 +331,7 @@ const CreateMenuForm: React.FC = () => {
             onChange={(selectedFile) => {
               const file = selectedFile.target.files?.[0];
               if (file) {
+                setImageFile(file);
                 const reader = new FileReader();
                 reader.onload = () => {
                   setImageUrl(reader.result as string);
@@ -374,8 +364,7 @@ const CreateMenuForm: React.FC = () => {
               borderRadius="md"
               w="full"
               boxShadow="sm"
-              mt={2}
-            >
+              mt={2}>
               <HStack justify="space-between">
                 <FormControl isRequired>
                   <FormLabel>Size Name</FormLabel>
@@ -387,8 +376,7 @@ const CreateMenuForm: React.FC = () => {
                       setSizes(updatedSizes);
                     }}
                     placeholder="Select size"
-                    focusBorderColor="teal.500"
-                  >
+                    focusBorderColor="teal.500">
                     <option value="Small">Small</option>
                     <option value="Medium">Medium</option>
                     <option value="Large">Large</option>
@@ -455,8 +443,7 @@ const CreateMenuForm: React.FC = () => {
                         setSizes(updatedSizes);
                       }}
                       placeholder="Select unit"
-                      focusBorderColor="teal.500"
-                    >
+                      focusBorderColor="teal.500">
                       <option value="Gram">Gram</option>
                       <option value="Litre">Litre</option>
                       <option value="K.G">K.G</option>
@@ -473,12 +460,11 @@ const CreateMenuForm: React.FC = () => {
                 onClick={() => {
                   const updatedSizes = [...sizes];
                   updatedSizes[index].ingredients.push({
-                    name: "",
-                    properties: { quantity: 0, unit: "" },
+                    name: '',
+                    properties: { quantity: 0, unit: '' },
                   });
                   setSizes(updatedSizes);
-                }}
-              >
+                }}>
                 Add Ingredient
               </Button>
 
@@ -554,8 +540,7 @@ const CreateMenuForm: React.FC = () => {
                         setSizes(updatedSizes);
                       }}
                       placeholder="Select unit"
-                      focusBorderColor="teal.500"
-                    >
+                      focusBorderColor="teal.500">
                       <option value="Gram">Gram</option>
                       <option value="Litre">Litre</option>
                       <option value="K.G">K.G</option>
@@ -584,14 +569,13 @@ const CreateMenuForm: React.FC = () => {
                 onClick={() => {
                   const updatedSizes = [...sizes];
                   updatedSizes[index].addOns.push({
-                    name: "",
+                    name: '',
                     quantity: 0,
-                    unit: "",
+                    unit: '',
                     addonPrice: 0,
                   });
                   setSizes(updatedSizes);
-                }}
-              >
+                }}>
                 Add-On
               </Button>
             </Box>
@@ -600,8 +584,7 @@ const CreateMenuForm: React.FC = () => {
             onClick={addSize}
             colorScheme="orange"
             leftIcon={<AddIcon />}
-            mt={2}
-          >
+            mt={2}>
             Add Size
           </Button>
         </FormControl>
@@ -613,8 +596,7 @@ const CreateMenuForm: React.FC = () => {
           w="full"
           onClick={() => {
             handleSubmit;
-          }}
-        >
+          }}>
           Add Item
         </Button>
       </VStack>
