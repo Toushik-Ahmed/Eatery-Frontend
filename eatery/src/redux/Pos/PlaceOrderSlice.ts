@@ -1,11 +1,15 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-interface OrderDetails {
-  table_no: number;
-  menu_items: {
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+export interface OrderDetails {
+  _id?: string;
+  tableNo?: number;
+  tableStatus?: string;
+  menuItems: {
     itemName: string;
     quantity: number;
     selectedSize: string;
-    itemPrice: number;
+    unitPrice: number;
+    sellingPrice: number;
     ingredients: {
       name: string;
       properties: {
@@ -22,25 +26,60 @@ interface OrderDetails {
   }[];
   preparationTime: number;
   totalPrice: number;
+  createdAt?: string;
 }
 
-export interface OrderDetailsState {
-  totalItems: OrderDetails[];
+interface PlaceOrderState {
+  orderDetails: OrderDetails;
+  status: string;
 }
-
-const initialState: OrderDetailsState = {
-  totalItems: [],
+const initialState: PlaceOrderState = {
+  orderDetails: {
+    tableNo: 2,
+    tableStatus: "occupied",
+    menuItems: [],
+    preparationTime: 0,
+    totalPrice: 0,
+  },
+  status: "",
 };
 
 export const PlaceOrderSlice = createSlice({
   name: "placeorder",
   initialState,
   reducers: {
-    addPlaceOrderInfo: (state, action: PayloadAction<OrderDetails[]>) => {
-      state.totalItems.push(...action.payload);
-    },
+    /* addPlaceOrderInfo: (state, action: PayloadAction<OrderDetails>) => {
+      return { ...state, ...action.payload };
+    }, */
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(
+        placeOrder.fulfilled,
+        (state, action: PayloadAction<OrderDetails>) => {
+          state.orderDetails = action.payload;
+          state.status = "success";
+        }
+      )
+      .addCase(placeOrder.pending, (state) => {
+        state.status = "loading";
+      });
   },
 });
 
+export const placeOrder = createAsyncThunk(
+  "placeorder/placeOrder",
+  async (orderDetails: OrderDetails) => {
+    const response = await axios.post("http://localhost:5000/pos/new", {
+      orderDetails,
+    });
+    return response.data;
+  }
+);
+
+export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
+  const response = await axios.get("http://localhost:5000/menu/allmenu");
+  return response.data;
+});
+
 export default PlaceOrderSlice.reducer;
-export const { addPlaceOrderInfo } = PlaceOrderSlice.actions;

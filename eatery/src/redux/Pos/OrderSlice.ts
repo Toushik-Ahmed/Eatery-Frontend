@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { MealTime } from "./MenuItemSlice";
 
 export interface Item {
   id: number;
   name: string;
   category: string;
-  tastyTag: string;
-  mealTime: string[];
+  mealTime: MealTime[];
   description: string;
   image: string;
   size: {
@@ -26,14 +26,19 @@ export interface Item {
       addonPrice: number;
     }[];
   }[];
+  uniqueKey: string;
 }
 
 export interface ItemState {
   orderedItems: Item[];
+  selectedSizes: { [key: string]: string };
+  selectedAddons: { [key: string]: string[] };
 }
 
 const initialState: ItemState = {
   orderedItems: [],
+  selectedSizes: {},
+  selectedAddons: {},
 };
 
 export const OrderSlice = createSlice({
@@ -43,18 +48,53 @@ export const OrderSlice = createSlice({
     addOrderInfo: (state, action: PayloadAction<Item[]>) => {
       state.orderedItems.push(...action.payload);
     },
+    updateSelectedSize(
+      state,
+      action: PayloadAction<{ itemId: string; sizeName: string }>
+    ) {
+      state.selectedSizes[action.payload.itemId] = action.payload.sizeName;
+    },
+    updateSelectedAddons(
+      state,
+      action: PayloadAction<{
+        itemId: string;
+        addonName: string;
+        isChecked: boolean;
+      }>
+    ) {
+      const currentAddons = state.selectedAddons[action.payload.itemId] || [];
+      if (action.payload.isChecked) {
+        state.selectedAddons[action.payload.itemId] = [
+          ...currentAddons,
+          action.payload.addonName,
+        ];
+      } else {
+        state.selectedAddons[action.payload.itemId] = currentAddons.filter(
+          (addon) => addon !== action.payload.addonName
+        );
+      }
+    },
     removeItemFromOrder: (
       state,
-      action: PayloadAction<{ itemId: number; index: number }>
+      action: PayloadAction<{ uniqueKey: string }>
     ) => {
-      const { itemId, index } = action.payload;
+      const { uniqueKey } = action.payload;
 
       state.orderedItems = state.orderedItems.filter(
-        (item, i) => !(item.id === itemId && i === index)
+        (item) => item.uniqueKey !== uniqueKey
       );
+    },
+    resetOrderInfo: (state) => {
+      state.orderedItems = initialState.orderedItems;
     },
   },
 });
 
 export default OrderSlice.reducer;
-export const { addOrderInfo, removeItemFromOrder } = OrderSlice.actions;
+export const {
+  addOrderInfo,
+  updateSelectedSize,
+  updateSelectedAddons,
+  removeItemFromOrder,
+  resetOrderInfo,
+} = OrderSlice.actions;
