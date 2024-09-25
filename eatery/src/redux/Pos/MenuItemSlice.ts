@@ -1,3 +1,4 @@
+import { getToken } from "@/services/tokenServices";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -38,14 +39,12 @@ export interface MenuItemState {
 
 export interface TopSell {
   itemName: string;
-  count : number;
+  count: number;
 }
-
-
 
 const initialState: MenuItemState = {
   allItems: [],
-  topSellingItems: []
+  topSellingItems: [],
 };
 
 export const MenuItemSlice = createSlice({
@@ -69,12 +68,20 @@ export const MenuItemSlice = createSlice({
 });
 
 export const getmenuItems = createAsyncThunk("menu/getmenuItems", async () => {
-  const response = await axios.get("http://localhost:5000/menu/allmenu");
+  const response = await axios.get("http://localhost:5000/menu/allmenu", {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
   return response.data;
 });
-export const getTopSellingItems = createAsyncThunk("menu/getTopSellingItemss", async () => {
-  const response = await axios.get("http://localhost:5000/pos/bestsell");
-  return response.data;
-});
+export const getTopSellingItems = createAsyncThunk(
+  "menu/getTopSellingItemss",
+  async () => {
+    const response = await axios.get("http://localhost:5000/pos/bestsell");
+    return response.data;
+  }
+);
 
 export default MenuItemSlice.reducer;
