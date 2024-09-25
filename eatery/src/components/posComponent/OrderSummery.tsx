@@ -182,7 +182,7 @@ const OrderSummery = (props: Props) => {
       h={["fit", "fit", "fit", "fit"]}
     >
       <Box
-        h={["60vh", "70vh", "75vh", "80vh"]}
+        h={["60vh", "70vh", "70vh", "80vh"]}
         display={"flex"}
         flexDirection={"column"}
         overflowY={"auto"}
