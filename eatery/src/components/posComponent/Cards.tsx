@@ -123,20 +123,19 @@ const Cards = (props: Props) => {
           Order Management
         </Text>
         <Button size={"sm"} gap={"2"}>
-          <ImHome color="#f53e62"/> Home
+          <ImHome color="#f53e62" /> Home
         </Button>
       </Box>
-      <Flex direction={{ base: "column", md: "row" }}>
+      <Flex direction={{ base: "column", md: "row" }} gap={{base: "2", md: "2"}}>
         <Box
           borderWidth="1px"
           borderRadius="md"
           bg={"#f4f4f6"}
           w={{ base: "100vw", md: "75vw" }}
           h={{ base: "auto", md: "92vh" }}
-          overflowY={"auto"}
         >
           <Flex justifyContent={"center"}>
-            <Box mt={"4"} mb={{ base: "4", md: "4" }}>
+            <Box py={{ base: "4", md: "4" }}>
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
                   bg={meal === "All Items" ? "#f53e62" : "white"}
@@ -191,10 +190,10 @@ const Cards = (props: Props) => {
               </HStack>
             </Box>
           </Flex>
-          <Box>
+          <Box maxHeight={{ base: "50vh", md: "84vh" }} overflowY="auto">
             <Stack spacing={{ base: "4", md: "4" }}>
               {categories.map((category, index) => (
-                <Box mx={{ base: "4", md: "4" }} key={index}>
+                <Box mx={{ base: "4", md: "4" }} key={index} h={{base: "36vh" , md: "36vh",lg:"26vh"}} >
                   <Flex gap="2">
                     <Box p={"2"}>
                       <Button
@@ -203,9 +202,9 @@ const Cards = (props: Props) => {
                         _hover={{ background: "#f53e62", textColor: "white" }}
                         borderBottomLeftRadius={"full"}
                         borderTopRightRadius={"full"}
-                        w={"6vw"}
+                        w={{base: "6vw", md: "8vw"}}
                         onClick={() => setSelectedCategory(category)}
-                        fontSize={{ base: "sm", md: "md" }}
+                        fontSize={{ base: "md", md: "sm" }}
                         fontWeight={"bold"}
                       >
                         {category}
