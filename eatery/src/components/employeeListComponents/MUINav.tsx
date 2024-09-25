@@ -23,6 +23,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import WidgetsIcon from "@mui/icons-material/Widgets";
 import EmployeeCard from "@/components/employeeListComponents/EmployeeCard";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -86,6 +87,34 @@ export default function MUINav() {
     setOpen(false);
   };
 
+  const menuItems = [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon sx={{ color: "white" }} />,
+      path: "/dashboard",
+    },
+    {
+      text: "POS",
+      icon: <PointOfSaleIcon sx={{ color: "white" }} />,
+      path: "/tableTry",
+    },
+    {
+      text: "HR Directory",
+      icon: <FolderSharedIcon sx={{ color: "white" }} />,
+      path: "/employee-list",
+    },
+    {
+      text: "Inventory",
+      icon: <InventoryIcon sx={{ color: "white" }} />,
+      path: "/Inventory",
+    },
+    {
+      text: "Menu",
+      icon: <WidgetsIcon sx={{ color: "white" }} />,
+      path: "/menubuilder",
+    },
+  ];
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -96,7 +125,13 @@ export default function MUINav() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
+            sx={[
+              {
+                mr: 2,
+              },
+              open && { display: "none" },
+              { color: "white" },
+            ]}
           >
             <MenuIcon />
           </IconButton>
@@ -112,6 +147,8 @@ export default function MUINav() {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            backgroundColor: "#f53e62",
+            color: "#ffffff",
           },
         }}
         variant="persistent"
@@ -128,26 +165,27 @@ export default function MUINav() {
           </IconButton>
         </DrawerHeader>
         <Divider />
+
         <List>
-          {[
-            "Dashboard",
-            "POS",
-            "HR Directory",
-            "Inventory",
-            "Add Menu",
-            "Menu",
-          ].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index === 0 && <DashboardIcon />}
-                  {index === 1 && <PointOfSaleIcon />}
-                  {index === 2 && <FolderSharedIcon />}
-                  {index === 3 && <InventoryIcon />}
-                  {index === 4 && <AddCircleIcon />}
-                  {index === 5 && <WidgetsIcon />}
+          {menuItems.map((item) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton
+                component={Link}
+                href={item.path}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#000000",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: "40px",
+                  }}
+                >
+                  {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={text} />
+                <ListItemText primary={item.text} />
               </ListItemButton>
             </ListItem>
           ))}

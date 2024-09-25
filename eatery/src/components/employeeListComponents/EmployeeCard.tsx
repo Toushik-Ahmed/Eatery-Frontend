@@ -55,14 +55,6 @@ export default function EmployeeCard() {
   }, []);
 
   const getToken = async () => {
-    // need to edit code for token
-    const hard: { message: string; token: string } = {
-      message: "Login successful",
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NmVmZTM2ZWFjZWUyMTc1ZTZjMmFiNzgiLCJlbWFpbCI6InJpendhbmZhaGltMjRAZ21haWwuY29tIiwib3JnYW5pemF0aW9uTmFtZSI6IlByb2plY3QgQ29kZSIsInVzZXJUeXBlIjoiQWRtaW4iLCJpYXQiOjE3MjcwNjkxNTUsImV4cCI6MTcyNzA3Mjc1NX0.j5U3nmfW_HEzFDnr34oMiBgt0jVbGY9xPMxNvn31cgA",
-    };
-
-    localStorage.setItem("token", hard.token);
     const token = localStorage.getItem("token");
     console.log("token: ", token);
     if (token) {

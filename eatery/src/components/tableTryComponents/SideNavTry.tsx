@@ -88,14 +88,21 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
+  // backgroundColor: "#e91e63",
+  color: "black",
+  variants: [
+    {
+      props: ({ open }) => open,
+      style: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(["margin", "width"], {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+      },
+    },
+  ],
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -145,6 +152,34 @@ export default function PersistentDrawerLeft() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const menuItems = [
+    {
+      text: "Dashboard",
+      icon: <DashboardIcon sx={{ color: "white" }} />,
+      path: "/dashboard",
+    },
+    {
+      text: "POS",
+      icon: <PointOfSaleIcon sx={{ color: "white" }} />,
+      path: "/tableTry",
+    },
+    {
+      text: "HR Directory",
+      icon: <FolderSharedIcon sx={{ color: "white" }} />,
+      path: "/employee-list",
+    },
+    {
+      text: "Inventory",
+      icon: <InventoryIcon sx={{ color: "white" }} />,
+      path: "/Inventory",
+    },
+    {
+      text: "Menu",
+      icon: <WidgetsIcon sx={{ color: "white" }} />,
+      path: "/menubuilder",
+    },
+  ];
 
   const list = useSelector((state: RootState) => state.placeOrder);
 
@@ -261,7 +296,7 @@ export default function PersistentDrawerLeft() {
     );
   };
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
@@ -270,11 +305,22 @@ export default function PersistentDrawerLeft() {
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
-            sx={{ mr: 2, ...(open && { display: "none" }) }}
+            sx={[
+              {
+                mr: 2,
+              },
+              open && { display: "none" },
+              { color: "white" },
+            ]}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ color: "white" }}
+          >
             Table Management
           </Typography>
         </Toolbar>
@@ -286,6 +332,8 @@ export default function PersistentDrawerLeft() {
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",
+            backgroundColor: "#f53e62",
+            color: "#ffffff",
           },
         }}
         variant="persistent"
@@ -293,7 +341,10 @@ export default function PersistentDrawerLeft() {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <Typography variant="h6" sx={{ flexGrow: 1, color: "#ffffff" }}>
+            Eatery
+          </Typography>
+          <IconButton onClick={handleDrawerClose} sx={{ color: "#ffffff" }}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
@@ -303,6 +354,30 @@ export default function PersistentDrawerLeft() {
         </DrawerHeader>
         <Divider />
         <List>
+          {menuItems.map((item) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton
+                component={Link}
+                href={item.path}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#000000",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: "40px",
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+        {/* <List>
           {[
             "Dashboard",
             "POS",
@@ -325,7 +400,7 @@ export default function PersistentDrawerLeft() {
               </ListItemButton>
             </ListItem>
           ))}
-        </List>
+        </List> */}
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
