@@ -4,6 +4,7 @@ import CustomCard from "../customComponents/CustomCard";
 import OrderSummery from "./OrderSummery";
 import { v4 as uuidv4 } from "uuid";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
+import { ImHome } from "react-icons/im";
 import {
   Box,
   Button,
@@ -117,13 +118,14 @@ const Cards = (props: Props) => {
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
-      <Text
-        py={{ base: "4", md: "4" }}
-        fontSize={{ base: "xl", md: "xl" }}
-        fontWeight={"bold"}
-      >
-        Order Management
-      </Text>
+      <Box display={"flex"} gap={"2"} my={{ base: "4", md: "4" }}>
+        <Text fontSize={{ base: "xl", md: "xl" }} fontWeight={"bold"}>
+          Order Management
+        </Text>
+        <Button size={"sm"} gap={"2"}>
+          <ImHome color="#f53e62"/> Home
+        </Button>
+      </Box>
       <Flex direction={{ base: "column", md: "row" }}>
         <Box
           borderWidth="1px"
@@ -134,7 +136,7 @@ const Cards = (props: Props) => {
           overflowY={"auto"}
         >
           <Flex justifyContent={"center"}>
-            <Box mt={"4"} mb={{ base: "4", md: "5" }}>
+            <Box mt={"4"} mb={{ base: "4", md: "4" }}>
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
                   bg={meal === "All Items" ? "#f53e62" : "white"}
