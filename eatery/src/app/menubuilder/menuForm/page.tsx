@@ -1,4 +1,4 @@
-import Card from "@/components/menuBuilderComponent/MenuCards";
+import Form from "@/components/menuBuilderComponent/MenuCreateForm";
 import React from "react";
 
 type Props = {};
@@ -6,7 +6,7 @@ type Props = {};
 const page = (props: Props) => {
   return (
     <div>
-      <Card />
+      <Form />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import SideNavbar from '@/components/inventoryComponent/SideNavbar';
+import SideNavbar from '@/components/menuBuilderComponent/SideNavbar';
 import React from 'react';
 
 type Props = {};

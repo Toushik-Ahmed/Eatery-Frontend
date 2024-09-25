@@ -1,5 +1,10 @@
 'use client';
 import {
+  deleteIngredient,
+  IngredientsTable,
+} from '@/redux/inventory/AddIngredientsSlice';
+import { AppDispatch } from '@/redux/store';
+import {
   Button,
   Table,
   TableContainer,
@@ -9,31 +14,36 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
+import { format, parseISO } from 'date-fns';
 
 import { MdDeleteOutline } from 'react-icons/md';
-import PopComponent from './PopComponent';
-
-type Ingredient = {
-  Name: string;
-  UOM: string;
-  CurrentStock: number;
-  UnitCost: number;
-  OrderPoint: number;
-  Prevstock: number;
-  Expiarydate: string;
-  NewStock: number;
-  expiarydate: string;
-  IncomingStock: string;
-};
+import { useDispatch } from 'react-redux';
 
 type Props = {
   tableHead: string[];
-  ingredients: Ingredient[];
+  ingredients: Partial<IngredientsTable>[];
+  pageSize: number;
+  pageNumber: number;
 };
 
-const Tablecomponent = ({ tableHead, ingredients }: Props) => {
+const Tablecomponent = ({
+  tableHead,
+  ingredients,
+  pageSize,
+  pageNumber,
+}: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleDelete = (id?: string) => {
+    if (id) dispatch(deleteIngredient(id));
+  };
+
+  // useEffect(() => {
+  //   dispatch(getAllIngredients({ pageSize, pageNumber }));
+  // }, [dispatch]);
+
   return (
-    <div className="flex justify-center">
+    <div className=" justify-center">
       <TableContainer>
         <Table size="sm">
           <Thead>
@@ -46,21 +56,40 @@ const Tablecomponent = ({ tableHead, ingredients }: Props) => {
           <Tbody>
             {ingredients.map((ingredient, index) => (
               <Tr key={index}>
-                <Td>{ingredient.Name}</Td>
-                <Td>{ingredient.UOM}</Td>
-                <Td>{ingredient.CurrentStock}</Td>
-                <Td>{ingredient.UnitCost}</Td>
-                <Td>{ingredient.OrderPoint}</Td>
-                <Td>{ingredient.Prevstock}</Td>
-                <Td>{ingredient.Expiarydate}</Td>
-                <Td>{ingredient.NewStock}</Td>
-                <Td>{ingredient.expiarydate}</Td>
-                <Td>{ingredient.IncomingStock}</Td>
-                {/* <Td>
-                 <PopComponent/>
-                </Td> */}
+                <Td>{ingredient.ingredient}</Td>
+                <Td>{ingredient.unit}</Td>
+                <Td>{ingredient.capacity}</Td>
+                <Td>{ingredient.currentStock}</Td>
+
+                <Td>{ingredient.poo}</Td>
+                <Td>{ingredient.prevStock}</Td>
+
                 <Td>
-                  <Button colorScheme="red">
+                  {ingredient.prevExpiary
+                    ? format(parseISO(ingredient.prevExpiary), 'dd-MM-yyyy')
+                    : ''}
+                </Td>
+                <Td>{ingredient.newStock}</Td>
+                <Td>
+                  {' '}
+                  {ingredient.newStockExpiry
+                    ? format(parseISO(ingredient.newStockExpiry), 'dd-MM-yyyy')
+                    : ''}
+                </Td>
+                <Td>
+                  {ingredient.incomingStock
+                    ? format(parseISO(ingredient.incomingStock), 'dd-MM-yyyy')
+                    : ''}
+                </Td>
+                <Td>
+                  <Button
+                    border={'none'}
+                    variant="ghost"
+                    colorScheme="red"
+                    onClick={() => {
+                      handleDelete(ingredient._id);
+                    }}
+                  >
                     <MdDeleteOutline />
                   </Button>
                 </Td>
