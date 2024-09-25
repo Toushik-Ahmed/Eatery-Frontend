@@ -84,8 +84,8 @@ function WastageTable({}: Props) {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex justify-between mb-10">
+    <div className="w-full mt-4">
+      <div className="flex justify-between mb-">
         <p className="font-bold text-3xl">Wastage</p>
       </div>
 
