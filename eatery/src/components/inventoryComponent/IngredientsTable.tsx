@@ -27,7 +27,7 @@ function IngredientsTablecomponent({}: Props) {
     'UOM',
     'capacity',
     'Current-Stcok',
-    
+
     'Order-Point',
     'Prev-Stock',
     'Expiary-Date',
@@ -63,10 +63,10 @@ function IngredientsTablecomponent({}: Props) {
   const [filter, setFilter] = useState('');
   const [selectLabel, setSelectLabel] = useState('Sort-By');
 
-  // console.log(allIngredients);
+  
 
   const handleFilter = (value: string) => {
-    console.log(filter);
+
     setSelectLabel(value);
     setFilter(value);
 

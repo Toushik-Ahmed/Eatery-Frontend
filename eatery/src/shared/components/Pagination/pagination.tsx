@@ -26,7 +26,7 @@ function Pagination({
   pageSize,
 }: PaginationProps) {
   const totalPages = Math.ceil((totalData || 0) / (pageSize || 10)) - 1;
-  console.log(totalPages, totalData);
+
   const [currentTotalPage, setCurrentTotalPage] = useState(
     totalPages >= 0 ? totalPages : 0
   );

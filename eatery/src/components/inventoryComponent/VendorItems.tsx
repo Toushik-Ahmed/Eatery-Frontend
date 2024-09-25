@@ -95,9 +95,9 @@ const VendorItems = ({ handleClick }: Props) => {
     getVendorItems();
   }, [pageNumber, pageSize]);
 
-  console.log(vendorItems.ingredient);
+
   useEffect(() => {
-    console.log('Selected items updated:', selectedItems);
+    
   }, [selectedItems]);
 
   const th = ['Name', 'Cost($)', 'Add to Cart'];

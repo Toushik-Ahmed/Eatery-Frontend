@@ -111,7 +111,7 @@ export function DrawerExample({
       deliveryDate: item.deliveryDate,
       price: item.price,
     }));
-    console.log('Checkout data:', cartData);
+
     const totalCost = calculateTotalCost();
 
     const newOrderHistory: OrderHistory = {
@@ -121,8 +121,7 @@ export function DrawerExample({
     setOrderHistory(newOrderHistory);
     dispatch(postOrder(newOrderHistory));
     setCartData(checkOutData);
-    console.log('Checkout data:', cartData);
-    console.log('Order history:', newOrderHistory);
+   
 
     toast({
       title: 'Order placed.',

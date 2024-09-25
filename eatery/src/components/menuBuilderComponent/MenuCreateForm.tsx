@@ -141,7 +141,7 @@ const Form: React.FC = () => {
     };
 
     // Display the collected data (log it for now)
-    console.log(formData);
+ 
 
     // Clear the form fields after submitting
     setItemName("");

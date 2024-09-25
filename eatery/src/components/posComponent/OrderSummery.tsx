@@ -67,7 +67,7 @@ const OrderSummery = (props: Props) => {
 
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
   const placeOrder = useSelector((state: RootState) => state.placeOrder);
-  console.log(placeOrder);
+
 
   const calculateTotalPrice = () => {
     const newTotalPrices: { [key: string]: number } = {};

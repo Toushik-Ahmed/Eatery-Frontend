@@ -37,7 +37,7 @@ const InventoryForm = (props: Props) => {
   const addIngredientsData = useSelector(
     (state: RootState) => state.addIngredients
   );
-  console.log(addIngredientsData);
+ 
   const handleCancel = () => {
     setIngredient('');
 
