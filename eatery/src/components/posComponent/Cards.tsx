@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import CustomCard from "../customComponents/CustomCard";
+import CustomCard from "../customComponents/CustomCardP";
 import OrderSummery from "./OrderSummery";
 import items from "../../data";
 

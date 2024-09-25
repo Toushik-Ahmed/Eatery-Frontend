@@ -1,5 +1,5 @@
 'use client';
-import { addIng } from '@/redux/inventory/AddIngredientsSlice';
+import { postAddIngredient } from '@/redux/inventory/AddIngredientsSlice';
 import { AppDispatch, RootState } from '@/redux/store';
 import {
   Box,
@@ -14,7 +14,7 @@ import {
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import ingImage from "./assets/ingredients.jpg"
+import ingImage from './assets/ingredients.jpg';
 
 type Props = {};
 
@@ -28,17 +28,16 @@ const InventoryForm = (props: Props) => {
   const handleSubmit = () => {
     const addIngredientsForm = {
       ingredient,
-
       unit,
       poo,
       capacity,
     };
-    dispatch(addIng(addIngredientsForm));
+    dispatch(postAddIngredient(addIngredientsForm));
   };
   const addIngredientsData = useSelector(
     (state: RootState) => state.addIngredients
   );
-  console.log(addIngredientsData);
+ 
   const handleCancel = () => {
     setIngredient('');
 
@@ -73,7 +72,7 @@ const InventoryForm = (props: Props) => {
       <FormControl>
         <FormLabel>Ingredient</FormLabel>
         <Input
-        p={2}
+          p={2}
           placeholder="Please Enter Ingredient Name"
           variant="outline"
           borderColor="purple.300"
@@ -91,9 +90,10 @@ const InventoryForm = (props: Props) => {
           value={unit}
           onChange={(e) => setUnit(e.target.value)}
         >
-          <option value="g">Grams</option>
-          <option value="kg">Kilograms</option>
-          <option value="l">Liters</option>
+          <option value="Gram">Gram</option>
+          <option value="K.G">Kilograms</option>
+          <option value="Liter">Liters</option>
+          <option value="Pieces">Pieces</option>
         </Select>
       </FormControl>
 
@@ -112,7 +112,7 @@ const InventoryForm = (props: Props) => {
       <FormControl>
         <FormLabel>Capacity</FormLabel>
         <Input
-        type='number'
+          type="number"
           placeholder="Please Enter base capacity"
           variant="outline"
           borderColor="purple.300"

@@ -9,7 +9,7 @@ const page = (props: Props) => {
   const [vendor, setVendor] = useState(false);
   const handleClick = () => {
     setVendor((prevVendor) => !prevVendor);
-    console.log(vendor);
+   
   };
 
   return (
