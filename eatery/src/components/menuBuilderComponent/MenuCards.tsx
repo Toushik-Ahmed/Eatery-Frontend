@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import CustomCard from "../customComponents/CustomCard";
+import CustomCard from "../customComponents/Custom";
 import {
   Box,
   Button,
@@ -286,8 +286,7 @@ const Cards = (props: Props) => {
 
           <Box>
             {categories.map((category) => (
-              
-              <Box mx={10} mt={10} key={category} position='relative'>
+              <Box mx={10} mt={10} key={category} position="relative">
                 <Stack spacing={6}>
                   <Text
                     fontSize={"2xl"}
@@ -297,32 +296,31 @@ const Cards = (props: Props) => {
                     {category}
                   </Text>
                   <center>
-                  <Grid
-                    templateColumns={{
-                      base: "repeat(1, 1fr)",
-                      sm: "repeat(2, 1fr)",
-                      md: "repeat(3, 1fr)",
-                      lg: "repeat(4, 1fr)",
-                      xl: "repeat(6, 1fr)",
-                    }}
-                    gap={6}
-                  >
-                    {availableItems
-                      .filter((item) => item.category === category)
-                      .map((item) => (
-                        <CustomCard
-                          key={item.id}
-                          name={item.name}
-                          size={item.size}
-                          image={item.image}
-                          onClick={() => handleSubmit(item)}
-                        />
-                      ))}
-                  </Grid>
+                    <Grid
+                      templateColumns={{
+                        base: "repeat(1, 1fr)",
+                        sm: "repeat(2, 1fr)",
+                        md: "repeat(3, 1fr)",
+                        lg: "repeat(4, 1fr)",
+                        xl: "repeat(6, 1fr)",
+                      }}
+                      gap={6}
+                    >
+                      {availableItems
+                        .filter((item) => item.category === category)
+                        .map((item) => (
+                          <CustomCard
+                            key={item.id}
+                            name={item.name}
+                            size={item.size}
+                            image={item.image}
+                            onClick={() => handleSubmit(item)}
+                          />
+                        ))}
+                    </Grid>
                   </center>
                 </Stack>
               </Box>
-              
             ))}
           </Box>
         </Box>

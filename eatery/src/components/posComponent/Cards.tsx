@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import CustomCard from "../customComponents/CustomCard";
+import CustomCard from "../customComponents/Custom";
 import OrderSummery from "./OrderSummery";
 import { v4 as uuidv4 } from "uuid";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -126,7 +126,10 @@ const Cards = (props: Props) => {
           <ImHome color="#f53e62" /> Home
         </Button>
       </Box>
-      <Flex direction={{ base: "column", md: "row" }} gap={{base: "2", md: "2"}}>
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        gap={{ base: "2", md: "2" }}
+      >
         <Box
           borderWidth="1px"
           borderRadius="md"
@@ -193,7 +196,11 @@ const Cards = (props: Props) => {
           <Box maxHeight={{ base: "50vh", md: "84vh" }} overflowY="auto">
             <Stack spacing={{ base: "4", md: "4" }}>
               {categories.map((category, index) => (
-                <Box mx={{ base: "4", md: "4" }} key={index} h={{base: "36vh" , md: "36vh",lg:"26vh"}} >
+                <Box
+                  mx={{ base: "4", md: "4" }}
+                  key={index}
+                  h={{ base: "36vh", md: "36vh", lg: "26vh" }}
+                >
                   <Flex gap="2">
                     <Box p={"2"}>
                       <Button
@@ -202,7 +209,7 @@ const Cards = (props: Props) => {
                         _hover={{ background: "#f53e62", textColor: "white" }}
                         borderBottomLeftRadius={"full"}
                         borderTopRightRadius={"full"}
-                        w={{base: "6vw", md: "8vw"}}
+                        w={{ base: "6vw", md: "8vw" }}
                         onClick={() => setSelectedCategory(category)}
                         fontSize={{ base: "md", md: "sm" }}
                         fontWeight={"bold"}
