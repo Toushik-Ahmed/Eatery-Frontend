@@ -4,7 +4,7 @@ import axios from "axios";
 
 export interface MenuItem {
   id: number;
-  name: string;
+  itemName: string;
   category: string;
   mealTime: MealTime[];
   description: string;
@@ -79,7 +79,13 @@ export const getmenuItems = createAsyncThunk("menu/getmenuItems", async () => {
 export const getTopSellingItems = createAsyncThunk(
   "menu/getTopSellingItemss",
   async () => {
-    const response = await axios.get("http://localhost:5000/pos/bestsell");
+    const response = await axios.get("http://localhost:5000/pos/bestsell",
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 );

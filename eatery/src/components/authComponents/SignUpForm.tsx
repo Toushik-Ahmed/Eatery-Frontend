@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { loggedInuser, signUp } from "@/services/apiservice";
+import {  signUp } from "@/services/apiservice";
 import {
   Box,
   Button,

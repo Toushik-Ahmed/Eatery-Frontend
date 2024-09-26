@@ -52,19 +52,19 @@ export const logIn = async (data: LogInUser): Promise<{ token: string }> => {
 
 //getLogedIn user data
 
-export const loggedInuser = async (): Promise<{ user: LoggedInuser }> => {
-  try {
-    const response = await axios.get(`http://localhost:5000/user-data`,
-      {
-        headers: {
-          Authorization: `Bearer ${getToken()}`
-        }
-      } 
-    );
+// export const loggedInuser = async (): Promise<{ user: LoggedInuser }> => {
+//   try {
+//     const response = await axios.get(`http://localhost:5000/user-data`,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${getToken()}`
+//         }
+//       } 
+//     );
 
-    return response.data;
-  } catch (error) {
-    console.error("Error logging in:", error);
-    throw error;
-  }
-};
+//     return response.data;
+//   } catch (error) {
+//     console.error("Error logging in:", error);
+//     throw error;
+//   }
+// };

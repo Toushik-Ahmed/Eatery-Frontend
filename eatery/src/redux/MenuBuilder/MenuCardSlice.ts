@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 
 export interface MenuItem {
   _id: string;
-  name: string;
+  itemName: string;
   category: string;
   mealTime: { mealtime: string }[];
   description: string;

@@ -3,7 +3,7 @@ import { MealTime } from "./MenuItemSlice";
 
 export interface Item {
   id: number;
-  name: string;
+  itemName: string;
   category: string;
   mealTime: MealTime[];
   description: string;

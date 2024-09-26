@@ -52,7 +52,7 @@ interface Size {
 
 interface SelectedItem {
   _id: string;
-  name: string;
+  itemName: string;
   image: string;
   description: string;
   tastyTag?: string;
@@ -126,7 +126,7 @@ const ItemDrawer: React.FC<Props> = ({
         <DrawerCloseButton />
         <DrawerHeader bg="#FF5841" color="white" borderBottomWidth="1px">
           <Text fontSize="2xl" fontWeight="bold">
-            {selectedItem?.name}
+            {selectedItem?.itemName}
           </Text>
         </DrawerHeader>
         <DrawerBody p={6}>
@@ -137,7 +137,7 @@ const ItemDrawer: React.FC<Props> = ({
                 <GridItem>
                   <Image
                     src={selectedItem.image}
-                    alt={selectedItem.name}
+                    alt={selectedItem.itemName}
                     borderRadius="md"
                     boxShadow="md"
                     width="100%"

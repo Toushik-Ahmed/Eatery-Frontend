@@ -38,6 +38,7 @@ const Cards = (props: Props) => {
 
   const list = useSelector((state: RootState) => state.allItem);
   const allItems = list.allItems;
+  console.log(allItems);
   const top = useSelector((state: RootState) => state.allItem);
   const topSelling = top.topSellingItems;
 
@@ -103,14 +104,14 @@ const Cards = (props: Props) => {
       const bestItem = topSellingArray
         .map((itemName) => {
           const matches = availableItems.filter(
-            (availableItem) => availableItem.name === itemName
+            (availableItem) => availableItem.itemName === itemName
           );
           return matches[0] || null;
         })
         .filter((item) => item !== null);
 
       const averageItem = availableItems.filter(
-        (availableItem) => !topSellingArray.includes(availableItem.name)
+        (availableItem) => !topSellingArray.includes(availableItem.itemName)
       );
       setNewItems([...bestItem, ...averageItem]);
     }
@@ -260,7 +261,7 @@ const Cards = (props: Props) => {
                             >
                               <CustomCard
                                 key={item.id}
-                                name={item.name}
+                                name={item.itemName}
                                 size={item.size}
                                 image={item.image}
                                 onClick={() => handleSubmit(item)}

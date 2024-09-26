@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { TableStatus } from "@/components/tableTryComponents/SideNavTry";
+import { getToken } from "@/services/tokenServices";
 export interface OrderDetails {
   _id?: string;
   tableNo?: number;
@@ -78,9 +79,17 @@ export const PlaceOrderSlice = createSlice({
 export const placeOrder = createAsyncThunk(
   "placeorder/placeOrder",
   async (orderDetails: OrderDetails) => {
-    const response = await axios.post("http://localhost:5000/pos/new", {
-      orderDetails,
-    });
+    const response = await axios.post(
+      "http://localhost:5000/pos/new",
+      {
+        orderDetails,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 );

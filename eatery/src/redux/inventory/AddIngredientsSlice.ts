@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { OrderHistory } from './OrderHistorySlice';
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { OrderHistory } from "./OrderHistorySlice";
+import { getToken } from "@/services/tokenServices";
 
 export interface IngredientsTable {
   _id?: string;
@@ -46,7 +47,7 @@ type paginatedData = {
 
 // Create the slice
 export const AddIngredientsSlice = createSlice({
-  name: 'addIngredients',
+  name: "addIngredients",
   initialState,
   reducers: {
     //totalData
@@ -109,26 +110,37 @@ export const AddIngredientsSlice = createSlice({
 });
 
 export const postOrder = createAsyncThunk(
-  'ingredients/order',
+  "ingredients/order",
   async (order: OrderHistory) => {
-    const response = await axios.post('http://localhost:5000/stock/new', order);
+    const response = await axios.post("http://localhost:5000/stock/new", order,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 );
 
 export const postAddIngredient = createAsyncThunk(
-  'ingredient/add',
+  "ingredient/add",
   async (addIngredient: AddIngredient) => {
     const response = await axios.post(
-      'http://localhost:5000/ingredient/addingredient',
-      addIngredient
+      "http://localhost:5000/ingredient/addingredient",
+      addIngredient,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
     );
     return response.data;
   }
 );
 
 export const getAllIngredients = createAsyncThunk(
-  'inventory/allIngredients',
+  "inventory/allIngredients",
   async ({
     pageSize,
     pageNumber,
@@ -137,18 +149,28 @@ export const getAllIngredients = createAsyncThunk(
     pageNumber: number;
   }): Promise<paginatedData> => {
     const response = await axios.get(
-      `http://localhost:5000/ingredient/allingredient?pageSize=${pageSize}&pageNumber=${pageNumber}`
+      `http://localhost:5000/ingredient/allingredient?pageSize=${pageSize}&pageNumber=${pageNumber}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
     );
     return response.data;
   }
 );
 
 export const deleteIngredient = createAsyncThunk(
-  'inventory/deleteIngredient',
+  "inventory/deleteIngredient",
   async (id: string) => {
     const response = await axios.delete(
       `http://localhost:5000/ingredient/delete-ingredient`,
-      { data: { id } }
+      {
+        data: { id },
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
     );
     return id;
   }

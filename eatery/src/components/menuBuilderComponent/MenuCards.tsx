@@ -132,7 +132,7 @@ const Cards = (props: Props) => {
                         <Box height="auto">
                           <CustomCard
                             key={item._id}
-                            name={item.name}
+                            name={item.itemName}
                             size={item.size}
                             image={item.image}
                             onClick={() => handleOpenDrawer(item)} // Open the drawer on card click

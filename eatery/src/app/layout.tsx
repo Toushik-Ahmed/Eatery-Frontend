@@ -1,6 +1,6 @@
 "use client"; // Keep this since the layout relies on client-side features
 
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, isChakraTheme } from "@chakra-ui/react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import localFont from "next/font/local";
 import "./globals.css";

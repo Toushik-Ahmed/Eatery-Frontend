@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ingImage from './assets/ingredients.jpg';
+import { getToken } from '@/services/tokenServices';
 
 type Props = {};
 
@@ -33,6 +34,8 @@ const InventoryForm = (props: Props) => {
       capacity,
     };
     dispatch(postAddIngredient(addIngredientsForm));
+    const a = getToken();
+    console.log(a);
   };
   const addIngredientsData = useSelector(
     (state: RootState) => state.addIngredients

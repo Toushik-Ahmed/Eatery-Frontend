@@ -138,7 +138,7 @@ const OrderSummery = (props: Props) => {
       tableNo: table.orderDetails.tableNo,
       tableStatus: table.orderDetails.tableStatus,
       menuItems: listOfItems.orderedItems.map((item) => ({
-        itemName: item.name || "",
+        itemName: item.itemName || "",
         quantity: quantities[item.uniqueKey] || 1,
         selectedSize: selectedSizes[item.uniqueKey],
         unitPrice: unitPrice[item.uniqueKey],
@@ -210,7 +210,7 @@ const OrderSummery = (props: Props) => {
             <Flex>
               <Box>
                 <Text fontSize={"md"} fontWeight={"semibold"}>
-                  {item.name}
+                  {item.itemName}
                 </Text>
               </Box>
               <Spacer />

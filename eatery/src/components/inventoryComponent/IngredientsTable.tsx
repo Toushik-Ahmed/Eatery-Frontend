@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../shared/components/Pagination/pagination";
 import DropDown from "../customComponents/DropDown";
 import Tablecomponent from "../customComponents/Table";
-import { loggedInuser, LoggedInuser} from "@/services/apiservice";
+
 
 interface Props {}
 

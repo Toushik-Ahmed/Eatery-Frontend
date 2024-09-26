@@ -1,5 +1,5 @@
 "use client";
-import { LoggedInuser, loggedInuser, logIn } from "@/services/apiservice";
+import { logIn } from "@/services/apiservice";
 import { setToken } from "@/services/tokenServices";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -33,16 +33,6 @@ const LoginForm = ({}: Props) => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const router = useRouter();
-  const [loggedInUser, setLoggedInUser] = useState<LoggedInuser>();
-
-  useEffect(() => {
-    const loggedinUser = async () => {
-      const { user } = await loggedInuser();
-      setLoggedInUser(user);
-      console.log(user);
-    };
-    loggedinUser();
-  }, []);
 
   useEffect(() => {
     // This ensures that the component is fully hydrated before rendering
@@ -62,12 +52,22 @@ const LoginForm = ({}: Props) => {
         password,
       });
       setToken(response.token);
-      const x = loggedInuser();
-      console.log(x);
-      setLoginSuccess(true);
-      setTimeout(() => {
+      // router.push("/Inventory");
+      console.log(userType);
+
+      if (userType === "Admin") {
+        router.push("/dashboard");
+      }
+      if (userType === "POSManager") {
         router.push("/Inventory");
-      }, 2000);
+      }
+      if (userType === "MenuManager") {
+        router.push("/menubuilder");
+      }
+      if (userType === "InventoryManager") {
+        router.push("/Inventory");
+      }
+      setLoginSuccess(true);
     } catch (error) {
       console.error("Error logging in:", error);
       setError("Failed to log in. Please try again.");
