@@ -1,6 +1,6 @@
-'use client';
-import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { IoChevronDownCircleOutline } from 'react-icons/io5';
+"use client";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { IoChevronDownCircleOutline } from "react-icons/io5";
 
 type Props = {
   selectLabel: string;

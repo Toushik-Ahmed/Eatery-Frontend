@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { TableStatus } from "@/components/tableTryComponents/SideNavTry";
 export interface OrderDetails {
   _id?: string;
   tableNo?: number;
@@ -51,6 +52,13 @@ export const PlaceOrderSlice = createSlice({
     /* addPlaceOrderInfo: (state, action: PayloadAction<OrderDetails>) => {
       return { ...state, ...action.payload };
     }, */
+    tableStatus: (state, action: PayloadAction<TableStatus>) => {
+      state.orderDetails = {
+        ...state.orderDetails,
+        tableStatus: action.payload.tableStatus,
+        tableNo: action.payload.tableNumber,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -83,3 +91,4 @@ export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
 });
 
 export default PlaceOrderSlice.reducer;
+export const { tableStatus } = PlaceOrderSlice.actions;

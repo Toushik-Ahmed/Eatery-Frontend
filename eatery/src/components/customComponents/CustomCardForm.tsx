@@ -12,7 +12,7 @@ import {
   ButtonGroup,
   Image,
   Flex,
-  Spacer,
+  Spacer
 } from "@chakra-ui/react";
 
 type Props = {
