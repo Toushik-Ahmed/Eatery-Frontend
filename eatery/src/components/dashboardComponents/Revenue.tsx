@@ -61,7 +61,7 @@ const Revenue = () => {
   }, []);
 
   return (
-    <Card sx={{ maxWidth: 220, width: "100%" }}>
+    <Card sx={{ maxWidth: 220, width:" 100%" }}>
       <CardHeader title="Total Revenue (Today)" />
       <CardContent>
         {loading ? (
@@ -80,7 +80,7 @@ const Revenue = () => {
             component="div"
             sx={{ fontWeight: "bold" }}
           >
-            {order ? JSON.stringify(order) : "No data available"}
+            {order ? JSON.stringify(order) : "No data"}
           </Typography>
         )}
       </CardContent>

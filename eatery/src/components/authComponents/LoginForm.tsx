@@ -1,5 +1,5 @@
 "use client";
-import { logIn } from "@/services/apiservice";
+import { LoggedInuser, loggedInuser, logIn } from "@/services/apiservice";
 import { setToken } from "@/services/tokenServices";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -33,6 +33,16 @@ const LoginForm = ({}: Props) => {
   const [isHydrated, setIsHydrated] = useState(false);
 
   const router = useRouter();
+  const [loggedInUser, setLoggedInUser] = useState<LoggedInuser>();
+
+  useEffect(() => {
+    const loggedinUser = async () => {
+      const { user } = await loggedInuser();
+      setLoggedInUser(user);
+      console.log(user);
+    };
+    loggedinUser();
+  }, []);
 
   useEffect(() => {
     // This ensures that the component is fully hydrated before rendering
@@ -52,7 +62,8 @@ const LoginForm = ({}: Props) => {
         password,
       });
       setToken(response.token);
-      
+      const x = loggedInuser();
+      console.log(x);
       setLoginSuccess(true);
       setTimeout(() => {
         router.push("/Inventory");
@@ -83,7 +94,7 @@ const LoginForm = ({}: Props) => {
       px={{ base: 4, md: 8 }}
     >
       <Center>
-      <Box mt={{ base: 8, md: 10 }} mb={{ base: 8, md: 10 }}>
+        <Box mt={{ base: 8, md: 10 }} mb={{ base: 8, md: 10 }}>
           {/* Header Section */}
           <Box mb={{ base: 6, md: 8 }} textAlign="center">
             <Heading

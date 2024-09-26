@@ -42,9 +42,9 @@ export default function RootLayout({
       >
         <ReduxProvider>
           {/* Wrap the app with both ChakraProvider and Material UI's ThemeProvider */}
-          <ChakraProvider>
-            <ThemeProvider theme={muiTheme}>{children}</ThemeProvider>
-          </ChakraProvider>
+          <ThemeProvider theme={muiTheme}>
+            <ChakraProvider>{children}</ChakraProvider>
+          </ThemeProvider>
         </ReduxProvider>
       </body>
     </html>

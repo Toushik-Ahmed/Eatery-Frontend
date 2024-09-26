@@ -235,14 +235,16 @@ export default function PersistentDrawerLeft() {
           }}
         >
           <Order />
-          <Revenue />
           <BasicPie />
+          <Revenue />
+          
         </div>
 
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
+            marginTop:"10vh"
           }}
         >
           <BasicBarsOrder />

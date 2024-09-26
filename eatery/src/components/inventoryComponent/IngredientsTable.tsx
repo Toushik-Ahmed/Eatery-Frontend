@@ -1,40 +1,41 @@
-'use client';
+"use client";
 import {
   getAllIngredients,
   IngredientsTable,
-} from '@/redux/inventory/AddIngredientsSlice';
-import { AppDispatch, RootState } from '@/redux/store';
+} from "@/redux/inventory/AddIngredientsSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import {
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
-} from '@chakra-ui/react';
-import { parse } from 'date-fns';
-import { useEffect, useState } from 'react';
-import { IoIosSearch } from 'react-icons/io';
-import { useDispatch, useSelector } from 'react-redux';
-import Pagination from '../../shared/components/Pagination/pagination';
-import DropDown from '../customComponents/DropDown';
-import Tablecomponent from '../customComponents/Table';
+} from "@chakra-ui/react";
+import { parse } from "date-fns";
+import { useEffect, useState } from "react";
+import { IoIosSearch } from "react-icons/io";
+import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../shared/components/Pagination/pagination";
+import DropDown from "../customComponents/DropDown";
+import Tablecomponent from "../customComponents/Table";
+import { loggedInuser, LoggedInuser} from "@/services/apiservice";
 
 interface Props {}
 
 function IngredientsTablecomponent({}: Props) {
-  const filterITems = ['Date', 'Name'];
+  const filterITems = ["Date", "Name"];
   const th = [
-    'Name',
-    'UOM',
-    'capacity',
-    'Current-Stcok',
+    "Name",
+    "UOM",
+    "capacity",
+    "Current-Stcok",
 
-    'Order-Point',
-    'Prev-Stock',
-    'Expiary-Date',
-    'New-Stock',
-    'expiary-Date',
-    'Incoming-Stock',
-    'Delete',
+    "Order-Point",
+    "Prev-Stock",
+    "Expiary-Date",
+    "New-Stock",
+    "expiary-Date",
+    "Incoming-Stock",
+    "Delete",
   ];
 
   const dispatch = useDispatch<AppDispatch>();
@@ -59,26 +60,23 @@ function IngredientsTablecomponent({}: Props) {
     setTotalData(totalDataSelector || 0);
   }, [allIngredients, totalDataSelector]);
 
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
-  const [selectLabel, setSelectLabel] = useState('Sort-By');
-
-  
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [selectLabel, setSelectLabel] = useState("Sort-By");
 
   const handleFilter = (value: string) => {
-
     setSelectLabel(value);
     setFilter(value);
 
-    if (value === 'Name') {
+    if (value === "Name") {
       const sortedIngredients = [...ingredients].sort((a, b) =>
         a.ingredient > b.ingredient ? 1 : a.ingredient < b.ingredient ? -1 : 0
       );
       setIngredients(sortedIngredients);
-    } else if (value === 'Date') {
+    } else if (value === "Date") {
       const sortedIngredientsByDate = [...ingredients].sort((a, b) => {
-        const dateA = parse(a.incomingStock, 'dd-MM-yyyy', new Date());
-        const dateB = parse(b.incomingStock, 'dd-MM-yyyy', new Date());
+        const dateA = parse(a.incomingStock, "dd-MM-yyyy", new Date());
+        const dateB = parse(b.incomingStock, "dd-MM-yyyy", new Date());
 
         return dateA.getTime() - dateB.getTime();
       });
@@ -99,13 +97,13 @@ function IngredientsTablecomponent({}: Props) {
       <div className=" mb-10">
         <p className="font-bold text-3xl">Ingredient-Lists</p>
         <div className="flex justify-end gap-4 mr-10">
-          <InputGroup w={'10vw'} borderRadius="28px" boxShadow="md">
+          <InputGroup w={"10vw"} borderRadius="28px" boxShadow="md">
             <Input
               placeholder="Search items"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               borderRadius="full"
-              _placeholder={{ color: 'gray.400' }}
+              _placeholder={{ color: "gray.400" }}
             />
             <InputRightElement>
               <IconButton
@@ -115,7 +113,7 @@ function IngredientsTablecomponent({}: Props) {
                 bg="#f53e62"
                 color="white"
                 borderRadius="full"
-                _hover={{ bg: '#f53e62' }}
+                _hover={{ bg: "#f53e62" }}
                 onClick={handleSearch}
               />
             </InputRightElement>

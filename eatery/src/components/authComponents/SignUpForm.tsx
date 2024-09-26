@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { signUp } from "@/services/apiservice";
+import { loggedInuser, signUp } from "@/services/apiservice";
 import {
   Box,
   Button,
@@ -60,7 +60,7 @@ function SignUpForm({}: Props) {
       });
       setToken(accessTokenResponse.token);
       setSignupSuccess(true);
-
+    
       router.push("/login");
     } catch (error) {
       console.error("Error signing up:", error);
