@@ -1,12 +1,18 @@
 "use client";
-import PersistentDrawerLeft from "@/components/tableTryComponents/SideNavTry";
 import React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PersistentDrawerLeft from "@/components/tableTryComponents/SideNavTry";
 
-function Page() {
+const theme = createTheme();
+type Props = {};
+
+function Page({}: Props) {
   return (
-    <div>
-      <PersistentDrawerLeft />
-    </div>
+    <ThemeProvider theme={theme}>
+      <div>
+        <PersistentDrawerLeft />
+      </div>
+    </ThemeProvider>
   );
 }
 
