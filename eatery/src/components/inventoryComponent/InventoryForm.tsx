@@ -1,6 +1,6 @@
-'use client';
-import { postAddIngredient } from '@/redux/inventory/AddIngredientsSlice';
-import { AppDispatch, RootState } from '@/redux/store';
+"use client";
+import { postAddIngredient } from "@/redux/inventory/AddIngredientsSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import {
   Box,
   Button,
@@ -10,20 +10,23 @@ import {
   Image,
   Input,
   Select,
-} from '@chakra-ui/react';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+  useToast,
+} from "@chakra-ui/react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import ingImage from './assets/ingredients.jpg';
+import ingImage from "./assets/ingredients.jpg";
+import { getToken } from "@/services/tokenServices";
 
 type Props = {};
 
 const InventoryForm = (props: Props) => {
-  const [ingredient, setIngredient] = useState('');
-  const [unit, setUnit] = useState('');
+  const [ingredient, setIngredient] = useState("");
+  const [unit, setUnit] = useState("");
   const [poo, setPoo] = useState<number>(0);
   const [capacity, setCapacity] = useState<number>(0);
   const dispatch = useDispatch<AppDispatch>();
+  const toast = useToast();
 
   const handleSubmit = () => {
     const addIngredientsForm = {
@@ -33,18 +36,34 @@ const InventoryForm = (props: Props) => {
       capacity,
     };
     dispatch(postAddIngredient(addIngredientsForm));
+    const a = getToken();
+    console.log(a);
+    toast({
+      title: "Ingredient Added Successfully!.",
+
+      status: "success",
+      position: "top-right",
+      duration: 3000,
+      isClosable: true,
+      render: () => (
+        <Box color="white" p={3} bg="#f53e62">
+          <Box> Order placed successfully</Box>
+          Ingredient: {ingredient}
+        </Box>
+      ),
+    });
   };
   const addIngredientsData = useSelector(
     (state: RootState) => state.addIngredients
   );
- 
+
   const handleCancel = () => {
-    setIngredient('');
+    setIngredient("");
 
     setCapacity(0);
 
     setPoo(0);
-    setUnit('');
+    setUnit("");
   };
 
   return (
@@ -52,7 +71,7 @@ const InventoryForm = (props: Props) => {
       p={6}
       bg="#FFFFF0"
       borderRadius="lg"
-      width={'20vw'}
+      width={"20vw"}
       boxShadow="lg"
       h="100%"
     >
@@ -128,7 +147,7 @@ const InventoryForm = (props: Props) => {
           color="white"
           onClick={() => handleCancel()}
         >
-          Cancel
+          Clear All
         </Button>
         <Button colorScheme="pink" color="white" onClick={() => handleSubmit()}>
           Add Item

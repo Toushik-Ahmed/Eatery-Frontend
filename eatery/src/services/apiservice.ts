@@ -1,7 +1,8 @@
 import axios from "axios";
+import { getToken } from "./tokenServices";
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URI;
 
-type SignUpUser = {
+export type SignUpUser = {
   firstName: string;
   lastName: string;
   organizationName: string;
@@ -11,6 +12,18 @@ type SignUpUser = {
   password: string;
 };
 
+export interface LoggedInuser {
+  user: {
+    userId?: string;
+    firstName: string;
+    lastName: string;
+    organizationName: string;
+    userType: string;
+    email: string;
+    phone: string;
+  };
+}
+
 type LogInUser = {
   organizationName: string;
   userType: string;
@@ -18,9 +31,7 @@ type LogInUser = {
   password: string;
 };
 
-export const signUp = async (
-  data: SignUpUser
-): Promise<{ token: string }> => {
+export const signUp = async (data: SignUpUser): Promise<{ token: string }> => {
   try {
     const response = await axios.post(`http://localhost:5000/signup`, data);
     return response.data;
@@ -30,11 +41,26 @@ export const signUp = async (
   }
 };
 
-export const logIn = async (
-  data: LogInUser
-): Promise<{ token: string }> => {
+export const logIn = async (data: LogInUser): Promise<{ token: string }> => {
   try {
     const response = await axios.post(`http://localhost:5000/login`, data);
+
+    return response.data;
+  } catch (error) {
+    console.error("Error logging in:", error);
+    throw error;
+  }
+};
+
+//getLogedIn user data
+
+export const loggedInuser = async (): Promise<LoggedInuser> => {
+  try {
+    const response = await axios.get(`http://localhost:5000/user-data`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
 
     return response.data;
   } catch (error) {

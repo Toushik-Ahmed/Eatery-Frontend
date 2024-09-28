@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { TableStatus } from "@/components/tableTryComponents/SideNavTry";
+import { getToken } from "@/services/tokenServices";
 export interface OrderDetails {
   _id?: string;
   tableNo?: number;
@@ -35,8 +37,8 @@ interface PlaceOrderState {
 }
 const initialState: PlaceOrderState = {
   orderDetails: {
-    tableNo: 2,
-    tableStatus: "occupied",
+    tableNo: 0,
+    tableStatus: "",
     menuItems: [],
     preparationTime: 0,
     totalPrice: 0,
@@ -51,6 +53,13 @@ export const PlaceOrderSlice = createSlice({
     /* addPlaceOrderInfo: (state, action: PayloadAction<OrderDetails>) => {
       return { ...state, ...action.payload };
     }, */
+    tableStatus: (state, action: PayloadAction<TableStatus>) => {
+      state.orderDetails = {
+        ...state.orderDetails,
+        tableStatus: action.payload.tableStatus,
+        tableNo: action.payload.tableNumber,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -70,9 +79,17 @@ export const PlaceOrderSlice = createSlice({
 export const placeOrder = createAsyncThunk(
   "placeorder/placeOrder",
   async (orderDetails: OrderDetails) => {
-    const response = await axios.post("http://localhost:5000/pos/new", {
-      orderDetails,
-    });
+    const response = await axios.post(
+      "http://localhost:5000/pos/new",
+      {
+        orderDetails,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getToken()}`,
+        },
+      }
+    );
     return response.data;
   }
 );
@@ -83,3 +100,4 @@ export const getmenuItems = createAsyncThunk("menu/menuItems", async () => {
 });
 
 export default PlaceOrderSlice.reducer;
+export const { tableStatus } = PlaceOrderSlice.actions;

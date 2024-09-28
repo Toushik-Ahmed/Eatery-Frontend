@@ -24,12 +24,18 @@ import {
   MenuItem,
 } from "@/redux/Pos/MenuItemSlice";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { LoggedInuser, loggedInuser } from "@/services/apiservice";
 
 type Props = {};
 
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [meal, setMealTime] = useState<string>("All Items");
+  const [user, setUserInfo] = useState<LoggedInuser | undefined>();
+  const [label, setLabel] = useState("User Name");
+  const [userType, setUserType] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(getmenuItems());
@@ -38,6 +44,7 @@ const Cards = (props: Props) => {
 
   const list = useSelector((state: RootState) => state.allItem);
   const allItems = list.allItems;
+  console.log(allItems);
   const top = useSelector((state: RootState) => state.allItem);
   const topSelling = top.topSellingItems;
 
@@ -56,6 +63,7 @@ const Cards = (props: Props) => {
       );
       setAvailableItems(filteredItems);
     }
+
   }, [meal, allItems]);
   const handleSubmit = (item: MenuItem) => {
     const uniqueKey = uuidv4();
@@ -103,18 +111,40 @@ const Cards = (props: Props) => {
       const bestItem = topSellingArray
         .map((itemName) => {
           const matches = availableItems.filter(
-            (availableItem) => availableItem.name === itemName
+            (availableItem) => availableItem.itemName === itemName
           );
           return matches[0] || null;
         })
         .filter((item) => item !== null);
 
       const averageItem = availableItems.filter(
-        (availableItem) => !topSellingArray.includes(availableItem.name)
+        (availableItem) => !topSellingArray.includes(availableItem.itemName)
       );
       setNewItems([...bestItem, ...averageItem]);
+    } else {
+      setNewItems(availableItems);
     }
   }, [availableItems, topSelling]);
+
+  const handleHomePage = () => {
+    router.push("/dashboard");
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await loggedInuser();
+        setUserInfo(userData);
+        setLabel(userData.user.firstName);
+        setUserType(userData.user.userType);
+        console.log(userData.user);
+        console.log(userData.user.firstName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
@@ -122,9 +152,11 @@ const Cards = (props: Props) => {
         <Text fontSize={{ base: "xl", md: "xl" }} fontWeight={"bold"}>
           Order Management
         </Text>
-        <Button size={"sm"} gap={"2"}>
-          <ImHome color="#f53e62" /> Home
-        </Button>
+        {userType === "Admin" && (
+          <Button onClick={handleHomePage} size={"sm"} gap={"2"}>
+            <ImHome color="#f53e62" /> Home
+          </Button>
+        )}
       </Box>
       <Flex
         direction={{ base: "column", md: "row" }}
@@ -209,9 +241,9 @@ const Cards = (props: Props) => {
                         _hover={{ background: "#f53e62", textColor: "white" }}
                         borderBottomLeftRadius={"full"}
                         borderTopRightRadius={"full"}
-                        w={{ base: "6vw", md: "8vw" }}
+                        w={{ base: "6vw", md: "6vw" }}
                         onClick={() => setSelectedCategory(category)}
-                        fontSize={{ base: "md", md: "sm" }}
+                        fontSize={{ base: "md", md: "md" }}
                         fontWeight={"bold"}
                       >
                         {category}
@@ -255,12 +287,12 @@ const Cards = (props: Props) => {
                               flexShrink={0}
                               w={"fit-content"}
                               as={motion.div}
-                              whileHover={{ scale: 1.05 }}
+                              whileHover={{ scale: 1.03 }}
                               whileTap={{ scale: 0.9 }}
                             >
                               <CustomCard
                                 key={item.id}
-                                name={item.name}
+                                name={item.itemName}
                                 size={item.size}
                                 image={item.image}
                                 onClick={() => handleSubmit(item)}

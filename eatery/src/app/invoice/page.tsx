@@ -1,12 +1,10 @@
-import Invoice from '@/components/posComponent/Invoice'
-import React from 'react'
+import Invoice from "@/components/posComponent/Invoice";
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const page = (props: Props) => {
-  return (
-    <Invoice />
-  )
-}
+  return <Invoice />;
+};
 
-export default page
+export default page;
