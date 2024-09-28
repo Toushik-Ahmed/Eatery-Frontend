@@ -63,7 +63,7 @@ const Cards = (props: Props) => {
       );
       setAvailableItems(filteredItems);
     }
-    
+
   }, [meal, allItems]);
   const handleSubmit = (item: MenuItem) => {
     const uniqueKey = uuidv4();
@@ -241,9 +241,9 @@ const Cards = (props: Props) => {
                         _hover={{ background: "#f53e62", textColor: "white" }}
                         borderBottomLeftRadius={"full"}
                         borderTopRightRadius={"full"}
-                        w={{ base: "6vw", md: "8vw" }}
+                        w={{ base: "6vw", md: "6vw" }}
                         onClick={() => setSelectedCategory(category)}
-                        fontSize={{ base: "md", md: "sm" }}
+                        fontSize={{ base: "md", md: "md" }}
                         fontWeight={"bold"}
                       >
                         {category}
@@ -287,7 +287,7 @@ const Cards = (props: Props) => {
                               flexShrink={0}
                               w={"fit-content"}
                               as={motion.div}
-                              whileHover={{ scale: 1.05 }}
+                              whileHover={{ scale: 1.03 }}
                               whileTap={{ scale: 0.9 }}
                             >
                               <CustomCard
