@@ -14,6 +14,7 @@ import {
   Image,
   Select,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
@@ -27,13 +28,14 @@ import { select } from "framer-motion/client";
 
 const CreateMenuForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const [name, setName] = useState("");
+  const [itemName, setName] = useState("");
   const [category, setCategory] = useState("");
   const [mealTimes, setMealTimes] = useState([{ mealtime: "" }]);
   const [description, setDescription] = useState("");
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const toast = useToast();
 
   const [sizes, setSizes] = useState([
     {
@@ -51,7 +53,6 @@ const CreateMenuForm: React.FC = () => {
         const resultAction = await dispatch(uploadImage(imageFile));
         if (uploadImage.fulfilled.match(resultAction)) {
           const uploadedImageUrl = resultAction.payload as string;
-          alert("Image uploaded successfully!");
           return uploadedImageUrl;
         } else {
           throw new Error("Image upload failed");
@@ -81,7 +82,7 @@ const CreateMenuForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !category || !description || !imageUrl) {
+    if (!itemName || !category || !description || !imageUrl) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -97,7 +98,7 @@ const CreateMenuForm: React.FC = () => {
     const uploadedName = await handleImageUpload();
 
     const newMenuItem = {
-      name,
+      itemName,
       category,
       mealTime: mealTimeValues,
       description,
@@ -126,7 +127,21 @@ const CreateMenuForm: React.FC = () => {
       ]);
 
       dispatch(resetMenuItem());
-      alert("Form Submitted Successfully!");
+      toast({
+        title: "Ingredient Added Successfully!.",
+  
+        status: "success",
+        position: "top-right",
+        duration: 3000,
+        isClosable: true,
+        render: () => (
+          <Box color="white" p={3} bg="#f53e62">
+            <Box> Menu Created successfully</Box>
+            <Box>{itemName}</Box>
+          </Box>
+        ),
+      });
+      
     } catch (error) {
       alert("Failed to submit form. Please try again.");
       console.error(error);
@@ -177,7 +192,7 @@ const CreateMenuForm: React.FC = () => {
         <FormControl isRequired>
           <FormLabel fontWeight="bold">Name</FormLabel>
           <Input
-            value={name}
+            value={itemName}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter menu item name"
             focusBorderColor="teal.500"
@@ -198,7 +213,7 @@ const CreateMenuForm: React.FC = () => {
           </Select>
         </FormControl>
 
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel fontWeight="bold">Meal Times</FormLabel>
           {mealTimes.map((mealTime, index) => (
             <HStack key={index} spacing={4} my={4}>
@@ -231,7 +246,7 @@ const CreateMenuForm: React.FC = () => {
           </Button>
         </FormControl>
 
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel fontWeight="bold">Description</FormLabel>
           <Textarea
             value={description}
@@ -271,7 +286,7 @@ const CreateMenuForm: React.FC = () => {
           )}
         </FormControl>
 
-        <FormControl>
+        <FormControl isRequired>
           <FormLabel fontWeight="bold">Sizes</FormLabel>
           {sizes.map((size, index) => (
             <Box
@@ -322,7 +337,7 @@ const CreateMenuForm: React.FC = () => {
 
               <Divider my={4} />
 
-              <FormControl>
+              <FormControl isRequired>
                 <FormLabel>Ingredients</FormLabel>
                 {size.ingredients.map((ingredient, ingIndex) => (
                   <HStack key={ingIndex} spacing={4} my={4}>
@@ -405,6 +420,7 @@ const CreateMenuForm: React.FC = () => {
                 <FormLabel>Preparation Time (minutes)</FormLabel>
                 <Input
                   type="number"
+                  placeholder="Preparation Time"
                   value={size.preparationTime}
                   onChange={(e) => {
                     const updatedSizes = [...sizes];
@@ -433,7 +449,7 @@ const CreateMenuForm: React.FC = () => {
 
               <Divider my={4} />
 
-              <FormControl>
+              <FormControl isRequired>
                 <FormLabel>Add-Ons</FormLabel>
                 {size.addOns.map((addOn, addIndex) => (
                   <HStack key={addIndex} spacing={4} my={4}>
