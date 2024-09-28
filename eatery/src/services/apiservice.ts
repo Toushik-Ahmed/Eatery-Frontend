@@ -13,18 +13,15 @@ export type SignUpUser = {
 };
 
 export interface LoggedInuser {
- user:{
-
-  userId?: string;
-  firstName: string;
-  lastName: string;
-  organizationName: string;
-  userType: string;
-  email: string;
-  phone: string;
-
- }
- 
+  user: {
+    userId?: string;
+    firstName: string;
+    lastName: string;
+    organizationName: string;
+    userType: string;
+    email: string;
+    phone: string;
+  };
 }
 
 type LogInUser = {
