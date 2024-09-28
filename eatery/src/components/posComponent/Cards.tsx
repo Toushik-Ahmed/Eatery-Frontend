@@ -24,12 +24,18 @@ import {
   MenuItem,
 } from "@/redux/Pos/MenuItemSlice";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
+import { LoggedInuser, loggedInuser } from "@/services/apiservice";
 
 type Props = {};
 
 const Cards = (props: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [meal, setMealTime] = useState<string>("All Items");
+  const [user, setUserInfo] = useState<LoggedInuser | undefined>();
+  const [label, setLabel] = useState("User Name");
+  const [userType, setUserType] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     dispatch(getmenuItems());
@@ -114,8 +120,30 @@ const Cards = (props: Props) => {
         (availableItem) => !topSellingArray.includes(availableItem.itemName)
       );
       setNewItems([...bestItem, ...averageItem]);
+    } else {
+      setNewItems(availableItems);
     }
   }, [availableItems, topSelling]);
+
+  const handleHomePage = () => {
+    router.push("/dashboard");
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await loggedInuser();
+        setUserInfo(userData);
+        setLabel(userData.user.firstName);
+        setUserType(userData.user.userType);
+        console.log(userData.user);
+        console.log(userData.user.firstName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   return (
     <Box mx={{ base: "2", md: "6", lg: "10" }}>
@@ -123,9 +151,11 @@ const Cards = (props: Props) => {
         <Text fontSize={{ base: "xl", md: "xl" }} fontWeight={"bold"}>
           Order Management
         </Text>
-        <Button size={"sm"} gap={"2"}>
-          <ImHome color="#f53e62" /> Home
-        </Button>
+        {userType === "Admin" && (
+          <Button onClick={handleHomePage} size={"sm"} gap={"2"}>
+            <ImHome color="#f53e62" /> Home
+          </Button>
+        )}
       </Box>
       <Flex
         direction={{ base: "column", md: "row" }}

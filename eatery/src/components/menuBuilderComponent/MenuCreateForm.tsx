@@ -208,8 +208,8 @@ const CreateMenuForm: React.FC = () => {
             focusBorderColor="teal.500"
           >
             <option value="Fast Food">Fast Food</option>
-            <option value="Meal">Meal</option>
             <option value="Beverage">Beverage</option>
+            <option value="Dessert">Dessert</option>
           </Select>
         </FormControl>
 
