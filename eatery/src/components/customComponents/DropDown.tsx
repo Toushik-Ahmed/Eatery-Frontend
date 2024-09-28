@@ -1,6 +1,6 @@
-'use client';
-import { Button, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react';
-import { IoChevronDownCircleOutline } from 'react-icons/io5';
+"use client";
+import { Button, Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react";
+import { IoChevronDownCircleOutline } from "react-icons/io5";
 
 type Props = {
   selectLabel: string;
@@ -12,7 +12,14 @@ function DropDown({ items, selectLabel, onSelect }: Props) {
   return (
     <div className="w-fit">
       <Menu>
-        <MenuButton as={Button} rightIcon={<IoChevronDownCircleOutline />}>
+        <MenuButton
+          as={Button}
+          color="black"
+          _hover={{ bg: '#f53e62' }}
+          borderRadius="full"
+          boxShadow="md"
+          rightIcon={<IoChevronDownCircleOutline />}
+        >
           {selectLabel}
         </MenuButton>
         <MenuList
@@ -21,13 +28,15 @@ function DropDown({ items, selectLabel, onSelect }: Props) {
           minWidth={'140px'}
           maxWidth={'140px'}
           width={'140px'}
-          _hover={{ color: '#1D1842' }}>
+          _hover={{  bg: 'gray.200' }}
+        >
           {items?.map((item, idx) => (
             <MenuItem
               key={idx}
               w={'100%'}
-              _hover={{ color: '#1D1842' }}
-              onClick={() => onSelect && onSelect(item)}>
+              _hover={{ bg: 'gray.200 ', color: 'black' }}
+              onClick={() => onSelect && onSelect(item)}
+            >
               {item}
             </MenuItem>
           ))}

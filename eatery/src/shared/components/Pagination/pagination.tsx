@@ -26,7 +26,10 @@ function Pagination({
   pageSize,
 }: PaginationProps) {
   const totalPages = Math.ceil((totalData || 0) / (pageSize || 10)) - 1;
-  const [currentTotalPage, setCurrentTotalPage] = useState(totalPages);
+
+  const [currentTotalPage, setCurrentTotalPage] = useState(
+    totalPages >= 0 ? totalPages : 0
+  );
   const [currentPage, setCurrentPage] = useState(
     pageNumber || 0 > totalPages
       ? totalPages >= 0
@@ -48,9 +51,9 @@ function Pagination({
     if (onPageChange) {
       onPageChange({ pageNumber: currentPage, pageSize: currentPageSize });
     }
-    setCurrentTotalPage(
-      Math.ceil((totalData || 0) / (currentPageSize || 10)) - 1
-    );
+
+    const x = Math.ceil((totalData || 0) / (currentPageSize || 10)) - 1;
+    setCurrentTotalPage(x >= 0 ? x : 0);
   }, [currentPage, currentPageSize]);
 
   useEffect(() => {
@@ -58,6 +61,12 @@ function Pagination({
       setCurrentPage(currentTotalPage);
     }
   }, [currentTotalPage]);
+
+  useEffect(() => {
+    setCurrentTotalData(totalData || 0);
+    const x = Math.ceil((totalData || 0) / (currentPageSize || 10)) - 1;
+    setCurrentTotalPage(x >= 0 ? x : 0);
+  }, [totalData]);
 
   return (
     <div className="flex justify-end items-center gap-4">
@@ -68,7 +77,8 @@ function Pagination({
           value={currentPageSize}
           onChange={(ev) => {
             setCurrentPageSize(+ev.target.value);
-          }}>
+          }}
+        >
           <option value={10}>10</option>
           <option value={20}>20</option>
           <option value={50}>50</option>
@@ -89,7 +99,8 @@ function Pagination({
               isDisabled={currentPage === 0}
               onClick={() => {
                 updateCurrentPage(-currentTotalPage);
-              }}>
+              }}
+            >
               <FiChevronsLeft />
             </Button>
           </Tooltip>
@@ -99,7 +110,8 @@ function Pagination({
               isDisabled={currentPage === 0}
               onClick={() => {
                 updateCurrentPage(-1);
-              }}>
+              }}
+            >
               <FiChevronLeft />
             </Button>
           </Tooltip>
@@ -111,7 +123,8 @@ function Pagination({
               }
               onClick={() => {
                 updateCurrentPage(1);
-              }}>
+              }}
+            >
               <FiChevronRight />
             </Button>
           </Tooltip>
@@ -123,7 +136,8 @@ function Pagination({
               }
               onClick={() => {
                 updateCurrentPage(currentTotalPage);
-              }}>
+              }}
+            >
               <FiChevronsRight />
             </Button>
           </Tooltip>

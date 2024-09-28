@@ -151,7 +151,7 @@ const items = [
     ],
   },
   {
-    id: 1,
+    id: 3,
     name: "Classic Burger",
     category: "Fast Food",
     tastyTag: "Delicious",
@@ -226,7 +226,7 @@ const items = [
     ],
   },
   {
-    id: 2,
+    id: 4,
     name: "Pizza",
     category: "Fast Food",
     tastyTag: "Delicious",

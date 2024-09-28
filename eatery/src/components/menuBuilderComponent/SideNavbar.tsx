@@ -7,7 +7,7 @@ import DropDown from "../customComponents/DropDown";
 const SideNavbar = () => {
   const items = ["Logout"];
   return (
-    <nav className="bg-[#f5f2f1] min-h-screen max-h-full w-fit sticky top-0">
+    <nav className="bg-[#f53e62] min-h-screen max-h-full w-fit sticky top-0">
       <div className="p-2 flex gap-8">
         <div className="bg-[white] px-1 py-1 h-10 w-10 font-bold text-xl rounded-full flex items-center justify-center">
           A
@@ -23,13 +23,13 @@ const SideNavbar = () => {
         <hr />
         <ul className="flex flex-col gap-4 text-black mt-10 p-2 text-lg">
           <Link href="/menubuilder/menuCard">
-            <li className="flex items-center gap-1 p-2 rounded-lg hover:bg-[#1D1842]">
+            <li className="flex items-center gap-1 p-2 rounded-lg hover:bg-[#1D1842] text-[white]">
               <IoMdBook />
               Menus
             </li>
           </Link>
           <Link href="/menubuilder/menuForm">
-            <li className="flex items-center gap-1 p-2 rounded-lg hover:bg-[#1D1842]">
+            <li className="flex items-center gap-1 p-2 rounded-lg hover:bg-[#1D1842] text-[white]">
               <IoIosAddCircleOutline />
               Add Menu
             </li>

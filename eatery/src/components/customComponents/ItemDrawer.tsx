@@ -21,7 +21,11 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
+import { deleteMenuItem, getmenuItems } from "@/redux/MenuBuilder/MenuCardSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+
 
 interface Ingredient {
   name: string;
@@ -47,10 +51,11 @@ interface Size {
 }
 
 interface SelectedItem {
-  name: string;
+  _id: string;
+  itemName: string;
   image: string;
   description: string;
-  tastyTag: string;
+  tastyTag?: string;
   mealTime: string[];
   size: Size[];
 }
@@ -72,21 +77,41 @@ const ItemDrawer: React.FC<Props> = ({
   setSelectedSize,
   onDelete,
 }) => {
+  const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
+  useEffect(()=>{
+    dispatch(getmenuItems())
+  },[dispatch])
 
-  const handleDelete = () => {
-    
-    onDelete();
-    
-    toast({
-      title: "Item deleted.",
-      description: "The selected item has been deleted.",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    onClose();
+  
+  const handleDelete = async () => {
+    if (selectedItem) {
+      console.log("Attempting to delete item with ID:", selectedItem._id); 
+  
+      try {
+        await dispatch(deleteMenuItem(selectedItem._id.toString()) as any);
+        toast({
+          title: 'Item deleted.',
+          description: 'The selected item has been deleted.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        });
+        onDelete(); 
+      } catch (error) {
+        console.error("Error deleting item:", error); // Log the error
+        toast({
+          title: 'Deletion failed.',
+          description: 'There was an error deleting the item.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+    }
   };
+  
+  
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -101,28 +126,25 @@ const ItemDrawer: React.FC<Props> = ({
         <DrawerCloseButton />
         <DrawerHeader bg="#FF5841" color="white" borderBottomWidth="1px">
           <Text fontSize="2xl" fontWeight="bold">
-            {selectedItem?.name}
+            {selectedItem?.itemName}
           </Text>
         </DrawerHeader>
         <DrawerBody p={6}>
           {selectedItem ? (
             <VStack spacing={6} align="flex-start">
-
               {/* Image and Size Selector part */}
               <Grid templateColumns="1fr" gap={6}>
                 <GridItem>
                   <Image
                     src={selectedItem.image}
-                    alt={selectedItem.name}
+                    alt={selectedItem.itemName}
                     borderRadius="md"
                     boxShadow="md"
-                    width="100%" 
+                    width="100%"
                   />
                 </GridItem>
                 <GridItem>
-                  <Text fontWeight="bold">
-                    Size:
-                  </Text>
+                  <Text fontWeight="bold">Size:</Text>
                   <Select
                     value={selectedSize}
                     onChange={(e) => setSelectedSize(Number(e.target.value))}
@@ -139,26 +161,18 @@ const ItemDrawer: React.FC<Props> = ({
               </Grid>
               <Divider borderColor="black" borderWidth="2px" />
 
-              {/* Description and Details part*/}
+              {/* Description and Details part */}
               <VStack align="flex-start" spacing={3}>
                 <Text fontWeight="bold" fontSize="lg">
                   Description:
                 </Text>
                 <Text>{selectedItem.description}</Text>
-                <Text fontWeight="bold" fontSize="lg">
-                  Tasty Tag:
-                </Text>
-                <Tag colorScheme="teal">{selectedItem.tastyTag}</Tag>
-                <Text fontWeight="bold" fontSize="lg">
+
+                {/* <Text fontWeight="bold" fontSize="lg">
                   Available at:
-                </Text>
-                <HStack spacing={2}>
-                  {selectedItem.mealTime.map((time, idx) => (
-                    <Tag key={idx} colorScheme="blue">
-                      {time}
-                    </Tag>
-                  ))}
-                </HStack>
+                </Text> */}
+                
+
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
 
@@ -180,7 +194,7 @@ const ItemDrawer: React.FC<Props> = ({
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
 
-              {/* Add-ons part*/}
+              {/* Add-ons part */}
               {selectedItem.size[selectedSize].addOns.length > 0 && (
                 <VStack align="flex-start" spacing={3}>
                   <Text fontWeight="bold" fontSize="lg">
@@ -200,7 +214,7 @@ const ItemDrawer: React.FC<Props> = ({
               )}
               <Divider borderColor="black" borderWidth="2px" />
 
-              {/* Price and Preparation Time part*/}
+              {/* Price and Preparation Time part */}
               <Text fontWeight="bold">
                 Preparation Time:{" "}
                 {selectedItem.size[selectedSize].preparationTime} minutes
@@ -208,7 +222,6 @@ const ItemDrawer: React.FC<Props> = ({
               <Text fontWeight="bold" fontSize="xl">
                 Price: ${selectedItem.size[selectedSize].sellingPrice}
               </Text>
-              Delete Button
               <Box mt={6}>
                 <Button
                   colorScheme="red"

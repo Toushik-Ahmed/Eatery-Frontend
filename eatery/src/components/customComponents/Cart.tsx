@@ -1,4 +1,7 @@
+import { postOrder } from '@/redux/inventory/AddIngredientsSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 import {
+  Box,
   Button,
   Drawer,
   DrawerBody,
@@ -7,210 +10,313 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerOverlay,
+  Flex,
+  Grid,
+  IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Select,
+  Spacer,
+  Text,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import React, { useState } from 'react';
 import { FiShoppingCart } from 'react-icons/fi';
-import { Items } from '../inventoryComponent/VendorItems';
+import { IoIosSearch } from 'react-icons/io';
+import { MdDeleteForever } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
 
 type DrawerProps = {
-  selectedItems: Items[];
   removeItem: (index: number) => void;
-  setSelectedItems: React.Dispatch<React.SetStateAction<Items[]>>;
+  cartData: CartData[];
+  setCartData: React.Dispatch<React.SetStateAction<CartData[]>>;
+  handleSearch: () => void;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
 };
 
 export interface CartData {
-  Name: string;
-  Unit: string;
-  Quantity: number;
-  DeliveryDate: string;
+  ingredient: string;
+  unit: string;
+  quantity: number;
+  price: number;
+  deliveryDate: string;
+}
+export interface OrderHistory {
+  ingredients: CartData[];
+  cost: number;
 }
 
 export function DrawerExample({
-  selectedItems,
   removeItem,
-  setSelectedItems,
+  cartData,
+  setCartData,
+  handleSearch,
+  search,
+  setSearch,
 }: DrawerProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const btnRef = React.useRef<HTMLButtonElement>(null);
 
-  const [units, setUnits] = useState<string[]>(
-   [])
-  ;
-  const [deliveryDates, setDeliveryDates] = useState<string[]>(
-    []
+  const [orderHistory, setOrderHistory] = useState<OrderHistory | undefined>();
+  const dispatch = useDispatch<AppDispatch>();
+  const oderedData = useSelector(
+    (state: RootState) => state.addIngredients.ingredients
   );
-  const [quantities, setQuantities] = useState<number[]>(
-   []
-  );
-  const [checkoutData, setCheckoutData] = useState<CartData[]>([]);
 
   // Handle quantity change
   const handleQuantityChange = (index: number, value: number) => {
-    const newQuantities = [...quantities];
-    newQuantities[index] = value;
-    setQuantities(newQuantities);
+    setCartData((data) => {
+      return data.map((el, idx) =>
+        idx === index ? { ...el, quantity: value } : { ...el }
+      );
+    });
   };
 
   // Handle unit change
   const handleUnitChange = (index: number, value: string) => {
-    const newUnits = [...units];
-    newUnits[index] = value;
-    setUnits(newUnits);
+    setCartData((data) => {
+      return data.map((el, idx) =>
+        idx === index ? { ...el, unit: value } : { ...el }
+      );
+    });
   };
 
   // Handle delivery date change
   const handleDeliveryDateChange = (index: number, value: string) => {
-    const newDates = [...deliveryDates];
-    newDates[index] = value;
-    setDeliveryDates(newDates);
+    setCartData((data) => {
+      return data.map((el, idx) =>
+        idx === index ? { ...el, deliveryDate: value } : { ...el }
+      );
+    });
+  };
+
+  // Calculate total cost of all items
+  const calculateTotalCost = () => {
+    return cartData.reduce((acc, curr) => {
+      return acc + curr.quantity * curr.price;
+    }, 0);
   };
 
   // Checkout function
   const handleCheckout = () => {
-    const cartData = selectedItems.map((item, index) => ({
-      Name: item.Name,
-      Unit: units[index],
-      Quantity: quantities[index],
-      DeliveryDate: deliveryDates[index],
+    const checkOutData = cartData.map((item) => ({
+      ingredient: item.ingredient,
+      unit: item.unit,
+      quantity: item.quantity,
+      deliveryDate: item.deliveryDate,
+      price: item.price,
     }));
 
-    setCheckoutData(cartData);
-    console.log('Checkout data:', cartData);
+    const totalCost = calculateTotalCost();
 
-    // Display toast message
+    const newOrderHistory: OrderHistory = {
+      ingredients: checkOutData,
+      cost: totalCost,
+    };
+    setOrderHistory(newOrderHistory);
+    dispatch(postOrder(newOrderHistory));
+    setCartData(checkOutData);
+   
+
     toast({
       title: 'Order placed.',
+
       status: 'success',
       position: 'top-right',
-      duration: 3000, // 3 seconds
+      duration: 3000,
       isClosable: true,
+      render: () => (
+        <Box color="white" p={3} bg='#f53e62' >
+          <Box> Order placed successfully</Box>
+          Total cost: ${totalCost}
+        </Box>
+      ),
     });
-
-    // Clear the cart after checkout
-    setSelectedItems([]);
-
-    // Clear all input fields
-    setCheckoutData([]);
-    setUnits(Array(selectedItems.length).fill(''));
-    setQuantities(Array(selectedItems.length).fill(1));
-    setDeliveryDates(
-      Array(selectedItems.length).fill(format(new Date(), 'yyyy-MM-dd'))
-    );
+    setCartData([]);
   };
 
   // Clear cart on cancel
   const handleCancel = () => {
-    setSelectedItems([]);
+    setCartData([]);
     onClose();
   };
 
-  // Calculate total cost of all items
-  const totalCost = selectedItems.reduce(
-    (acc, item, index) => acc + item.Cost * (quantities[index] || 1),
-    0
-  );
+  // Handle remove item
+  const handleRemoveItem = (index: number) => {
+    removeItem(index);
+  };
 
   return (
     <>
-      <Button ref={btnRef} onClick={onOpen} _hover={{ bg: '#ff5841' }}>
-        <FiShoppingCart />
-      </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement="right"
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerCloseButton />
-          <DrawerHeader>Your Cart</DrawerHeader>
-
-          <DrawerBody>
-            {selectedItems.length === 0 ? (
-              <p>No items in the cart</p>
-            ) : (
-              selectedItems.map((item, index) => (
-                <div key={index} className="mb-4 border-b pb-2">
-                  <p>
-                    <strong>Name:</strong> {item.Name}
-                  </p>
-                  <p>
-                    <strong>Cost (p/u):</strong> {item.Cost} Taka
-                  </p>
-
-                  <div className="my-2">
-                    <label>Unit: </label>
-                    <Select
-                      placeholder="Select unit"
-                      size="sm"
-                      value={units[index] || ''}
-                      onChange={(e) => handleUnitChange(index, e.target.value)}
-                    >
-                      <option value="kg">K.G</option>
-                      <option value="liter">Liter</option>
-                    </Select>
-                  </div>
-
-                  <div className="my-2">
-                    <label>Quantity: </label>
-                    <Input
-                      type="number"
-                      size="sm"
-                      min={1}
-                      defaultValue={1}
-                      value={quantities[index]}
-                      onChange={(e) =>
-                        handleQuantityChange(index, parseInt(e.target.value))
-                      }
-                    />
-                  </div>
-
-                  <div className="my-2">
-                    <label>Delivery Date: </label>
-                    <Input
-                      type="date"
-                      size="sm"
-                      min={format(new Date(), 'yyyy-MM-dd')}
-                      value={deliveryDates[index]}
-                      onChange={(e) =>
-                        handleDeliveryDateChange(index, e.target.value)
-                      }
-                    />
-                  </div>
-                  <Button
-                    size="sm"
-                    colorScheme="red"
-                    onClick={() => removeItem(index)}
-                  >
-                    Remove
-                  </Button>
-                </div>
-              ))
-            )}
-            {selectedItems.length > 0 && (
-              <div className="mt-4 font-bold text-lg">
-                <p>Total Cost: {totalCost} Taka</p>
-              </div>
-            )}
-          </DrawerBody>
-
-          <DrawerFooter>
-            <Button variant="outline" mr={3} onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button colorScheme="blue" onClick={handleCheckout}>
-              Checkout
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+      <Box>
+        <Flex gap={4}>
+          <InputGroup w={'10vw'} borderRadius="28px" boxShadow="md">
+            <Input
+              placeholder="Search items"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              borderRadius="full"
+              _placeholder={{ color: 'gray.400' }}
+            />
+            <InputRightElement>
+              <IconButton
+                aria-label="Search database"
+                icon={<IoIosSearch />}
+                size="sm"
+                bg="#f53e62"
+                color="white"
+                borderRadius="full"
+                _hover={{ bg: '#f53e62' }}
+                onClick={handleSearch}
+              />
+            </InputRightElement>
+          </InputGroup>
+          <Spacer />
+          <Button
+            ref={btnRef}
+            onClick={onOpen}
+            bg="white"
+            color="black"
+            _hover={{ color: 'black', bg: '#f53e62' }}
+            borderRadius="full"
+            boxShadow="md"
+          >
+            <div className="mx-2">View Cart</div>
+            <FiShoppingCart />
+          </Button>
+        </Flex>
+        <Drawer
+          isOpen={isOpen}
+          placement="right"
+          onClose={onClose}
+          finalFocusRef={btnRef}
+          size={'xl'}
+        >
+          <DrawerOverlay />
+          <DrawerContent bg="gray.50">
+            <DrawerCloseButton />
+            <DrawerHeader>Your Cart</DrawerHeader>
+            <DrawerBody>
+              <Box>
+                {cartData.length === 0 ? (
+                  <Text fontSize="lg" color="gray.500">
+                    No items in the cart
+                  </Text>
+                ) : (
+                  <Grid templateColumns="repeat(4, 1fr)" gap={6}>
+                    {cartData.map((item, index) => (
+                      <Box
+                        key={index}
+                        p={4}
+                        borderWidth="1px"
+                        borderRadius="lg"
+                        bg="white"
+                        boxShadow="sm"
+                        transition="transform 0.2s"
+                        _hover={{ transform: 'scale(1.05)', boxShadow: 'lg' }}
+                      >
+                        <Text fontWeight="bold">{item.ingredient}</Text>
+                        <Text fontWeight='bold' color="gray.600">
+                          Cost (p/u): {item.price} $
+                        </Text>
+                        <Box mt={2}>
+                          <label className="font-bold">Unit: </label>
+                          <Select
+                            placeholder="Select unit"
+                            size="sm"
+                            value={item.unit || ''}
+                            onChange={(e) =>
+                              handleUnitChange(index, e.target.value)
+                            }
+                            bg="gray.100"
+                            _hover={{ bg: 'gray.200' }}
+                          >
+                            <option value="K.G">K.G</option>
+                            <option value="Liter">Liter</option>
+                            <option value="Gram">Gram</option>
+                            <option value="Piece">Pieces</option>
+                          </Select>
+                        </Box>
+                        <Box mt={2}>
+                          <label className="font-bold">Quantity: </label>
+                          <Input
+                            type="number"
+                            size="sm"
+                            value={item.quantity}
+                            onChange={(e) =>
+                              handleQuantityChange(
+                                index,
+                                parseInt(e.target.value)
+                              )
+                            }
+                            bg="gray.100"
+                            _hover={{ bg: 'gray.200' }}
+                          />
+                        </Box>
+                        <Box mt={2}>
+                          <label className="font-bold">Delivery Date: </label>
+                          <Input
+                            type="date"
+                            size="sm"
+                            min={format(new Date(), 'yyyy-MM-dd')}
+                            value={item.deliveryDate || ''}
+                            onChange={(e) =>
+                              handleDeliveryDateChange(index, e.target.value)
+                            }
+                            bg="gray.100"
+                            _hover={{ bg: 'gray.200' }}
+                          />
+                        </Box>
+                        <Button
+                          mt={4}
+                          w={'fit-content'}
+                          border="none"
+                          variant="solid"
+                          size="xs"
+                          colorScheme="red"
+                          onClick={() => handleRemoveItem(index)}
+                        >
+                          <MdDeleteForever />
+                        </Button>
+                      </Box>
+                    ))}
+                  </Grid>
+                )}
+              </Box>
+              {cartData.length > 0 && (
+                <Box mt={6} fontWeight="bold" fontSize="lg">
+                  <Text>Total Cost: {calculateTotalCost()} $</Text>
+                </Box>
+              )}
+            </DrawerBody>
+            <DrawerFooter justifyContent={'space-between'}>
+              <Button
+                variant="outline"
+                borderColor="red.500"
+                color="red.500"
+                mr={3}
+                _hover={{ bg: 'red.100' }}
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
+              <Button
+                bg="#f53e62"
+                color="white"
+                _hover={{ color: 'black' }}
+                onClick={handleCheckout}
+              >
+                Checkout
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      </Box>
     </>
   );
 }

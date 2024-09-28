@@ -1,111 +1,94 @@
-import { addPlaceOrderInfo } from "@/redux/Pos/PlaceOrderSlice";
+"use client";
+import { placeOrder } from "@/redux/Pos/PlaceOrderSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { MdOutlineAccessTime } from "react-icons/md";
-import { RiDeleteBin6Fill } from "react-icons/ri";
+import { RiDeleteBin2Fill } from "react-icons/ri";
+
 import {
   Button,
   Box,
   Flex,
   HStack,
   Spacer,
-  Select,
   Text,
   Center,
-  Checkbox,
-  VStack,
   Icon,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { removeItemFromOrder } from "@/redux/Pos/OrderSlice";
+import { removeItemFromOrder, resetOrderInfo } from "@/redux/Pos/OrderSlice";
+import { useRouter } from "next/navigation";
+import { OrderDetails } from "@/redux/Pos/PlaceOrderSlice";
+import Size from "./Size";
 
+import { FiMinus, FiPlus } from "react-icons/fi";
 type Props = {};
 
-interface OrderDetails {
-  table_no: number;
-  menu_items: {
-    itemName: string;
-    quantity: number;
-    selectedSize: string;
-    itemPrice: number;
-    ingredients: {
-      name: string;
-      properties: {
-        quantity: number;
-        unit: string;
-      };
-    }[];
-    addOns: {
-      name: string;
-      quantity: number;
-      unit: string;
-      addonPrice: number;
-    }[];
-  }[];
-  preparationTime: number;
-  totalPrice: number;
-}
-
 const OrderSummery = (props: Props) => {
+  const router = useRouter();
   const dispatch = useDispatch<AppDispatch>();
+  const selectedSizes = useSelector(
+    (state: RootState) => state.orderInfo.selectedSizes
+  );
+  const selectedAddons = useSelector(
+    (state: RootState) => state.orderInfo.selectedAddons
+  );
 
-  const [selectedSizes, setSelectedSizes] = useState<{
-    [key: string]: string;
-  }>({});
-  const [selectedAddons, setSelectedAddons] = useState<{
-    [key: string]: string[];
-  }>({});
-  const [quantities, setQuantities] = useState<{
-    [key: string]: number;
-  }>({});
-  const [totalPrices, setTotalPrices] = useState<{
-    [key: string]: number;
-  }>({});
-  const [preparationTime, setPreparationTime] = useState<{
-    [key: string]: number;
-  }>({});
-
+  const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
+  const [totalPrices, setTotalPrices] = useState<{ [key: string]: number }>({});
+  const [preparationTime, setPreparationTime] = useState<number>(0);
+  const [unitPrice, setUnitPrice] = useState<{ [key: string]: number }>({});
   const listOfItems = useSelector((state: RootState) => state.orderInfo);
-  const placeOrder = useSelector((state: RootState) => state.placeOrder);
-  console.log(placeOrder);
+
+  const table = useSelector((state: RootState) => state.placeOrder);
+
+  const calculateUnitPrice = () => {
+    const newUnitPrices: { [key: string]: number } = {};
+
+    listOfItems.orderedItems.forEach((item) => {
+      const itemId = item.uniqueKey;
+      const selectedSize = item.size.find(
+        (s) => s.sizeName === selectedSizes[itemId]
+      );
+      const sizePrice = selectedSize ? selectedSize.sellingPrice : 0;
+
+      newUnitPrices[itemId] = sizePrice;
+    });
+
+    setUnitPrice(newUnitPrices);
+  };
 
   const calculateTotalPrice = () => {
     const newTotalPrices: { [key: string]: number } = {};
 
-    listOfItems.orderedItems.forEach((item, index) => {
-      const uniqueKey = `${item.id}-${index}`;
-
+    listOfItems.orderedItems.forEach((item) => {
+      const itemId = item.uniqueKey;
       const selectedSize = item.size.find(
-        (s) => s.sizeName === selectedSizes[uniqueKey]
+        (s) => s.sizeName === selectedSizes[itemId]
       );
       const sizePrice = selectedSize ? selectedSize.sellingPrice : 0;
-
       const addonPrices =
-        selectedAddons[uniqueKey]?.reduce((acc, addonName) => {
+        selectedAddons[itemId]?.reduce((acc, addonName) => {
           const addonPrice =
             selectedSize?.addOns.find((addon) => addon.name === addonName)
               ?.addonPrice || 0;
           return acc + addonPrice;
         }, 0) || 0;
 
-      const quantity = quantities[uniqueKey] || 1;
+      const quantity = quantities[itemId] || 1;
+
       const totalPrice = (sizePrice + addonPrices) * quantity;
-
-      newTotalPrices[uniqueKey] = totalPrice;
+      newTotalPrices[itemId] = totalPrice;
     });
-
     setTotalPrices(newTotalPrices);
   };
-
   const calculatePreparationTime = () => {
     let maxPreparationTime = 0;
-
-    listOfItems.orderedItems.forEach((item, index) => {
-      const uniqueKey = `${item.id}-${index}`;
+    listOfItems.orderedItems.forEach((item) => {
+      const itemId = item.uniqueKey;
       const selectedSize = item.size.find(
-        (s) => s.sizeName === selectedSizes[uniqueKey]
+        (s) => s.sizeName === selectedSizes[itemId]
       );
-
       if (selectedSize) {
         maxPreparationTime = Math.max(
           maxPreparationTime,
@@ -113,87 +96,60 @@ const OrderSummery = (props: Props) => {
         );
       }
     });
-
-    setPreparationTime({ maxPreparationTime });
-  };
-
-  const handleSizeChange = (
-    itemId: number,
-    index: number,
-    sizeName: string
-  ) => {
-    const uniqueKey = `${itemId}-${index}`;
-    setSelectedSizes((prevSizes) => ({
-      ...prevSizes,
-      [uniqueKey]: sizeName,
-    }));
-  };
-
-  const handleAddonChange = (
-    itemId: number,
-    index: number,
-    addonName: string,
-    isChecked: boolean
-  ) => {
-    const uniqueKey = `${itemId}-${index}`;
-    setSelectedAddons((prevAddons) => {
-      const currentAddons = prevAddons[uniqueKey] || [];
-      let newAddons = isChecked
-        ? [...currentAddons, addonName]
-        : currentAddons.filter((addon) => addon !== addonName);
-
-      return {
-        ...prevAddons,
-        [uniqueKey]: newAddons,
-      };
-    });
+    setPreparationTime(maxPreparationTime);
   };
 
   const handleQuantityChange = (
-    itemId: number,
-    index: number,
+    uniqueKey: string,
     action: "increment" | "decrement"
   ) => {
-    const uniqueKey = `${itemId}-${index}`;
     setQuantities((prevQuantities) => {
       const currentQuantity = prevQuantities[uniqueKey] || 1;
       const newQuantity =
         action === "increment"
           ? currentQuantity + 1
           : Math.max(1, currentQuantity - 1);
-
       return {
         ...prevQuantities,
         [uniqueKey]: newQuantity,
       };
     });
   };
+  const handleDeleteItem = (uniqueKey: string) => {
+    dispatch(removeItemFromOrder({ uniqueKey }));
 
-  const handleDeleteItem = (itemId: number, index: number) => {
-    dispatch(removeItemFromOrder({ itemId, index }));
+    setQuantities((prev) => {
+      const { [uniqueKey]: _, ...rest } = prev;
+      return rest;
+    });
+    setTotalPrices((prev) => {
+      const { [uniqueKey]: _, ...rest } = prev;
+      return rest;
+    });
   };
-
   useEffect(() => {
+    calculateUnitPrice();
     calculateTotalPrice();
     calculatePreparationTime();
-  }, [selectedSizes, selectedAddons, quantities]);
+  }, [selectedSizes, selectedAddons, quantities, listOfItems.orderedItems]);
 
   const handleSendOrder = () => {
     const orderDetails: OrderDetails = {
-      table_no: 5,
-      menu_items: listOfItems.orderedItems.map((item, index) => ({
-        itemName: item.name,
-        quantity: quantities[`${item.id}-${index}`] || 1,
-        selectedSize: selectedSizes[`${item.id}-${index}`],
-        itemPrice: totalPrices[`${item.id}-${index}`] || 0,
+      tableNo: table.orderDetails.tableNo,
+      tableStatus: table.orderDetails.tableStatus,
+      menuItems: listOfItems.orderedItems.map((item) => ({
+        itemName: item.itemName || "",
+        quantity: quantities[item.uniqueKey] || 1,
+        selectedSize: selectedSizes[item.uniqueKey],
+        unitPrice: unitPrice[item.uniqueKey],
+        sellingPrice: totalPrices[item.uniqueKey] || 0,
         ingredients:
-          item.size.find(
-            (s) => s.sizeName === selectedSizes[`${item.id}-${index}`]
-          )?.ingredients || [],
+          item.size.find((s) => s.sizeName === selectedSizes[item.uniqueKey])
+            ?.ingredients || [],
         addOns:
-          selectedAddons[`${item.id}-${index}`]?.map((addonName) => {
+          selectedAddons[item.uniqueKey]?.map((addonName) => {
             const selectedSize = item.size.find(
-              (s) => s.sizeName === selectedSizes[`${item.id}-${index}`]
+              (s) => s.sizeName === selectedSizes[item.uniqueKey]
             );
             const addon = selectedSize?.addOns.find(
               (addon) => addon.name === addonName
@@ -206,112 +162,64 @@ const OrderSummery = (props: Props) => {
             };
           }) || [],
       })),
-      preparationTime: preparationTime.maxPreparationTime,
+      preparationTime,
       totalPrice: Object.values(totalPrices).reduce(
         (acc, curr) => acc + curr,
         0
       ),
     };
+    dispatch(placeOrder(orderDetails));
 
-    dispatch(addPlaceOrderInfo([orderDetails]));
+    router.push(`/invoice`);
+    dispatch(resetOrderInfo());
   };
-
   return (
     <Box
       borderWidth="1px"
       borderRadius="md"
-      bg={"#FFFFF6"}
-      w={["90vw", "70vw", "40vw", "20vw"]}
-      h={["70vh", "80vh", "85vh", "90vh"]}
+      bg={"#fffff6"}
+      w={["fit", "fit", "40vw", "20vw"]}
+      h={["fit", "fit", "fit", "fit"]}
     >
       <Box
-        h={["60vh", "70vh", "75vh", "80vh"]}
+        h={["60vh", "70vh", "70vh", "80vh"]}
         display={"flex"}
         flexDirection={"column"}
-        alignItems={"center"}
         overflowY={"auto"}
       >
-        <Text py={"4"} fontWeight={"bold"}>
-          Order Summary
-        </Text>
-        {listOfItems.orderedItems.map((item, index) => (
+        <Flex mx={"3"}>
+          <Text fontSize={"lg"} py={"4"} fontWeight={"semibold"}>
+            Current Order
+          </Text>
+          <Spacer />
+          <Text fontSize={"md"} py={"4"} fontWeight={"semibold"}>
+            Table {table.orderDetails.tableNo}
+          </Text>
+        </Flex>
+        {listOfItems.orderedItems.map((item) => (
           <Box
-            key={`${item.id}-${index}`}
-            w={["85vw", "65vw", "45vw", "19vw"]}
-            p={["2", "3", "4"]}
+            key={`${item.uniqueKey}`}
+            p={["2", "3", "2"]}
             borderWidth="1px"
             borderRadius="md"
             borderColor={"gray-200"}
             rounded={"md"}
+            mx={"2"}
+            mb={"1vh"}
           >
             <Flex>
               <Box>
-                <Text fontWeight={"bold"}>{item.name}</Text>
+                <Text fontSize={"md"} fontWeight={"semibold"}>
+                  {item.itemName}
+                </Text>
               </Box>
               <Spacer />
               <Text fontWeight={"bold"}>
-                ${totalPrices[`${item.id}-${index}`]?.toFixed(2) || "0.00"}
+                ${totalPrices[`${item.uniqueKey}`]?.toFixed(2) || "0.00"}
               </Text>
             </Flex>
-
             <Flex>
-              <Box>
-                <Select
-                  placeholder="Size"
-                  size={"sm"}
-                  mt={"2"}
-                  onChange={(e) =>
-                    handleSizeChange(item.id, index, e.target.value)
-                  }
-                  value={selectedSizes[`${item.id}-${index}`] || ""}
-                >
-                  {item.size.map((s) => (
-                    <option value={s.sizeName} key={s.sizeName}>
-                      {s.sizeName}
-                    </option>
-                  ))}
-                </Select>
-
-                {selectedSizes[`${item.id}-${index}`] && (
-                  <Box mt={"2"}>
-                    <Text fontSize="sm" color="gray.900">
-                      Size: {selectedSizes[`${item.id}-${index}`]}
-                    </Text>
-                  </Box>
-                )}
-
-                {selectedSizes[`${item.id}-${index}`] && (
-                  <VStack align={"start"} mt={"2"}>
-                    <Text fontSize="sm" color="gray.900">
-                      Add-ons:
-                    </Text>
-                    {item.size
-                      .find(
-                        (s) =>
-                          s.sizeName === selectedSizes[`${item.id}-${index}`]
-                      )
-                      ?.addOns.map((addon) => (
-                        <Checkbox
-                          key={addon.name}
-                          isChecked={selectedAddons[
-                            `${item.id}-${index}`
-                          ]?.includes(addon.name)}
-                          onChange={(e) =>
-                            handleAddonChange(
-                              item.id,
-                              index,
-                              addon.name,
-                              e.target.checked
-                            )
-                          }
-                        >
-                          {addon.name}
-                        </Checkbox>
-                      ))}
-                  </VStack>
-                )}
-              </Box>
-
+              <Size itemId={item.uniqueKey} sizes={item.size} />
               <Spacer />
               <Box mt={"2"}>
                 <Flex alignItems={"center"}>
@@ -319,57 +227,58 @@ const OrderSummery = (props: Props) => {
                     size={"sm"}
                     bg={"none"}
                     textColor={"#ff5841"}
-                    _hover={{ background: "red", textColor: "white" }}
+                    _hover={{ background: "red.500", textColor: "white" }}
                     borderWidth={"1px"}
                     borderRadius={"6px"}
                     borderColor={"#ff5841"}
                     onClick={() =>
-                      handleQuantityChange(item.id, index, "decrement")
+                      handleQuantityChange(item.uniqueKey, "decrement")
                     }
                   >
-                    -
+                    <FiMinus />
                   </Button>
-
                   <Center w={"8"}>
-                    <Text>{quantities[`${item.id}-${index}`] || 1}</Text>
+                    <Text>{quantities[`${item.uniqueKey}`] || 1}</Text>
                   </Center>
 
                   <Button
                     size={"sm"}
                     bg={"none"}
                     textColor={"#ff5841"}
-                    _hover={{ background: "green", textColor: "white" }}
+                    _hover={{ background: "green.500", textColor: "white" }}
                     borderWidth={"1px"}
                     borderRadius={"6px"}
                     borderColor={"#ff5841"}
                     onClick={() =>
-                      handleQuantityChange(item.id, index, "increment")
+                      handleQuantityChange(item.uniqueKey, "increment")
                     }
                   >
-                    +
+                    <FiPlus />
                   </Button>
                 </Flex>
               </Box>
             </Flex>
-            <Box
-              as="button"
-              borderRadius="md"
-              bg="white"
-              color="#ff5841"
-              mt={"2"}
-              onClick={() => handleDeleteItem(item.id, index)}
-            >
-              <Icon as={RiDeleteBin6Fill} />
-            </Box>
+            <Flex justifyContent={"flex-end"}>
+              <Box
+                as="button"
+                borderRadius="md"
+                bg="white"
+                color="#ff5841"
+                mt={"2"}
+                onClick={() => handleDeleteItem(item.uniqueKey)}
+                fontSize={"xl"}
+              >
+                <Icon as={RiDeleteBin2Fill} />
+              </Box>
+            </Flex>
           </Box>
         ))}
       </Box>
-      <Box p={"2"} borderTop={"1px"}>
+      <Box py={["2", "4", "4", "8"]} px={"4"} borderTop={"1px"}>
         <HStack spacing="1">
           <Box>
             <Box>
-              <Icon as={MdOutlineAccessTime} /> :{" "}
-              {preparationTime.maxPreparationTime || 0} mins
+              <Icon as={MdOutlineAccessTime} /> : {preparationTime || 0} mins
             </Box>
             <Box fontWeight={"bold"} w={"fit-content"}>
               Total: $
@@ -382,9 +291,9 @@ const OrderSummery = (props: Props) => {
           <Box
             as="button"
             borderRadius="md"
-            bg="#ff5841"
+            bg="#f53e62"
             color="white"
-            p={"2"}
+            p={["1", "1", "2"]}
             onClick={handleSendOrder}
           >
             Send Order
@@ -394,5 +303,4 @@ const OrderSummery = (props: Props) => {
     </Box>
   );
 };
-
 export default OrderSummery;
