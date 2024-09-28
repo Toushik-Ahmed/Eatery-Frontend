@@ -46,6 +46,12 @@ import { useEffect } from "react";
 import { placeOrder, tableStatus } from "@/redux/Pos/PlaceOrderSlice";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
+import { useRouter } from "next/navigation";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import { SelectChangeEvent } from "@mui/material/Select";
+import { loggedInuser, LoggedInuser } from "@/services/apiservice";
+import { removeToken } from "@/services/tokenServices";
 
 const drawerWidth = 240;
 
@@ -130,6 +136,32 @@ export default function PersistentDrawerLeft() {
   const [tables, setTables] = React.useState<TableData[]>([]);
   const [status, setStatus] = React.useState("");
   const dispatch = useDispatch<AppDispatch>();
+
+  //added
+
+  const router = useRouter();
+  const [label, setLabel] = React.useState("User Name");
+  const [user, setUserInfo] = React.useState<LoggedInuser>();
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await loggedInuser();
+        setUserInfo(userData);
+        setLabel(userData.user.firstName);
+        console.log(userData.user);
+        console.log(userData.user.firstName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleLogOut = () => {
+    removeToken();
+    router.push("/login");
+  };
 
   React.useEffect(() => {
     fetchTables();
@@ -299,30 +331,61 @@ export default function PersistentDrawerLeft() {
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                mr: 2,
-              },
-              open && { display: "none" },
-              { color: "white" },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ color: "white" }}
-          >
-            Table Management
-          </Typography>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={[
+                {
+                  mr: 2,
+                },
+                open && { display: "none" },
+                { color: "white" },
+              ]}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ color: "white" }}
+            >
+              Table Management
+            </Typography>
+          </Box>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth size="small">
+              <Select
+                labelId="user-menu-label"
+                id="user-menu"
+                value=""
+                onChange={(event) => {
+                  if (event.target.value === "logout") {
+                    handleLogOut();
+                  }
+                }}
+                displayEmpty
+                renderValue={() => label}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  color: "black",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "& .MuiSelect-select": {
+                    paddingLeft: 2,
+                    paddingY: 1,
+                  },
+                }}
+              >
+                <MenuItem value="logout">Log out</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
