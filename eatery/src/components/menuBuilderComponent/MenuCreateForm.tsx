@@ -28,7 +28,7 @@ import { select } from "framer-motion/client";
 const CreateMenuForm: React.FC = () => {
   // const dispatch = useDispatch();
   const dispatch = useDispatch<AppDispatch>();
-  const [name, setName] = useState("");
+  const [itemName, setName] = useState("");
   const [category, setCategory] = useState("");
   const [mealTimes, setMealTimes] = useState([{ mealtime: "" }]);
   const [description, setDescription] = useState("");
@@ -45,41 +45,6 @@ const CreateMenuForm: React.FC = () => {
       addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
     },
   ]);
-
-  // Cloudinary Configuration .............
-  // const uploadImageToCloudinary = async (imageFile: File) => {
-  //   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dglgia8j6/image/upload`;
-  //   const formData = new FormData();
-
-  //   // Add required Cloudinary fields...............
-  //   formData.append("file", imageFile);
-  //   formData.append("upload_preset", "Barshon");
-
-  //   // Upload image.....................
-  //   try {
-  //     const response = await axios.post(cloudinaryUrl, formData, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-  //     return response.data.secure_url;
-  //   } catch (error) {
-  //     console.error("Image upload error:", error);
-  //     throw new Error("Failed to upload image");
-  //   }
-  // };
-
-  // const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     setImageFile(file);
-  //     try {
-  //       const uploadedImageUrl = await uploadImageToCloudinary(file);
-  //       setImageUrl(uploadedImageUrl);
-  //       alert("Image uploaded successfully!");
-  //     } catch (error) {
-  //       alert("Image upload failed. Please try again.");
-  //     }
-  //   }
-  // };
   const handleImageUpload = async (): Promise<string> => {
     if (imageFile) {
       try {
@@ -113,61 +78,10 @@ const CreateMenuForm: React.FC = () => {
     setMealTimes(mealTimes.filter((_, i) => i !== index));
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!name || !category || !description || !imageUrl) {
-  //     alert("Please fill in all required fields.");
-  //     return;
-  //   }
-
-  //   const mealTimeValues = mealTimes
-  //     .map((mt) => ({ mealtime: mt.mealtime }))
-  //     .filter((mt) => mt.mealtime);
-  //   if (mealTimeValues.length === 0) {
-  //     alert("Please fill in all meal times.");
-  //     return;
-  //   }
-
-  //   const newMenuItem = {
-  //     name,
-  //     category,
-  //     mealTime: mealTimeValues,
-  //     description,
-  //     image: imageUrl,
-  //     size: sizes,
-  //   };
-
-  //   try {
-  //     await dispatch(createMenuItem(newMenuItem) as any);
-
-  //     setName("");
-  //     setCategory("");
-  //     setMealTimes([{ mealtime: "" }]);
-  //     setDescription("");
-  //     setImageUrl("");
-  //     setSizes([
-  //       {
-  //         sizeName: "",
-  //         ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
-  //         preparationTime: 0,
-  //         sellingPrice: 0,
-  //         addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
-  //       },
-  //     ]);
-
-  //     dispatch(resetMenuItem());
-
-  //     alert("Form Submitted Successfully!");
-  //   } catch (error) {
-  //     alert("Failed to submit form. Please try again.");
-  //     console.error(error);
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!name || !category || !description || !imageUrl) {
+    if (!itemName || !category || !description || !imageUrl) {
       alert("Please fill in all required fields.");
       return;
     }
@@ -183,7 +97,7 @@ const CreateMenuForm: React.FC = () => {
     const uploadedName = await handleImageUpload();
 
     const newMenuItem = {
-      name,
+      itemName,
       category,
       mealTime: mealTimeValues,
       description,
@@ -263,7 +177,7 @@ const CreateMenuForm: React.FC = () => {
         <FormControl isRequired>
           <FormLabel fontWeight="bold">Name</FormLabel>
           <Input
-            value={name}
+            value={itemName}
             onChange={(e) => setName(e.target.value)}
             placeholder="Enter menu item name"
             focusBorderColor="teal.500"
@@ -279,8 +193,8 @@ const CreateMenuForm: React.FC = () => {
             focusBorderColor="teal.500"
           >
             <option value="Fast Food">Fast Food</option>
-            <option value="Meal">Meal</option>
             <option value="Beverage">Beverage</option>
+            <option value="Dessert">Dessert</option>
           </Select>
         </FormControl>
 

@@ -128,7 +128,11 @@ export const deleteMenuItem = createAsyncThunk(
   "menu/deleteMenuItem",
   async (_id: string) => {
     console.log("Sending DELETE request for item ID:", _id); // Log the ID being sent
-    await axios.delete(`http://localhost:5000/menu/items/${_id}`);
+    await axios.delete(`http://localhost:5000/menu/items/${_id}`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
     return _id; // Return the deleted item I
   }
 );
