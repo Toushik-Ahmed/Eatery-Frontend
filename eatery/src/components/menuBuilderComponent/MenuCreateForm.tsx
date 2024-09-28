@@ -26,7 +26,6 @@ import { AppDispatch } from "../../redux/store";
 import { select } from "framer-motion/client";
 
 const CreateMenuForm: React.FC = () => {
-  // const dispatch = useDispatch();
   const dispatch = useDispatch<AppDispatch>();
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
@@ -46,46 +45,12 @@ const CreateMenuForm: React.FC = () => {
     },
   ]);
 
-  // Cloudinary Configuration .............
-  // const uploadImageToCloudinary = async (imageFile: File) => {
-  //   const cloudinaryUrl = `https://api.cloudinary.com/v1_1/dglgia8j6/image/upload`;
-  //   const formData = new FormData();
-
-  //   // Add required Cloudinary fields...............
-  //   formData.append("file", imageFile);
-  //   formData.append("upload_preset", "Barshon");
-
-  //   // Upload image.....................
-  //   try {
-  //     const response = await axios.post(cloudinaryUrl, formData, {
-  //       headers: { "Content-Type": "multipart/form-data" },
-  //     });
-  //     return response.data.secure_url;
-  //   } catch (error) {
-  //     console.error("Image upload error:", error);
-  //     throw new Error("Failed to upload image");
-  //   }
-  // };
-
-  // const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     setImageFile(file);
-  //     try {
-  //       const uploadedImageUrl = await uploadImageToCloudinary(file);
-  //       setImageUrl(uploadedImageUrl);
-  //       alert("Image uploaded successfully!");
-  //     } catch (error) {
-  //       alert("Image upload failed. Please try again.");
-  //     }
-  //   }
-  // };
   const handleImageUpload = async (): Promise<string> => {
     if (imageFile) {
       try {
         const resultAction = await dispatch(uploadImage(imageFile));
         if (uploadImage.fulfilled.match(resultAction)) {
-          const uploadedImageUrl = resultAction.payload as string; // Ensure payload is of type string
+          const uploadedImageUrl = resultAction.payload as string;
           alert("Image uploaded successfully!");
           return uploadedImageUrl;
         } else {
@@ -113,57 +78,6 @@ const CreateMenuForm: React.FC = () => {
     setMealTimes(mealTimes.filter((_, i) => i !== index));
   };
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!name || !category || !description || !imageUrl) {
-  //     alert("Please fill in all required fields.");
-  //     return;
-  //   }
-
-  //   const mealTimeValues = mealTimes
-  //     .map((mt) => ({ mealtime: mt.mealtime }))
-  //     .filter((mt) => mt.mealtime);
-  //   if (mealTimeValues.length === 0) {
-  //     alert("Please fill in all meal times.");
-  //     return;
-  //   }
-
-  //   const newMenuItem = {
-  //     name,
-  //     category,
-  //     mealTime: mealTimeValues,
-  //     description,
-  //     image: imageUrl,
-  //     size: sizes,
-  //   };
-
-  //   try {
-  //     await dispatch(createMenuItem(newMenuItem) as any);
-
-  //     setName("");
-  //     setCategory("");
-  //     setMealTimes([{ mealtime: "" }]);
-  //     setDescription("");
-  //     setImageUrl("");
-  //     setSizes([
-  //       {
-  //         sizeName: "",
-  //         ingredients: [{ name: "", properties: { quantity: 0, unit: "" } }],
-  //         preparationTime: 0,
-  //         sellingPrice: 0,
-  //         addOns: [{ name: "", quantity: 0, unit: "", addonPrice: 0 }],
-  //       },
-  //     ]);
-
-  //     dispatch(resetMenuItem());
-
-  //     alert("Form Submitted Successfully!");
-  //   } catch (error) {
-  //     alert("Failed to submit form. Please try again.");
-  //     console.error(error);
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -287,7 +201,7 @@ const CreateMenuForm: React.FC = () => {
         <FormControl>
           <FormLabel fontWeight="bold">Meal Times</FormLabel>
           {mealTimes.map((mealTime, index) => (
-            <HStack key={index} spacing={4}>
+            <HStack key={index} spacing={4} my={4}>
               <Select
                 value={mealTime.mealtime}
                 onChange={(e) => handleMealTimeChange(index, e.target.value)}
@@ -370,9 +284,9 @@ const CreateMenuForm: React.FC = () => {
               boxShadow="sm"
               mt={2}
             >
-              <HStack justify="space-between">
-                <FormControl isRequired>
-                  <FormLabel>Size Name</FormLabel>
+              <FormControl isRequired>
+                <FormLabel>Size Name</FormLabel>
+                <HStack justify="space-between" alignItems="center">
                   <Select
                     value={size.sizeName}
                     onChange={(e) => {
@@ -382,38 +296,36 @@ const CreateMenuForm: React.FC = () => {
                     }}
                     placeholder="Select size"
                     focusBorderColor="teal.500"
+                    flex="1" // This ensures the Select takes most of the space
                   >
                     <option value="Small">Small</option>
                     <option value="Medium">Medium</option>
                     <option value="Large">Large</option>
-
                     <option value="Regular">Regular</option>
                     <option value="Premium">Premium</option>
-
                     <option value='6"'>6"</option>
                     <option value='8"'>8"</option>
                     <option value='12"'>12"</option>
-
                     <option value="2 PCs">2 PCs</option>
                     <option value="4 PCs">4 PCs</option>
                     <option value="8 PCs">8 PCs</option>
                   </Select>
-                </FormControl>
 
-                <IconButton
-                  icon={<MinusIcon />}
-                  aria-label="Remove size"
-                  colorScheme="red"
-                  onClick={() => removeSize(index)}
-                />
-              </HStack>
+                  <IconButton
+                    icon={<MinusIcon />}
+                    aria-label="Remove size"
+                    colorScheme="red"
+                    onClick={() => removeSize(index)}
+                  />
+                </HStack>
+              </FormControl>
 
               <Divider my={4} />
 
               <FormControl>
                 <FormLabel>Ingredients</FormLabel>
                 {size.ingredients.map((ingredient, ingIndex) => (
-                  <HStack key={ingIndex} spacing={4}>
+                  <HStack key={ingIndex} spacing={4} my={4}>
                     <Input
                       placeholder="Ingredient Name"
                       value={ingredient.name}
@@ -456,6 +368,17 @@ const CreateMenuForm: React.FC = () => {
                       <option value="K.G">K.G</option>
                       <option value="PCS">PCS</option>
                     </Select>
+
+                    <IconButton
+                      icon={<MinusIcon />}
+                      aria-label="Remove ingredient"
+                      colorScheme="red"
+                      onClick={() => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].ingredients.splice(ingIndex, 1); // Remove the ingredient at the specified index
+                        setSizes(updatedSizes);
+                      }}
+                    />
                   </HStack>
                 ))}
               </FormControl>
@@ -513,7 +436,7 @@ const CreateMenuForm: React.FC = () => {
               <FormControl>
                 <FormLabel>Add-Ons</FormLabel>
                 {size.addOns.map((addOn, addIndex) => (
-                  <HStack key={addIndex} spacing={4}>
+                  <HStack key={addIndex} spacing={4} my={4}>
                     <Input
                       placeholder="Add-On Name"
                       value={addOn.name}
@@ -567,6 +490,17 @@ const CreateMenuForm: React.FC = () => {
                       }}
                       focusBorderColor="teal.500"
                     />
+
+                    <IconButton
+                      icon={<MinusIcon />}
+                      aria-label="Remove add-on"
+                      colorScheme="red"
+                      onClick={() => {
+                        const updatedSizes = [...sizes];
+                        updatedSizes[index].addOns.splice(addIndex, 1); // Remove add-on at the specific index
+                        setSizes(updatedSizes);
+                      }}
+                    />
                   </HStack>
                 ))}
               </FormControl>
@@ -602,7 +536,7 @@ const CreateMenuForm: React.FC = () => {
 
         <Button
           type="submit"
-          colorScheme="teal"
+          bg="teal.500"
           size="lg"
           w="full"
           onClick={() => {

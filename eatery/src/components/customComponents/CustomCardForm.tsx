@@ -56,13 +56,8 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
           borderRadius="lg"
           objectFit={"cover"}
         />
-<<<<<<< HEAD:eatery/src/components/customComponents/CustomCard.tsx
-        <Stack mt="2" spacing="1">
-          <Heading size="md" fontWeight={"semibold"}>
-=======
         <Stack mt="1" spacing="1">
           <Text fontSize="lg" fontWeight={"bold"} objectFit={"cover"}>
->>>>>>> e9a532f5bee45fa61664430c3bad1e45032657aa:eatery/src/components/customComponents/CustomCardForm.tsx
             {name}
           </Text>
           {size.map((s) => (
