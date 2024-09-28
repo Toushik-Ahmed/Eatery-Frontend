@@ -129,7 +129,7 @@ const CreateMenuForm: React.FC = () => {
       dispatch(resetMenuItem());
       toast({
         title: "Ingredient Added Successfully!.",
-  
+
         status: "success",
         position: "top-right",
         duration: 3000,
@@ -141,7 +141,6 @@ const CreateMenuForm: React.FC = () => {
           </Box>
         ),
       });
-      
     } catch (error) {
       alert("Failed to submit form. Please try again.");
       console.error(error);
@@ -208,8 +207,9 @@ const CreateMenuForm: React.FC = () => {
             focusBorderColor="teal.500"
           >
             <option value="Fast Food">Fast Food</option>
-            <option value="Beverage">Beverage</option>
-            <option value="Dessert">Dessert</option>
+            <option value="Dessert">Desert</option>
+            <option value="Beverage">Drinks</option>
+            
           </Select>
         </FormControl>
 
@@ -360,7 +360,7 @@ const CreateMenuForm: React.FC = () => {
                         const updatedSizes = [...sizes];
                         updatedSizes[index].ingredients[
                           ingIndex
-                        ].properties.quantity = Number(e.target.value);
+                        ].properties.quantity = parseFloat(e.target.value);
                         setSizes(updatedSizes);
                       }}
                       focusBorderColor="teal.500"
@@ -424,7 +424,7 @@ const CreateMenuForm: React.FC = () => {
                   value={size.preparationTime}
                   onChange={(e) => {
                     const updatedSizes = [...sizes];
-                    updatedSizes[index].preparationTime = Number(
+                    updatedSizes[index].preparationTime = parseFloat(
                       e.target.value
                     );
                     setSizes(updatedSizes);
@@ -440,7 +440,7 @@ const CreateMenuForm: React.FC = () => {
                   value={size.sellingPrice}
                   onChange={(e) => {
                     const updatedSizes = [...sizes];
-                    updatedSizes[index].sellingPrice = Number(e.target.value);
+                    updatedSizes[index].sellingPrice = parseFloat(e.target.value);
                     setSizes(updatedSizes);
                   }}
                   focusBorderColor="teal.500"
@@ -470,9 +470,8 @@ const CreateMenuForm: React.FC = () => {
                       value={addOn.quantity}
                       onChange={(e) => {
                         const updatedSizes = [...sizes];
-                        updatedSizes[index].addOns[addIndex].quantity = Number(
-                          e.target.value
-                        );
+                        updatedSizes[index].addOns[addIndex].quantity =
+                          parseFloat(e.target.value);
                         setSizes(updatedSizes);
                       }}
                       focusBorderColor="teal.500"
@@ -501,7 +500,7 @@ const CreateMenuForm: React.FC = () => {
                       onChange={(e) => {
                         const updatedSizes = [...sizes];
                         updatedSizes[index].addOns[addIndex].addonPrice =
-                          Number(e.target.value);
+                          parseFloat(e.target.value);
                         setSizes(updatedSizes);
                       }}
                       focusBorderColor="teal.500"

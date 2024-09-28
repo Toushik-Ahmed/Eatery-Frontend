@@ -45,7 +45,7 @@ const CustomCard = ({ name, size, image, onClick }: Props) => {
       bg="white"
       borderRadius="lg"
       onClick={onClick}
-      h={"fit"}
+      h={{ base: "36vh", md: "36vh", xl: "26vh" }}
     >
       <CardBody p={"2"}>
         <Image
