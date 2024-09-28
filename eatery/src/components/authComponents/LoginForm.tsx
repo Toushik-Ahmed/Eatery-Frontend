@@ -70,7 +70,7 @@ const LoginForm = ({}: Props) => {
         router.push("/dashboard");
       }
       if (userType === "POSManager") {
-        router.push("/Inventory");
+        router.push("/tableTry");
       }
       if (userType === "MenuManager") {
         router.push("/menubuilder");
