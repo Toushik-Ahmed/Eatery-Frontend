@@ -30,6 +30,12 @@ import Order from "@/components/dashboardComponents/Order";
 import Revenue from "@/components/dashboardComponents/Revenue";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { loggedInuser, LoggedInuser } from "@/services/apiservice";
+import { removeToken } from "@/services/tokenServices";
 
 const drawerWidth = 240;
 
@@ -69,6 +75,7 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   // backgroundColor: "#e91e63",
+
   color: "black",
   variants: [
     {
@@ -98,6 +105,24 @@ export default function PersistentDrawerLeft() {
   const [open, setOpen] = React.useState(true);
   const [rightDrawerOpen, setRightDrawerOpen] = React.useState(false);
   const router = useRouter();
+  //added
+  const [label, setLabel] = React.useState("User Name");
+  const [user, setUserInfo] = React.useState<LoggedInuser>();
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await loggedInuser();
+        setUserInfo(userData);
+        setLabel(userData.user.firstName);
+        console.log(userData.user);
+        console.log(userData.user.firstName);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -113,6 +138,11 @@ export default function PersistentDrawerLeft() {
 
   const handleRightDrawerClose = () => {
     setRightDrawerOpen(false);
+  };
+  //added
+  const handleLogOut = () => {
+    removeToken();
+    router.push("/login");
   };
 
   const menuItems = [
@@ -147,30 +177,66 @@ export default function PersistentDrawerLeft() {
     <Box sx={{ display: "flex", minHeight: "100vh" }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={[
-              {
-                mr: 2,
-              },
-              open && { display: "none" },
-              { color: "white" },
-            ]}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ color: "white" }}
-          >
-            Admin Dashboard
-          </Typography>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={[{ mr: 2 }, open && { display: "none" }, { color: "white" }]}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="h6"
+              noWrap
+              component="div"
+              sx={{ color: "white" }}
+            >
+              Admin Dashboard
+            </Typography>
+          </Box>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="user-menu-label" sx={{ color: "white" }}>
+                {label}
+              </InputLabel>
+              <Select
+                labelId="user-menu-label"
+                id="user-menu"
+                value=""
+                label={label}
+                onChange={(event) => {
+                  if (event.target.value === "logout") {
+                    handleLogOut();
+                  }
+                }}
+                displayEmpty
+                renderValue={() => label}
+                // sx={{
+                //   color: "white",
+                //   ".MuiOutlinedInput-notchedOutline": {
+                //     borderColor: "white",
+                //     borderWidth: "1px",
+                //   },
+                //   "&:hover .MuiOutlinedInput-notchedOutline": {
+                //     borderColor: "white",
+                //     borderWidth: "2px",
+                //   },
+                //   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                //     borderColor: "white",
+                //     borderWidth: "2px",
+                //   },
+                // }}
+              >
+                <MenuItem disabled value="">
+                  <em>{label}</em>
+                </MenuItem>
+                <MenuItem value="logout">Log out</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -237,14 +303,13 @@ export default function PersistentDrawerLeft() {
           <Order />
           <BasicPie />
           <Revenue />
-          
         </div>
 
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            marginTop:"10vh"
+            marginTop: "10vh",
           }}
         >
           <BasicBarsOrder />
