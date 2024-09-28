@@ -16,7 +16,7 @@ const SideNavbar = () => {
   const [label, setLabel] = useState("User Name");
   const [userType, setUserType] = useState("");
   const router = useRouter();
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -35,19 +35,19 @@ const SideNavbar = () => {
 
   const handleLogOut = () => {
     removeToken();
-    router.push("/login");
+    router.push("/");
   };
 
   return (
-    <nav className="bg-[#f53e62] min-h-screen max-h-full w-[15vw] sticky top-0">
-    <div className="p-2 flex gap-8">
-      <div className="flex gap-4 items-center">
+    <nav className="bg-[#f53e62] min-h-screen max-h-full w-[12vw] sticky top-0">
+    <div className="p-2 flex gap-8 justify-center">
+      <div className="flex gap-4 items-center ">
         <DropDown selectLabel={label} items={items} onSelect={handleLogOut} />
       </div>
     </div>
 
     <div>
-      <div className="font-bold text-xl mt-4 p-2 flex justify-between">
+      <div className="font-bold text-xl mt-8 p-2 flex justify-between">
         Food Menu
         <div>
           <BackToAdmin />

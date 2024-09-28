@@ -98,10 +98,11 @@ export function DrawerExample({
   // Calculate total cost of all items
   const calculateTotalCost = () => {
     return cartData.reduce((acc, curr) => {
-      return acc + curr.quantity * curr.price;
+      const validQuantity = curr.quantity || 0;
+      const validPrice = curr.price || 0;
+      return acc + validQuantity * validPrice;
     }, 0);
   };
-
   // Checkout function
   const handleCheckout = () => {
     const checkOutData = cartData.map((item) => ({
@@ -121,7 +122,6 @@ export function DrawerExample({
     setOrderHistory(newOrderHistory);
     dispatch(postOrder(newOrderHistory));
     setCartData(checkOutData);
-   
 
     toast({
       title: 'Order placed.',
@@ -131,7 +131,7 @@ export function DrawerExample({
       duration: 3000,
       isClosable: true,
       render: () => (
-        <Box color="white" p={3} bg='#f53e62' >
+        <Box color="white" p={3} bg="#f53e62">
           <Box> Order placed successfully</Box>
           Total cost: ${totalCost}
         </Box>
@@ -221,7 +221,7 @@ export function DrawerExample({
                         _hover={{ transform: 'scale(1.05)', boxShadow: 'lg' }}
                       >
                         <Text fontWeight="bold">{item.ingredient}</Text>
-                        <Text fontWeight='bold' color="gray.600">
+                        <Text fontWeight="bold" color="gray.600">
                           Cost (p/u): {item.price} $
                         </Text>
                         <Box mt={2}>
