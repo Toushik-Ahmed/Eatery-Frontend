@@ -1,35 +1,42 @@
-import * as React from "react";
-import Link from "next/link";
-import { styled, useTheme, Theme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
-import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
-import FolderSharedIcon from "@mui/icons-material/FolderShared";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
-import WidgetsIcon from "@mui/icons-material/Widgets";
-import { Select, MenuItem } from "@mui/material";
-import postTable from "@/services/tableServices/postTable";
-import updateTable from "@/services/tableServices/updateTable";
-import getTable from "@/services/tableServices/getTable";
-import deleteTable from "@/services/tableServices/deleteTable";
+import { tableStatus } from '@/redux/Pos/PlaceOrderSlice';
+import { AppDispatch, RootState } from '@/redux/store';
+import { loggedInuser, LoggedInuser } from '@/services/apiservice';
+import deleteTable from '@/services/tableServices/deleteTable';
+import getTable from '@/services/tableServices/getTable';
+import postTable from '@/services/tableServices/postTable';
+import updateTable from '@/services/tableServices/updateTable';
+import { removeToken } from '@/services/tokenServices';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import MenuIcon from '@mui/icons-material/Menu';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import WidgetsIcon from '@mui/icons-material/Widgets';
+import { MenuItem, Select } from '@mui/material';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import { styled, useTheme } from '@mui/material/styles';
+import TextField from '@mui/material/TextField';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Table1,
   Table2,
@@ -39,34 +46,22 @@ import {
   Table6,
   Table7,
   Table8,
-} from "./tableTry";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/redux/store";
-import { useEffect } from "react";
-import { placeOrder, tableStatus } from "@/redux/Pos/PlaceOrderSlice";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
-import InputLabel from "@mui/material/InputLabel";
-import FormControl from "@mui/material/FormControl";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { loggedInuser, LoggedInuser } from "@/services/apiservice";
-import { removeToken } from "@/services/tokenServices";
+} from './tableTry';
 
 const drawerWidth = 240;
 
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
 }>(({ theme, open }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
-  transition: theme.transitions.create("margin", {
+  transition: theme.transitions.create('margin', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   marginLeft: `-${drawerWidth}px`,
   ...(open && {
-    transition: theme.transitions.create("margin", {
+    transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -88,21 +83,21 @@ interface AppBarProps extends MuiAppBarProps {
 }
 
 const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== "open",
+  shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(["margin", "width"], {
+  transition: theme.transitions.create(['margin', 'width'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   // backgroundColor: "#e91e63",
-  color: "black",
+  color: 'black',
   variants: [
     {
       props: ({ open }) => open,
       style: {
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(["margin", "width"], {
+        transition: theme.transitions.create(['margin', 'width'], {
           easing: theme.transitions.easing.easeOut,
           duration: theme.transitions.duration.enteringScreen,
         }),
@@ -111,12 +106,12 @@ const AppBar = styled(MuiAppBar, {
   ],
 }));
 
-const DrawerHeader = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
-  justifyContent: "flex-end",
+  justifyContent: 'flex-end',
 }));
 
 interface TableData {
@@ -132,15 +127,15 @@ export default function PersistentDrawerLeft() {
   const [tableStatusOpen, setTableStatusOpen] = React.useState(false);
   const [tableNumber, setTableNumber] = React.useState(0);
   const [tableNo, setTableNo] = React.useState(0);
-  const [seatingCapacity, setSeatingCapacity] = React.useState("");
+  const [seatingCapacity, setSeatingCapacity] = React.useState('');
   const [tables, setTables] = React.useState<TableData[]>([]);
-  const [status, setStatus] = React.useState("");
+  const [status, setStatus] = React.useState('');
   const dispatch = useDispatch<AppDispatch>();
 
   //added
 
   const router = useRouter();
-  const [label, setLabel] = React.useState("User Name");
+  const [label, setLabel] = React.useState('User Name');
   const [user, setUserInfo] = React.useState<LoggedInuser>();
 
   React.useEffect(() => {
@@ -152,7 +147,7 @@ export default function PersistentDrawerLeft() {
         console.log(userData.user);
         console.log(userData.user.firstName);
       } catch (error) {
-        console.error("Error fetching user data:", error);
+        console.error('Error fetching user data:', error);
       }
     };
     fetchUser();
@@ -160,7 +155,7 @@ export default function PersistentDrawerLeft() {
 
   const handleLogOut = () => {
     removeToken();
-    router.push("/login");
+    router.push('/login');
   };
 
   React.useEffect(() => {
@@ -170,10 +165,10 @@ export default function PersistentDrawerLeft() {
   const fetchTables = async () => {
     try {
       const response = await getTable();
-      console.log("response: ", response);
+      console.log('response: ', response);
       setTables(response);
     } catch (error) {
-      console.error("Error fetching tables:", error);
+      console.error('Error fetching tables:', error);
     }
   };
 
@@ -187,36 +182,36 @@ export default function PersistentDrawerLeft() {
 
   const menuItems = [
     {
-      text: "Dashboard",
-      icon: <DashboardIcon sx={{ color: "white" }} />,
-      path: "/dashboard",
+      text: 'Dashboard',
+      icon: <DashboardIcon sx={{ color: 'white' }} />,
+      path: '/dashboard',
     },
     {
-      text: "POS",
-      icon: <PointOfSaleIcon sx={{ color: "white" }} />,
-      path: "/tableTry",
+      text: 'HR Directory',
+      icon: <FolderSharedIcon sx={{ color: 'white' }} />,
+      path: '/employee-list',
     },
     {
-      text: "HR Directory",
-      icon: <FolderSharedIcon sx={{ color: "white" }} />,
-      path: "/employee-list",
+      text: 'Inventory',
+      icon: <InventoryIcon sx={{ color: 'white' }} />,
+      path: '/Inventory',
     },
     {
-      text: "Inventory",
-      icon: <InventoryIcon sx={{ color: "white" }} />,
-      path: "/Inventory",
+      text: 'Menu',
+      icon: <WidgetsIcon sx={{ color: 'white' }} />,
+      path: '/menubuilder',
     },
     {
-      text: "Menu",
-      icon: <WidgetsIcon sx={{ color: "white" }} />,
-      path: "/menubuilder",
+      text: 'POS',
+      icon: <PointOfSaleIcon sx={{ color: 'white' }} />,
+      path: '/tableTry',
     },
   ];
 
   const list = useSelector((state: RootState) => state.placeOrder);
 
   useEffect(() => {
-    console.log("Data:", list.orderDetails.tableNo);
+    console.log('Data:', list.orderDetails.tableNo);
   }, [list]);
 
   const handleRightDrawerClose = () => {
@@ -240,20 +235,20 @@ export default function PersistentDrawerLeft() {
       const newTable: TableData = {
         number: tableNumber,
         capacity: parseInt(seatingCapacity),
-        status: "free",
+        status: 'free',
       };
 
-      console.log("new table: ", newTable);
+      console.log('new table: ', newTable);
       try {
         const response = await postTable(newTable);
-        console.log("response: ", response);
+        console.log('response: ', response);
         setTables(response);
-        console.log("Tables: ", tables);
+        console.log('Tables: ', tables);
         setTableNumber(0);
-        setSeatingCapacity("");
+        setSeatingCapacity('');
         handleRightDrawerClose();
       } catch (error) {
-        console.error("Error adding table:", error);
+        console.error('Error adding table:', error);
       }
     }
   };
@@ -270,10 +265,10 @@ export default function PersistentDrawerLeft() {
       tableNumber: tableNo,
       status: status,
     };
-    console.log("tableStatusdb: ", tableStatus);
+    console.log('tableStatusdb: ', tableStatus);
     try {
       const response = await updateTable(tableStatus);
-      console.log("response: ", response);
+      console.log('response: ', response);
       fetchTables();
       // setTables(response);
       // console.log("Tables: ", tables);
@@ -281,7 +276,7 @@ export default function PersistentDrawerLeft() {
       // setSeatingCapacity("");
       // handleRightDrawerClose();
     } catch (error) {
-      console.error("Error adding table:", error);
+      console.error('Error adding table:', error);
     }
   };
 
@@ -291,10 +286,10 @@ export default function PersistentDrawerLeft() {
       if (response.success) {
         setTables(response.remainingTables);
       } else {
-        console.error("Error deleting table:", response.message);
+        console.error('Error deleting table:', response.message);
       }
     } catch (error) {
-      console.error("Error deleting table:", error);
+      console.error('Error deleting table:', error);
     }
   };
 
@@ -328,11 +323,11 @@ export default function PersistentDrawerLeft() {
     );
   };
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh" }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <IconButton
               color="inherit"
               aria-label="open drawer"
@@ -342,8 +337,8 @@ export default function PersistentDrawerLeft() {
                 {
                   mr: 2,
                 },
-                open && { display: "none" },
-                { color: "white" },
+                open && { display: 'none' },
+                { color: 'white' },
               ]}
             >
               <MenuIcon />
@@ -352,7 +347,7 @@ export default function PersistentDrawerLeft() {
               variant="h6"
               noWrap
               component="div"
-              sx={{ color: "white" }}
+              sx={{ color: 'white' }}
             >
               Table Management
             </Typography>
@@ -364,19 +359,19 @@ export default function PersistentDrawerLeft() {
                 id="user-menu"
                 value=""
                 onChange={(event) => {
-                  if (event.target.value === "logout") {
+                  if (event.target.value === 'logout') {
                     handleLogOut();
                   }
                 }}
                 displayEmpty
                 renderValue={() => label}
                 sx={{
-                  backgroundColor: "#ffffff",
-                  color: "black",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    border: "none",
+                  backgroundColor: '#ffffff',
+                  color: 'black',
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    border: 'none',
                   },
-                  "& .MuiSelect-select": {
+                  '& .MuiSelect-select': {
                     paddingLeft: 2,
                     paddingY: 1,
                   },
@@ -392,11 +387,11 @@ export default function PersistentDrawerLeft() {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          "& .MuiDrawer-paper": {
+          '& .MuiDrawer-paper': {
             width: drawerWidth,
-            boxSizing: "border-box",
-            backgroundColor: "#f53e62",
-            color: "#ffffff",
+            boxSizing: 'border-box',
+            backgroundColor: '#f53e62',
+            color: '#ffffff',
           },
         }}
         variant="persistent"
@@ -404,11 +399,11 @@ export default function PersistentDrawerLeft() {
         open={open}
       >
         <DrawerHeader>
-          <Typography variant="h6" sx={{ flexGrow: 1, color: "#ffffff" }}>
+          <Typography variant="h6" sx={{ flexGrow: 1, color: '#ffffff' }}>
             Eatery
           </Typography>
-          <IconButton onClick={handleDrawerClose} sx={{ color: "#ffffff" }}>
-            {theme.direction === "ltr" ? (
+          <IconButton onClick={handleDrawerClose} sx={{ color: '#ffffff' }}>
+            {theme.direction === 'ltr' ? (
               <ChevronLeftIcon />
             ) : (
               <ChevronRightIcon />
@@ -423,14 +418,14 @@ export default function PersistentDrawerLeft() {
                 component={Link}
                 href={item.path}
                 sx={{
-                  "&:hover": {
-                    backgroundColor: "#000000",
+                  '&:hover': {
+                    backgroundColor: '#000000',
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    minWidth: "40px",
+                    minWidth: '40px',
                   }}
                 >
                   {item.icon}
@@ -467,7 +462,7 @@ export default function PersistentDrawerLeft() {
       </Drawer>
       <Main open={open}>
         <DrawerHeader />
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "12px" }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
           <Button
             variant="outlined"
             onClick={handleRightDrawerOpen}
@@ -485,9 +480,9 @@ export default function PersistentDrawerLeft() {
         </Box>
         <Box
           sx={{
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "flex-start",
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'flex-start',
             marginTop: 2,
           }}
         >
@@ -499,13 +494,13 @@ export default function PersistentDrawerLeft() {
         open={rightDrawerOpen}
         onClose={handleRightDrawerClose}
         sx={{
-          "& .MuiDrawer-paper": {
+          '& .MuiDrawer-paper': {
             width: 300,
             padding: 2,
           },
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton onClick={handleRightDrawerClose}>
             <ChevronRightIcon />
           </IconButton>
@@ -531,7 +526,7 @@ export default function PersistentDrawerLeft() {
             type="number"
           />
           <Box
-            sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}
+            sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}
           >
             <Button
               variant="contained"
@@ -548,13 +543,13 @@ export default function PersistentDrawerLeft() {
         open={tableStatusOpen}
         onClose={tableStatusDrawerClose}
         sx={{
-          "& .MuiDrawer-paper": {
+          '& .MuiDrawer-paper': {
             width: 300,
             padding: 2,
           },
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton onClick={tableStatusDrawerClose}>
             <ChevronRightIcon />
           </IconButton>
@@ -596,7 +591,7 @@ export default function PersistentDrawerLeft() {
             type="text"
           /> */}
           <Box
-            sx={{ display: "flex", justifyContent: "flex-end", marginTop: 2 }}
+            sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}
           >
             <Button
               variant="contained"

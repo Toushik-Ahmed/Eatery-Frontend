@@ -1,21 +1,21 @@
-"use client"; // Keep this since the layout relies on client-side features
+'use client'; // Keep this since the layout relies on client-side features
 
-import { ChakraProvider, isChakraTheme } from "@chakra-ui/react";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import localFont from "next/font/local";
-import "./globals.css";
-import { ReduxProvider } from "@/redux/provider";
+import { ReduxProvider } from '@/redux/provider';
+import { ChakraProvider } from '@chakra-ui/react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import localFont from 'next/font/local';
+import './globals.css';
 
 // Import local fonts
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+  src: './fonts/GeistVF.woff',
+  variable: '--font-geist-sans',
+  weight: '100 900',
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+  src: './fonts/GeistMonoVF.woff',
+  variable: '--font-geist-mono',
+  weight: '100 900',
 });
 
 // Create a Material UI theme
@@ -25,7 +25,7 @@ const muiTheme = createTheme({
   },
   palette: {
     primary: {
-      main: "#1976d2", // Customize your primary color
+      main: '#1976d2', // Customize your primary color
     },
   },
 });
@@ -37,6 +37,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>Eatery</title>
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

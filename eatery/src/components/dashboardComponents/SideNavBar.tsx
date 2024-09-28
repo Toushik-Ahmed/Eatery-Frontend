@@ -147,25 +147,25 @@ export default function PersistentDrawerLeft() {
       path: '/dashboard',
     },
     {
-      text: 'Inventory',
-      icon: <InventoryIcon sx={{ color: 'white' }} />,
-      path: '/Inventory',
-    },
-    {
-      text: 'POS',
-      icon: <PointOfSaleIcon sx={{ color: 'white' }} />,
-      path: '/tableTry',
-    },
-    {
       text: 'HR Directory',
       icon: <FolderSharedIcon sx={{ color: 'white' }} />,
       path: '/employee-list',
     },
 
     {
+      text: 'Inventory',
+      icon: <InventoryIcon sx={{ color: 'white' }} />,
+      path: '/Inventory',
+    },
+    {
       text: 'Menu',
       icon: <WidgetsIcon sx={{ color: 'white' }} />,
       path: '/menubuilder',
+    },
+    {
+      text: 'POS',
+      icon: <PointOfSaleIcon sx={{ color: 'white' }} />,
+      path: '/tableTry',
     },
   ];
 
@@ -259,7 +259,7 @@ export default function PersistentDrawerLeft() {
                 href={item.path}
                 sx={{
                   '&:hover': {
-                    backgroundColor: '#000000',
+                    backgroundColor: '#1D1842',
                   },
                 }}
               >

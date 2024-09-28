@@ -35,7 +35,7 @@ const SideNavbar = () => {
 
   const handleLogOut = () => {
     removeToken();
-    router.push("/");
+    router.push("/login");
   };
 
   return (
