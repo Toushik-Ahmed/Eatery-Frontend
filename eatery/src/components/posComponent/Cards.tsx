@@ -63,6 +63,7 @@ const Cards = (props: Props) => {
       );
       setAvailableItems(filteredItems);
     }
+    
   }, [meal, allItems]);
   const handleSubmit = (item: MenuItem) => {
     const uniqueKey = uuidv4();
