@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { getAllWastageItems } from '@/apiServices/inventory/inventoryApi';
+import { getAllWastageItems } from "@/apiServices/inventory/inventoryApi";
 import {
   IconButton,
   Input,
   InputGroup,
   InputRightElement,
-} from '@chakra-ui/react';
-import { parse } from 'date-fns';
-import { useEffect, useState } from 'react';
-import { IoIosSearch } from 'react-icons/io';
-import DropDown from '../customComponents/DropDown';
-import ExpiredTablecomponent from '../customComponents/expiredItemsTable';
-import Pagination from '@/shared/components/Pagination/pagination';
+} from "@chakra-ui/react";
+import { parse } from "date-fns";
+import { useEffect, useState } from "react";
+import { IoIosSearch } from "react-icons/io";
+import DropDown from "../customComponents/DropDown";
+import ExpiredTablecomponent from "../customComponents/expiredItemsTable";
+import Pagination from "@/shared/components/Pagination/pagination";
 
 export interface wastageTable {
   expiredItems: ExpiredItems[];
@@ -29,15 +29,15 @@ export interface ExpiredItems {
 interface Props {}
 
 function WastageTable({}: Props) {
-  const th = ['INGREDIENT', 'UNIT', 'QUANTITY', 'DATE'];
-  const filterITems = ['Date', 'Name'];
+  const th = ["INGREDIENT", "UNIT", "QUANTITY", "DATE"];
+  const filterITems = ["Date", "Name"];
   const [wasteddata, setWastageData] = useState<wastageTable>({
     expiredItems: [],
     totalData: 0,
   });
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('');
-  const [selectLabel, setSelectLabel] = useState('Sort-By');
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("");
+  const [selectLabel, setSelectLabel] = useState("Sort-By");
   const [pageNumber, setPageNumber] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalData, setTotalData] = useState(0);
@@ -50,6 +50,8 @@ function WastageTable({}: Props) {
       setWastageData(response);
       setIngredients(response.expiredItems);
       setTotalData(response.totalData);
+      console.log("new", response.expiredItems);
+      console.log(response);
     };
     expiredItems();
   }, []);
@@ -68,15 +70,15 @@ function WastageTable({}: Props) {
     setSelectLabel(value);
     setFilter(value);
 
-    if (value === 'Name') {
+    if (value === "Name") {
       const sortedIngredients = [...ingredients].sort((a, b) =>
         a.ingredient > b.ingredient ? 1 : a.ingredient < b.ingredient ? -1 : 0
       );
       setIngredients(sortedIngredients);
-    } else if (value === 'Date') {
+    } else if (value === "Date") {
       const sortedIngredientsByDate = [...ingredients].sort((a, b) => {
-        const dateA = parse(a.wastageDate, 'dd-MM-yyyy', new Date());
-        const dateB = parse(b.wastageDate, 'dd-MM-yyyy', new Date());
+        const dateA = parse(a.wastageDate, "dd-MM-yyyy", new Date());
+        const dateB = parse(b.wastageDate, "dd-MM-yyyy", new Date());
         return dateA.getTime() - dateB.getTime();
       });
       setIngredients(sortedIngredientsByDate);
@@ -92,13 +94,13 @@ function WastageTable({}: Props) {
       <div className=" w-full flex justify-end ">
         <div className="flex gap-4 mr-10">
           <form onSubmit={handleSearch}>
-            <InputGroup w={'10vw'} borderRadius="28px" boxShadow="md">
+            <InputGroup w={"10vw"} borderRadius="28px" boxShadow="md">
               <Input
                 placeholder="Search items"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 borderRadius="full"
-                _placeholder={{ color: 'gray.400' }}
+                _placeholder={{ color: "gray.400" }}
               />
               <InputRightElement>
                 <IconButton
@@ -108,7 +110,7 @@ function WastageTable({}: Props) {
                   bg="#f53e62"
                   color="white"
                   borderRadius="full"
-                  _hover={{ bg: '#f53e62' }}
+                  _hover={{ bg: "#f53e62" }}
                   onClick={handleSearch}
                 />
               </InputRightElement>

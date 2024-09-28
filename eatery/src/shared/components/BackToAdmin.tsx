@@ -1,35 +1,13 @@
-import { LoggedInuser, loggedInuser } from "@/services/apiservice";
-import { Box, Button, Spacer, Text } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Box, Button, Link, Spacer, Text } from "@chakra-ui/react";
 import { FaHome, FaLongArrowAltLeft } from "react-icons/fa";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 type Props = {};
 
 const BackToAdmin = (props: Props) => {
-  const [user, setUserInfo] = useState<LoggedInuser | undefined>();
-  const [label, setLabel] = useState("User Name");
-  const [userType, setUserType] = useState("");
-  const router = useRouter();
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await loggedInuser();
-        setUserInfo(userData);
-        setLabel(userData.user.firstName);
-        setUserType(userData.user.userType);
-        console.log(userData.user);
-        console.log(userData.user.firstName);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchUser();
-    console.log(userType);
-  }, []);
 
-  const handleBackToAdmin = () => {
-    router.push("/dashboard");
+  const handleClick = () => {
+    window.location.href = "/dashboard";
   };
   return (
     <div>
@@ -43,7 +21,7 @@ const BackToAdmin = (props: Props) => {
         minH="auto"
         bg="#f53e62"
         _hover={{ color: "white", bg: "#f53e62" }}
-        onClick={handleBackToAdmin}
+        onClick={handleClick}
       >
         <Box
           display={"flex"}
@@ -52,6 +30,7 @@ const BackToAdmin = (props: Props) => {
           justifyItems={"center"}
           alignItems={"center"}
         >
+          
           <FaHome />
           {/* <Spacer />
           <Text fontWeight={'bold'} fontSize={'md'}>Back</Text> */}
