@@ -199,14 +199,10 @@ export default function PersistentDrawerLeft() {
           </Box>
           <Box sx={{ minWidth: 120 }}>
             <FormControl fullWidth size="small">
-              <InputLabel id="user-menu-label" sx={{ color: "white" }}>
-                {label}
-              </InputLabel>
               <Select
                 labelId="user-menu-label"
                 id="user-menu"
                 value=""
-                label={label}
                 onChange={(event) => {
                   if (event.target.value === "logout") {
                     handleLogOut();
@@ -214,25 +210,18 @@ export default function PersistentDrawerLeft() {
                 }}
                 displayEmpty
                 renderValue={() => label}
-                // sx={{
-                //   color: "white",
-                //   ".MuiOutlinedInput-notchedOutline": {
-                //     borderColor: "white",
-                //     borderWidth: "1px",
-                //   },
-                //   "&:hover .MuiOutlinedInput-notchedOutline": {
-                //     borderColor: "white",
-                //     borderWidth: "2px",
-                //   },
-                //   "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                //     borderColor: "white",
-                //     borderWidth: "2px",
-                //   },
-                // }}
+                sx={{
+                  backgroundColor: "#ffffff",
+                  color: "black",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "& .MuiSelect-select": {
+                    paddingLeft: 2,
+                    paddingY: 1,
+                  },
+                }}
               >
-                <MenuItem disabled value="">
-                  <em>{label}</em>
-                </MenuItem>
                 <MenuItem value="logout">Log out</MenuItem>
               </Select>
             </FormControl>
