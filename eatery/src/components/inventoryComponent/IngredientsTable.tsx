@@ -18,7 +18,6 @@ import Pagination from "../../shared/components/Pagination/pagination";
 import DropDown from "../customComponents/DropDown";
 import Tablecomponent from "../customComponents/Table";
 
-
 interface Props {}
 
 function IngredientsTablecomponent({}: Props) {
@@ -31,9 +30,9 @@ function IngredientsTablecomponent({}: Props) {
 
     "Order-Point",
     "Prev-Stock",
-    "Expiary-Date",
+    "Expiry-Date",
     "New-Stock",
-    "expiary-Date",
+    "Expiry-Date(New)",
     "Incoming-Stock",
     "Delete",
   ];
