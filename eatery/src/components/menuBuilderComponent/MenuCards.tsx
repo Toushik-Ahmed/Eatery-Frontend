@@ -121,7 +121,7 @@ const Cards = (props: Props) => {
                     fontSize={{ base: "xl", md: "2xl" }}
                     fontWeight={"semiBold"}
                     w={"fit"}
-                    textColor={"#ff5841"}
+                    textColor={"#d91a40"}
                   >
                     {category}
                   </Text>

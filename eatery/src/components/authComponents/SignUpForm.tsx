@@ -286,12 +286,12 @@ function SignUpForm({}: Props) {
             {/* Submit Button */}
             <Button
               type="submit"
-              bg="#169880"
+              bg="#547494"
               color="black"
               size="md"
               w="full"
-              _hover={{ bg: "#169880" , color: "white"}}
-              _active={{ bg: "#298e46" }}
+              _hover={{ bg: "#547494" , color: "white"}}
+              _active={{ bg: "#547494" }}
               mt="4"
             >
               Sign up

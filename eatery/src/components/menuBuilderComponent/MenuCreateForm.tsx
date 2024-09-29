@@ -165,8 +165,6 @@ const CreateMenuForm: React.FC = () => {
   };
 
   return (
-    
-
     <Box
       p={{ base: 2, md: 5 }}
       bg="#FFFFF6"
@@ -176,7 +174,6 @@ const CreateMenuForm: React.FC = () => {
       boxShadow="lg"
       as="form"
       onSubmit={handleSubmit}
-      
     >
       {/* Header Section */}
       <Box fontSize="2xl" fontWeight="bold" textAlign="center">
@@ -233,7 +230,10 @@ const CreateMenuForm: React.FC = () => {
               <IconButton
                 icon={<MinusIcon />}
                 aria-label="R#d91a40"
-                bg="#d91a40"
+                bg={"none"}
+                color={"#d91a40"}
+                border={"1px"}
+                borderColor={"#d91a40"}
                 onClick={() => removeMealTime(index)}
               />
             </HStack>
@@ -241,9 +241,9 @@ const CreateMenuForm: React.FC = () => {
           <Button
             onClick={addMealTime}
             leftIcon={<AddIcon />}
-  
             textColor={"white"}
-            bg="#169880"
+            bg="#d91a40"
+            _hover={{bg: "#d91a40" , color: "white"}}
             mt={2}
           >
             Add Meal Time
@@ -333,7 +333,10 @@ const CreateMenuForm: React.FC = () => {
                   <IconButton
                     icon={<MinusIcon />}
                     aria-label="Remove size"
-                    bg="#d91a40"
+                    bg={"none"}
+                    color={"#d91a40"}
+                    border={"1px"}
+                    borderColor={"#d91a40"}
                     onClick={() => removeSize(index)}
                   />
                 </HStack>
@@ -391,7 +394,10 @@ const CreateMenuForm: React.FC = () => {
                     <IconButton
                       icon={<MinusIcon />}
                       aria-label="Remove ingredient"
-                      bg="#d91a40"
+                      bg={"none"}
+                      color={"#d91a40"}
+                      border={"1px"}
+                      borderColor={"#d91a40"}
                       onClick={() => {
                         const updatedSizes = [...sizes];
                         updatedSizes[index].ingredients.splice(ingIndex, 1); // Remove the ingredient at the specified index
@@ -405,7 +411,8 @@ const CreateMenuForm: React.FC = () => {
               <Button
                 mt={2}
                 textColor={"white"}
-                bg="#169880"
+                bg="#d91a40"
+                _hover={{bg: "#d91a40" , color: "white"}}
                 leftIcon={<AddIcon />}
                 onClick={() => {
                   const updatedSizes = [...sizes];
@@ -516,7 +523,10 @@ const CreateMenuForm: React.FC = () => {
                     <IconButton
                       icon={<MinusIcon />}
                       aria-label="Remove add-on"
-                      bg="#d91a40"
+                      bg={"none"}
+                      color={"#d91a40"}
+                      border={"1px"}
+                      borderColor={"#d91a40"}
                       onClick={() => {
                         const updatedSizes = [...sizes];
                         updatedSizes[index].addOns.splice(addIndex, 1); // Remove add-on at the specific index
@@ -530,7 +540,8 @@ const CreateMenuForm: React.FC = () => {
               <Button
                 mt={2}
                 textColor={"white"}
-                bg="#169880"
+                bg="#d91a40"
+                _hover={{bg: "#d91a40" , color: "white"}}
                 leftIcon={<AddIcon />}
                 onClick={() => {
                   const updatedSizes = [...sizes];
@@ -550,7 +561,8 @@ const CreateMenuForm: React.FC = () => {
           <Button
             onClick={addSize}
             textColor={"white"}
-            bg="#169880"
+            bg="#d91a40"
+            _hover={{bg: "#d91a40" , color: "white"}}
             leftIcon={<AddIcon />}
             mt={2}
           >
@@ -560,8 +572,9 @@ const CreateMenuForm: React.FC = () => {
 
         <Button
           type="submit"
-          textColor={"white"}
-          bg="#169880"
+          textColor={"black"}
+          bg="#547494"
+          _hover={{bg: "#547494" , color: "white"}}
           size="lg"
           w="full"
           onClick={() => {
@@ -572,7 +585,6 @@ const CreateMenuForm: React.FC = () => {
         </Button>
       </VStack>
     </Box>
-    
   );
 };
 

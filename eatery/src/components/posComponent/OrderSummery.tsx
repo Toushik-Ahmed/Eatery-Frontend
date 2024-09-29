@@ -226,11 +226,11 @@ const OrderSummery = (props: Props) => {
                   <Button
                     size={"sm"}
                     bg={"none"}
-                    textColor={"#ff5841"}
-                    _hover={{ background: "red.500", textColor: "white" }}
-                    borderWidth={"1px"}
-                    borderRadius={"6px"}
-                    borderColor={"#ff5841"}
+                    textColor={"black"}
+                    _hover={{borderColor: "#d91a40", textColor: "#d91a40" }}
+                    borderWidth={"2px"}
+                    borderRadius={"4px"}
+                    borderColor={"gray.400"}
                     onClick={() =>
                       handleQuantityChange(item.uniqueKey, "decrement")
                     }
@@ -244,11 +244,11 @@ const OrderSummery = (props: Props) => {
                   <Button
                     size={"sm"}
                     bg={"none"}
-                    textColor={"#ff5841"}
-                    _hover={{ background: "green.500", textColor: "white" }}
-                    borderWidth={"1px"}
-                    borderRadius={"6px"}
-                    borderColor={"#ff5841"}
+                    textColor={"black"}
+                    _hover={{borderColor: "#38cf38", textColor: "#38cf38" }}
+                    borderWidth={"2px"}
+                    borderRadius={"4px"}
+                    borderColor={"gray.400"}
                     onClick={() =>
                       handleQuantityChange(item.uniqueKey, "increment")
                     }
@@ -263,7 +263,7 @@ const OrderSummery = (props: Props) => {
                 as="button"
                 borderRadius="md"
                 bg="white"
-                color="#ff5841"
+                color="#d91a40"
                 mt={"2"}
                 onClick={() => handleDeleteItem(item.uniqueKey)}
                 fontSize={"xl"}
