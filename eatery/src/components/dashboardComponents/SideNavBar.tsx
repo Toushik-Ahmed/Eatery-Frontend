@@ -34,6 +34,9 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
+import Items from "./Items";
+import Expenditure from "./Expenditure";
+import Wastage from "./wastage";
 
 
 const drawerWidth = 240;
@@ -283,15 +286,15 @@ export default function PersistentDrawerLeft() {
           {/* First row: Order and Revenue components aligned vertically */}
           <div className="flex justify-around items-start">
             <Order />
+            <Expenditure />
             <Revenue />
-            <Order />
-            <Revenue />
+            <Items />
           </div>
 
           {/* Second row: BasicColor components aligned vertically */}
           <div className="flex items-start gap-2">
             <BasicColor />
-            <BasicColor />
+            <Wastage />
             <div>
               <BasicPie />
             </div>

@@ -50,7 +50,7 @@ export default function BasicBarsRevenue() {
           fontSize: "20px",
         }}
       >
-        Total Revenue (7 Days)
+        Total Revenue (30 Days)
       </h2>
     </div>
   );
