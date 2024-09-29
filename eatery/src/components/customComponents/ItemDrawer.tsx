@@ -224,7 +224,7 @@ const ItemDrawer: React.FC<Props> = ({
               </Text>
               <Box mt={6}>
                 <Button
-                  colorScheme="red"
+                  bg="#d91a40"
                   onClick={handleDelete}
                   size="lg"
                   width="100%"

@@ -39,7 +39,9 @@ const SideNavbar = () => {
   };
 
   return (
-    <nav className="bg-[#f53e62] min-h-screen max-h-full w-[12vw] sticky top-0">
+    // <nav className="bg-[#f53e62] min-h-screen max-h-full w-[12vw] sticky top-0">
+    <nav className="bg-[#d91a40] min-h-screen max-h-full w-[12vw] sticky top-0">
+
     <div className="p-2 flex gap-8 justify-center">
       <div className="flex gap-4 items-center ">
         <DropDown selectLabel={label} items={items} onSelect={handleLogOut} />
