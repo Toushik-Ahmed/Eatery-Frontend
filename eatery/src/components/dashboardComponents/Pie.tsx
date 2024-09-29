@@ -35,16 +35,6 @@ export default function BasicPie() {
         textAlign: "center",
       }}
     >
-      <h2
-        style={{
-          fontFamily: "Arial, sans-serif",
-          color: "#333",
-          justifyContent: "center",
-          fontSize: "24px",
-        }}
-      >
-        Top Selling Product (Today)
-      </h2>
       <PieChart
         series={[
           {
@@ -52,8 +42,18 @@ export default function BasicPie() {
           },
         ]}
         width={600}
-        height={200}
+        height={250}
       />
+      <h2
+        style={{
+          fontFamily: "Arial, sans-serif",
+          color: "#333",
+          justifyContent: "center",
+          fontSize: "20px",
+        }}
+      >
+        Top Selling Product (Today)
+      </h2>
     </div>
   );
 }

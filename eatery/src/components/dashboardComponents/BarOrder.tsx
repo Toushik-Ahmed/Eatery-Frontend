@@ -37,22 +37,22 @@ export default function BasicBarsOrder() {
         marginTop: "10px",
       }}
     >
+      <BarChart
+        xAxis={[{ scaleType: "band", data: labels }]}
+        series={[{ data: barData }]}
+        width={800}
+        height={300}
+      />{" "}
       <h2
         style={{
           fontFamily: "Arial, sans-serif",
           color: "#333",
           justifyContent: "center",
-          fontSize: "24px",
+          fontSize: "20px",
         }}
       >
         Total Order (7 Days)
       </h2>
-      <BarChart
-        xAxis={[{ scaleType: "band", data: labels }]}
-        series={[{ data: barData }]}
-        width={500}
-        height={300}
-      />
     </div>
   );
 }

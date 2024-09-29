@@ -34,25 +34,24 @@ export default function BasicBarsRevenue() {
       style={{
         backgroundColor: "#ffffff",
         textAlign: "center",
-        marginTop: "10px",
       }}
     >
+      <BarChart
+        xAxis={[{ scaleType: "band", data: labels }]}
+        series={[{ data: barData }]}
+        width={800}
+        height={300}
+      />{" "}
       <h2
         style={{
           fontFamily: "Arial, sans-serif",
           color: "#333",
           justifyContent: "center",
-          fontSize: "24px",
+          fontSize: "20px",
         }}
       >
         Total Revenue (7 Days)
       </h2>
-      <BarChart
-        xAxis={[{ scaleType: "band", data: labels }]}
-        series={[{ data: barData }]}
-        width={500}
-        height={300}
-      />
     </div>
   );
 }

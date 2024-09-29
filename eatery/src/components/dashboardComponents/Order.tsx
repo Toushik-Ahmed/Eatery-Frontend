@@ -41,6 +41,7 @@ import {
   Box,
 } from "@mui/material";
 import orderToday from "@/services/dashboardServices/orderToday";
+import { Center } from "@chakra-ui/react";
 
 const Order = () => {
   const [order, setOrder] = useState(null);
@@ -61,8 +62,8 @@ const Order = () => {
   }, []);
 
   return (
-    <Card sx={{ maxWidth: 220, width: "100%" }}>
-      <CardHeader title="Total Orders (Today)" />
+    <Card sx={{ maxWidth: 320, width: "100%" }}>
+      <CardHeader sx={{textAlign: "center"}} title="Total Orders (Today)" />
       <CardContent>
         {loading ? (
           <Box
