@@ -64,7 +64,7 @@ export default function EmployeeCard() {
       sx={{
         display: 'flex',
         flexWrap: 'wrap',
-        justifyContent: 'center',
+        
       }}
     >
       {employees.map((employee) => (
