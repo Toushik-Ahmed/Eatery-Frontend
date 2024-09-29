@@ -97,10 +97,10 @@ const Cards = (props: Props) => {
                   (time) => (
                     <Button
                       key={time}
-                      bg={mealTime === time ? "#ff5841" : "white"}
+                      bg={mealTime === time ? "#d91a40" : "white"}
                       textColor={mealTime === time ? "white" : "black"}
                       onClick={() => setMealTime(time)}
-                      _hover={{ background: "#ff5841", textColor: "white" }}
+                      _hover={{ background: "#d91a40", textColor: "white" }}
                     >
                       {time}
                     </Button>
