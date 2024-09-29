@@ -22,10 +22,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect } from "react";
-import { deleteMenuItem, getmenuItems } from "@/redux/MenuBuilder/MenuCardSlice";
+import {
+  deleteMenuItem,
+  getmenuItems,
+} from "@/redux/MenuBuilder/MenuCardSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-
 
 interface Ingredient {
   name: string;
@@ -79,39 +81,36 @@ const ItemDrawer: React.FC<Props> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const toast = useToast();
-  useEffect(()=>{
-    dispatch(getmenuItems())
-  },[dispatch])
+  useEffect(() => {
+    dispatch(getmenuItems());
+  }, [dispatch]);
 
-  
   const handleDelete = async () => {
     if (selectedItem) {
-      console.log("Attempting to delete item with ID:", selectedItem._id); 
-  
+      console.log("Attempting to delete item with ID:", selectedItem._id);
+
       try {
         await dispatch(deleteMenuItem(selectedItem._id.toString()) as any);
         toast({
-          title: 'Item deleted.',
-          description: 'The selected item has been deleted.',
-          status: 'success',
+          title: "Item deleted.",
+          description: "The selected item has been deleted.",
+          status: "success",
           duration: 5000,
           isClosable: true,
         });
-        onDelete(); 
+        onDelete();
       } catch (error) {
         console.error("Error deleting item:", error); // Log the error
         toast({
-          title: 'Deletion failed.',
-          description: 'There was an error deleting the item.',
-          status: 'error',
+          title: "Deletion failed.",
+          description: "There was an error deleting the item.",
+          status: "error",
           duration: 5000,
           isClosable: true,
         });
       }
     }
   };
-  
-  
 
   return (
     <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
@@ -124,7 +123,7 @@ const ItemDrawer: React.FC<Props> = ({
         boxShadow="lg"
       >
         <DrawerCloseButton />
-        <DrawerHeader bg="#FF5841" color="white" borderBottomWidth="1px">
+        <DrawerHeader bg="#d91a40" color="white" borderBottomWidth="1px">
           <Text fontSize="2xl" fontWeight="bold">
             {selectedItem?.itemName}
           </Text>
@@ -171,8 +170,6 @@ const ItemDrawer: React.FC<Props> = ({
                 {/* <Text fontWeight="bold" fontSize="lg">
                   Available at:
                 </Text> */}
-                
-
               </VStack>
               <Divider borderColor="black" borderWidth="2px" />
 
@@ -225,6 +222,7 @@ const ItemDrawer: React.FC<Props> = ({
               <Box mt={6}>
                 <Button
                   bg="#d91a40"
+                  _hover={{ bg: "#d91a40", color: "white" }}
                   onClick={handleDelete}
                   size="lg"
                   width="100%"
