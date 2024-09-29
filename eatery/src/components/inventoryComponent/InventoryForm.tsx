@@ -151,8 +151,8 @@ const InventoryForm = (props: Props) => {
           Clear All
         </Button>
         <Button
-          bg={"#169880"}
-          _hover={{ bg: "#169880", color: "white" }}
+          bg={"#547494"}
+          _hover={{ bg: "#547494", color: "white" }}
           color="black"
           onClick={() => handleSubmit()}
         >
