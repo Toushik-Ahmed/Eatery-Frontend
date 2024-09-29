@@ -1,30 +1,33 @@
-import * as React from 'react';
-import { LineChart } from '@mui/x-charts/LineChart';
-import Stack from '@mui/material/Stack';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import * as React from "react";
+import { LineChart } from "@mui/x-charts/LineChart";
+import Stack from "@mui/material/Stack";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 const Tableau10 = [
-  '#4e79a7',
-  '#f28e2c',
-  '#e15759',
-  '#76b7b2',
-  '#59a14f',
-  '#edc949',
-  '#af7aa1',
-  '#ff9da7',
-  '#9c755f',
-  '#bab0ab',
+  "#4e79a7",
+  "#f28e2c",
+  "#e15759",
+  "#76b7b2",
+  "#59a14f",
+  "#edc949",
+  "#af7aa1",
+  "#ff9da7",
+  "#9c755f",
+  "#bab0ab",
 ];
 
 const chartsParams = {
   margin: { bottom: 20, left: 25, right: 5 },
   height: 300,
 };
-export default function BasicColor() {
-  const [color, setColor] = React.useState('#4e79a7');
+export default function Wastage() {
+  const [color, setColor] = React.useState("#4e79a7");
 
-  const handleChange = (event: React.MouseEvent<HTMLElement>, nextColor: string) => {
+  const handleChange = (
+    event: React.MouseEvent<HTMLElement>,
+    nextColor: string
+  ) => {
     setColor(nextColor);
   };
 
@@ -39,7 +42,7 @@ export default function BasicColor() {
         {...chartsParams}
         series={[
           {
-            data: [20, 30, 50, 50, 60, 40, 30],
+            data: [0, 10, 20, 15, 10],
             color,
           },
         ]}
@@ -58,7 +61,7 @@ export default function BasicColor() {
           fontSize: "20px",
         }}
       >
-        Purchased Ingredients (7 Days)
+        Total Wastage (7 Days)
       </h2>
     </Stack>
   );

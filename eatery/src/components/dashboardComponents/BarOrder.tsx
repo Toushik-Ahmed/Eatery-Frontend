@@ -51,7 +51,7 @@ export default function BasicBarsOrder() {
           fontSize: "20px",
         }}
       >
-        Total Order (7 Days)
+        Total Order (30 Days)
       </h2>
     </div>
   );
