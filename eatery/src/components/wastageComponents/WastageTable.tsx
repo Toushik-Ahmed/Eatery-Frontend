@@ -107,10 +107,10 @@ function WastageTable({}: Props) {
                   aria-label="Search database"
                   icon={<IoIosSearch />}
                   size="sm"
-                  bg="#f53e62"
+                  bg="#d91a40"
                   color="white"
                   borderRadius="full"
-                  _hover={{ bg: "#f53e62" }}
+                  _hover={{ bg: "#d91a40" }}
                   onClick={handleSearch}
                 />
               </InputRightElement>

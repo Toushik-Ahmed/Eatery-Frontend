@@ -19,7 +19,7 @@ function DropDown({ items, selectLabel, onSelect }: Props) {
         <MenuButton
           as={Button}
           color="black"
-          _hover={{ bg: "#f53e62" }}
+          _hover={{ bg: "#d91a40", color: "white" }}
           borderRadius="full"
           boxShadow="md"
           rightIcon={<IoChevronDownCircleOutline />}

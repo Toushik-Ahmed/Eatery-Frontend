@@ -182,7 +182,7 @@ export function DrawerExample({
             onClick={onOpen}
             bg="white"
             color="black"
-            _hover={{ color: 'black', bg: '#f53e62' }}
+            _hover={{ color: 'white', bg: '#d91a40' }}
             borderRadius="full"
             boxShadow="md"
           >

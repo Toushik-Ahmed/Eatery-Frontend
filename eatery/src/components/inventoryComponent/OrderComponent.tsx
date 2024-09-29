@@ -12,7 +12,7 @@ const OrderComponent = ({ handleClick }: Props) => {
     <div className="m-4">
       <div className="font-bold text-3xl mb-10">Vendor-Lists</div>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x- gap-y-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))]  gap-y-4">
         <VendorCard
           src={vendor.src}
           alt="vendorPic"
@@ -45,6 +45,15 @@ const OrderComponent = ({ handleClick }: Props) => {
           heading="Green-Vege"
           handleClick={handleClick}
         />
+         <VendorCard
+          src={vegetable.src}
+          alt="vendorPic"
+          Email="meat24@gmail.com"
+          Phone="0187909092"
+          heading="Green-Vege"
+          handleClick={handleClick}
+        />
+        
         {/* <VendorCard
           src={vendor.src}
           alt="vendorPic"

@@ -213,11 +213,11 @@ const LoginForm = ({}: Props) => {
               {/* Submit Button */}
               <Button
                 type="submit"
-                bg="#2da44e"
-                color="white"
+                bg="#169880"
+                color="black"
                 size="md"
                 w="full"
-                _hover={{ bg: "#2c974b" }}
+                _hover={{ bg: "#169880", color: "white" }}
                 _active={{ bg: "#298e46" }}
               >
                 Login
