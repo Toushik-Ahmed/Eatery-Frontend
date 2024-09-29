@@ -34,7 +34,7 @@ export default function BasicBarsOrder() {
       style={{
         backgroundColor: "#ffffff",
         textAlign: "center",
-        marginTop: "10px",
+        marginTop: "2px",
       }}
     >
       <BarChart

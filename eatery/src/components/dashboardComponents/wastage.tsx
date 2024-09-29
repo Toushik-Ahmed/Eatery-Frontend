@@ -18,7 +18,7 @@ const Tableau10 = [
 ];
 
 const chartsParams = {
-  margin: { bottom: 20, left: 25, right: 5 },
+  margin: { bottom: 20, left: 2, right: 5 },
   height: 300,
 };
 export default function Wastage() {
@@ -34,9 +34,10 @@ export default function Wastage() {
   return (
     <Stack
       direction="column"
-      spacing={2}
+
       alignItems="center"
       sx={{ maxWidth: 400, maxHeight: 250, width: "100%", height: "100%" }}
+      
     >
       <LineChart
         {...chartsParams}

@@ -18,7 +18,7 @@ const Tableau10 = [
 ];
 
 const chartsParams = {
-  margin: { bottom: 20, left: 25, right: 5 },
+  margin: { bottom: 20, left: 2, right: 2 },
   height: 300,
 };
 export default function BasicColor() {
@@ -31,9 +31,9 @@ export default function BasicColor() {
   return (
     <Stack
       direction="column"
-      spacing={2}
       alignItems="center"
       sx={{ maxWidth: 400, maxHeight: 250, width: "100%", height: "100%" }}
+      
     >
       <LineChart
         {...chartsParams}
