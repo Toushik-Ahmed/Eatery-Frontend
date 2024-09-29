@@ -154,7 +154,7 @@ const Cards = (props: Props) => {
         </Text>
         {userType === "Admin" && (
           <Button onClick={handleHomePage} size={"sm"} gap={"2"}>
-            <ImHome color="#f53e62" /> Home
+            <ImHome color="#d91a40" /> Home
           </Button>
         )}
       </Box>
@@ -173,50 +173,50 @@ const Cards = (props: Props) => {
             <Box py={{ base: "4", md: "4" }}>
               <HStack spacing={{ base: 3, md: 6 }}>
                 <Button
-                  bg={meal === "All Items" ? "#f53e62" : "white"}
+                  bg={meal === "All Items" ? "#d91a40" : "white"}
                   textColor={meal === "All Items" ? "white" : "black"}
                   onClick={() => setMealTime("All Items")}
-                  _hover={{ background: "#f53e62", textColor: "white" }}
+                  _hover={{ background: "#d91a40", textColor: "white" }}
                   fontSize={{ base: "sm", md: "md" }}
                   fontWeight={"bold"}
                 >
                   All Items
                 </Button>
                 <Button
-                  bg={meal === "All Day" ? "#f53e62" : "white"}
+                  bg={meal === "All Day" ? "#d91a40" : "white"}
                   textColor={meal === "All Day" ? "white" : "black"}
                   onClick={() => setMealTime("All Day")}
-                  _hover={{ background: "#f53e62", textColor: "white" }}
+                  _hover={{ background: "#d91a40", textColor: "white" }}
                   fontSize={{ base: "sm", md: "md" }}
                   fontWeight={"bold"}
                 >
                   All Day
                 </Button>
                 <Button
-                  bg={meal === "Breakfast" ? "#f53e62" : "white"}
+                  bg={meal === "Breakfast" ? "#d91a40" : "white"}
                   textColor={meal === "Breakfast" ? "white" : "black"}
                   onClick={() => setMealTime("Breakfast")}
-                  _hover={{ background: "#f53e62", textColor: "white" }}
+                  _hover={{ background: "#d91a40", textColor: "white" }}
                   fontSize={{ base: "sm", md: "md" }}
                   fontWeight={"bold"}
                 >
                   Breakfast
                 </Button>
                 <Button
-                  bg={meal === "Lunch" ? "#f53e62" : "white"}
+                  bg={meal === "Lunch" ? "#d91a40" : "white"}
                   textColor={meal === "Lunch" ? "white" : "black"}
                   onClick={() => setMealTime("Lunch")}
-                  _hover={{ background: "#f53e62", textColor: "white" }}
+                  _hover={{ background: "#d91a40", textColor: "white" }}
                   fontSize={{ base: "sm", md: "md" }}
                   fontWeight={"bold"}
                 >
                   Lunch
                 </Button>
                 <Button
-                  bg={meal === "Dinner" ? "#f53e62" : "white"}
+                  bg={meal === "Dinner" ? "#d91a40" : "white"}
                   textColor={meal === "Dinner" ? "white" : "black"}
                   onClick={() => setMealTime("Dinner")}
-                  _hover={{ background: "#f53e62", textColor: "white" }}
+                  _hover={{ background: "#d91a40", textColor: "white" }}
                   fontSize={{ base: "sm", md: "md" }}
                   fontWeight={"bold"}
                 >
@@ -236,9 +236,9 @@ const Cards = (props: Props) => {
                   <Flex gap="2">
                     <Box p={"2"}>
                       <Button
-                        bg={"#f53e62"}
+                        bg={"#d91a40"}
                         textColor={"white"}
-                        _hover={{ background: "#f53e62", textColor: "white" }}
+                        _hover={{ background: "#d91a40", textColor: "white" }}
                         borderBottomLeftRadius={"full"}
                         borderTopRightRadius={"full"}
                         w={{ base: "6vw", md: "6vw" }}

@@ -53,7 +53,7 @@ const VendorCard = ({ src, alt, Phone, Email, heading,handleClick }: Props) => {
           <Text color="black" fontSize="1rem">
             Email: {Email}
           </Text>
-          <Button _hover={{ color: "black" }} bg="#f53e62" color="white" onClick={()=>handleClick()}>
+          <Button _hover={{ color: "black" }} bg="#d91a40" color="white" onClick={()=>handleClick()}>
             GO
           </Button>
         </Stack>

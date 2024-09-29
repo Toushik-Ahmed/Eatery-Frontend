@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { FaLongArrowAltLeft } from 'react-icons/fa';
-import { IoBagAddOutline } from 'react-icons/io5';
+import { FaCartPlus } from "react-icons/fa";
 import { CartData, DrawerExample } from '../customComponents/Cart';
 
 export interface Items {
@@ -116,13 +116,13 @@ const VendorItems = ({ handleClick }: Props) => {
           <Button
             p={0}
             size={'lg'}
-            color={'white'}
+            color={'black'}
             w="auto"
             h="auto"
             minW="auto"
             minH="auto"
-            bg="#f53e62"
-            _hover={{ color: 'black', bg: '#f53e62' }}
+            bg="#d91a40"
+            _hover={{ color: 'white', bg: '#f53e62' }}
             onClick={handleCheckoutOrClose}
           >
             <FaLongArrowAltLeft />
@@ -170,7 +170,7 @@ const VendorItems = ({ handleClick }: Props) => {
                     _hover={{ bg: '#f53e62' }}
                     onClick={() => handleSelectItems(el, id)}
                   >
-                    <IoBagAddOutline />
+                    <FaCartPlus />
                   </Button>
                 </Td>
               </Tr>

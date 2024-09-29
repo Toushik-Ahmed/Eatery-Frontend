@@ -291,7 +291,7 @@ const OrderSummery = (props: Props) => {
           <Box
             as="button"
             borderRadius="md"
-            bg="#f53e62"
+            bg="#d91a40"
             color="white"
             p={["1", "1", "2"]}
             onClick={handleSendOrder}

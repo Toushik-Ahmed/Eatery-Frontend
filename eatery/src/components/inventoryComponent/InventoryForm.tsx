@@ -47,7 +47,7 @@ const InventoryForm = (props: Props) => {
       isClosable: true,
       render: () => (
         <Box color="white" p={3} bg="#f53e62">
-          <Box> Order placed successfully</Box>
+          <Box>Ingredient Added Successfully! </Box>
           Ingredient: {ingredient}
         </Box>
       ),
@@ -69,7 +69,7 @@ const InventoryForm = (props: Props) => {
   return (
     <Box
       p={6}
-      bg="#FFFFF0"
+      bg="#FFFFF6"
       borderRadius="lg"
       width={"20vw"}
       boxShadow="lg"
@@ -143,13 +143,19 @@ const InventoryForm = (props: Props) => {
       {/* Buttons */}
       <Flex justify="space-between" mt={4}>
         <Button
-          colorScheme="orange"
-          color="white"
+          bg={"#d91a40"}
+          _hover={{ bg: "#d91a40", color: "white" }}
+          color="black"
           onClick={() => handleCancel()}
         >
           Clear All
         </Button>
-        <Button colorScheme="pink" color="white" onClick={() => handleSubmit()}>
+        <Button
+          bg={"#169880"}
+          _hover={{ bg: "#169880", color: "white" }}
+          color="black"
+          onClick={() => handleSubmit()}
+        >
           Add Item
         </Button>
       </Flex>
